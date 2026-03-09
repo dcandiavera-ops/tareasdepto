@@ -237,8 +237,36 @@ button{font-family:inherit;border:none;cursor:pointer}
 .trow-nic{border-left:3px solid #60a5fa}
 
 /* Flash */
-.save-flash{position:fixed;bottom:20px;right:16px;background:#1b4332;color:white;font-size:12px;font-weight:700;padding:8px 16px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.2);opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
+.save-flash{position:fixed;bottom:90px;right:16px;background:#064e3b;color:#34d399;font-size:12px;font-weight:700;padding:8px 16px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.3);border:1px solid rgba(52,211,153,0.3);opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
 .save-flash.show{opacity:1}
+
+/* ── SAVE BUTTON ── */
+.save-btn-wrap{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:98;display:none}
+.save-btn-wrap.visible{display:block}
+.save-btn{background:linear-gradient(135deg,#047857,#34d399);color:#fff;font-size:14px;font-weight:800;padding:14px 40px;border-radius:99px;box-shadow:0 4px 24px rgba(52,211,153,0.45);letter-spacing:0.04em;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:all .2s}
+.save-btn:active{transform:scale(0.96)}
+@keyframes savePulse{0%,100%{box-shadow:0 4px 24px rgba(52,211,153,0.45)}50%{box-shadow:0 4px 40px rgba(52,211,153,0.8)}}
+.save-btn-wrap.visible .save-btn{animation:savePulse 2s ease-in-out infinite}
+
+/* ── HISTORY VIEW ── */
+.hist-day{margin-bottom:16px}
+.hist-day-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;margin-bottom:8px;cursor:pointer}
+.hist-day-title{font-size:13px;font-weight:800;color:#fff}
+.hist-day-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px}
+.hist-day-badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.2)}
+.hist-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:5px;border-left:3px solid transparent}
+.hist-item-dan{border-left-color:#34d399}
+.hist-item-nic{border-left-color:#60a5fa}
+.hist-icon{font-size:16px;flex-shrink:0}
+.hist-info{flex:1;min-width:0}
+.hist-title{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85)}
+.hist-meta{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;display:flex;gap:6px;flex-wrap:wrap}
+.hist-stamp{font-size:10px;color:rgba(255,255,255,0.25);flex-shrink:0;text-align:right}
+.hist-empty{text-align:center;padding:40px 20px;color:rgba(255,255,255,0.2);font-size:13px}
+.hist-filter{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto}
+.hist-filter::-webkit-scrollbar{display:none}
+.hf-btn{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);white-space:nowrap;transition:all .2s}
+.hf-btn.on{background:rgba(52,211,153,0.15);color:#34d399;border-color:rgba(52,211,153,0.3)}
 </style>
 </head>
 <body>
@@ -281,6 +309,7 @@ button{font-family:inherit;border:none;cursor:pointer}
       <button class="tab"    id="tab-mes"        onclick="setTab('mes')">Mes</button>
       <button class="tab"    id="tab-trimestre"  onclick="setTab('trimestre')">Trimestre</button>
       <button class="tab"    id="tab-lista"      onclick="setTab('lista')">Lista</button>
+      <button class="tab"    id="tab-historial"  onclick="setTab('historial')">📋 Historial</button>
     </div>
   </div>
 
@@ -289,6 +318,14 @@ button{font-family:inherit;border:none;cursor:pointer}
 
   <!-- CONTENT -->
   <div id="content"></div>
+</div>
+
+<!-- SAVE BUTTON -->
+<div class="save-btn-wrap" id="save-btn-wrap">
+  <button class="save-btn" onclick="confirmSave()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8L6 12L14 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Guardar cambios
+  </button>
 </div>
 
 <div class="save-flash" id="save-flash">✓ Guardado</div>
@@ -364,7 +401,7 @@ const NOW = new Date();
 // ⚙️  CONFIGURACIÓN FIREBASE
 // Pega aquí la URL de tu base de datos
 // ══════════════════════════════════════
-const FIREBASE_URL = "https://console.firebase.google.com/u/0/project/tareas-depto/database/tareas-depto-default-rtdb/data/~2F"; // Ej: "https://tareas-depto-XXXXX-default-rtdb.firebaseio.com"
+const FIREBASE_URL = ""; // Ej: "https://tareas-depto-XXXXX-default-rtdb.firebaseio.com"
 
 // ══════════════════════════════════════
 // STORAGE — Firebase + localStorage fallback
@@ -392,6 +429,13 @@ function hasFirebase(){ return FIREBASE_URL && FIREBASE_URL.length > 10; }
 function isTaskDone(t){ return !!dbCache[sKey(t.id,periodKey(t.freq,NOW))]; }
 function getStamp(t){ return dbCache[sKey(t.id,periodKey(t.freq,NOW))] || null; }
 
+let pendingChanges = 0;
+
+function updateSaveBtn(){
+  const wrap = document.getElementById("save-btn-wrap");
+  if(wrap) wrap.classList.toggle("visible", pendingChanges > 0);
+}
+
 // Write — optimistic update + push to Firebase
 async function toggleTask(id){
   const t = TASKS.find(x=>x.id===id);
@@ -409,7 +453,11 @@ async function toggleTask(id){
   if(wasDone) localStorage.removeItem(k);
   else localStorage.setItem(k, dbCache[k]);
 
-  flash(); render();
+  // Track pending changes
+  pendingChanges++;
+  updateSaveBtn();
+
+  render();
 
   // Push to Firebase if configured
   if(hasFirebase()){
@@ -426,6 +474,19 @@ async function toggleTask(id){
       showSyncStatus("☁️ Sincronizado");
     } catch(e){ showSyncStatus("⚠️ Sin conexión"); }
   }
+}
+
+function confirmSave(){
+  pendingChanges = 0;
+  updateSaveBtn();
+  flash();
+  // Save snapshot to history log
+  saveHistorySnapshot();
+}
+
+function saveHistorySnapshot(){
+  // history is already implicit in dbCache — nothing extra needed
+  // just update the visual flash
 }
 
 // Pull all data from Firebase
@@ -475,6 +536,7 @@ function getTabTasks(){
   if(activeTab==="semana")    return TASKS.filter(t=>t.freq==="semanal");
   if(activeTab==="mes")       return TASKS.filter(t=>t.freq==="mensual");
   if(activeTab==="trimestre") return TASKS.filter(t=>t.freq==="trimestral");
+  if(activeTab==="historial") return [];
   return TASKS;
 }
 
@@ -552,7 +614,7 @@ function updateScores(){
 // ══════════════════════════════════════
 function renderBanner(){
   const el=document.getElementById("pb");
-  if(activeTab==="lista"){el.style.display="none";return;}
+  if(activeTab==="lista"||activeTab==="historial"){el.style.display="none";return;}
   el.style.display="flex";
   const d=NOW,q=Math.ceil((d.getMonth()+1)/3);
   const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
@@ -687,6 +749,118 @@ function listView(){
 }
 
 // ══════════════════════════════════════
+// HISTORY VIEW
+// ══════════════════════════════════════
+let histFilter = "todo"; // todo | daniel | nicolas
+
+function histView(){
+  // Parse all done tasks from dbCache
+  // Keys look like: td26_d1_2026-03-09
+  const entries = [];
+  for(const [k, stamp] of Object.entries(dbCache)){
+    if(!k.startsWith("td26_") || !stamp) continue;
+    // Extract task id and period
+    const parts = k.replace("td26_","").split("_");
+    const taskId = parts[0];
+    const period = parts.slice(1).join("_");
+    const task = TASKS.find(t=>t.id===taskId);
+    if(!task) continue;
+    entries.push({task, period, stamp, key:k});
+  }
+
+  if(!entries.length){
+    return `<div class="hist-empty">Sin historial todavía.<br>Empieza a marcar tareas ✅</div>`;
+  }
+
+  // Group by date/period label
+  const grouped = {};
+  for(const e of entries){
+    const label = periodLabel(e.task.freq, e.period);
+    if(!grouped[label]) grouped[label] = {label, sortKey: e.period, items:[]};
+    grouped[label].items.push(e);
+  }
+
+  // Sort groups newest first
+  const groups = Object.values(grouped).sort((a,b)=>b.sortKey.localeCompare(a.sortKey));
+
+  // Filter buttons
+  let html = `<div class="hist-filter">
+    <button class="hf-btn ${histFilter==="todo"?"on":""}" onclick="setHistFilter('todo')">Todos</button>
+    <button class="hf-btn ${histFilter==="daniel"?"on":""}" onclick="setHistFilter('daniel')">🟢 Daniel</button>
+    <button class="hf-btn ${histFilter==="nicolas"?"on":""}" onclick="setHistFilter('nicolas')">🔵 Nicolás</button>
+  </div>`;
+
+  for(const g of groups){
+    const items = g.items.filter(e=>{
+      if(histFilter==="daniel") return e.task.person==="Daniel";
+      if(histFilter==="nicolas") return e.task.person==="Nicolas";
+      return true;
+    });
+    if(!items.length) continue;
+
+    const danCount = items.filter(e=>e.task.person==="Daniel").length;
+    const nicCount = items.filter(e=>e.task.person==="Nicolas").length;
+    const totalPts = items.reduce((s,e)=>s+e.task.pts, 0);
+
+    html += `<div class="hist-day">
+      <div class="hist-day-hdr">
+        <div>
+          <div class="hist-day-title">${g.label}</div>
+          <div class="hist-day-sub">🟢 Daniel ${danCount} · 🔵 Nicolás ${nicCount} · ${totalPts} pts</div>
+        </div>
+        <div class="hist-day-badge">${items.length} tareas</div>
+      </div>`;
+
+    // Sort items within group: newest stamp first
+    items.sort((a,b)=>b.stamp.localeCompare(a.stamp));
+    for(const e of items){
+      const isDan = e.task.person==="Daniel";
+      const personColor = isDan ? "#34d399" : "#60a5fa";
+      const personLabel = isDan ? "Daniel" : "Nicolás";
+      html += `<div class="hist-item ${isDan?"hist-item-dan":"hist-item-nic"}">
+        <span class="hist-icon">${e.task.icon}</span>
+        <div class="hist-info">
+          <div class="hist-title">${e.task.title}</div>
+          <div class="hist-meta">
+            <span style="color:${personColor};font-weight:700">${personLabel}</span>
+            <span>★ ${e.task.pts} pts</span>
+            <span>⏱ ${e.task.time} min</span>
+          </div>
+        </div>
+        <div class="hist-stamp">${e.stamp}</div>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+  return html;
+}
+
+function periodLabel(freq, period){
+  if(freq==="diaria"){
+    // period = 2026-03-09
+    const [y,m,d] = period.split("-").map(Number);
+    const date = new Date(y,m-1,d);
+    return `${DAYS[date.getDay()]} ${d} ${MONTHS[m-1]}`;
+  }
+  if(freq==="semanal"){
+    // period = W2026-03-09 (monday)
+    const raw = period.replace("W","");
+    const [y,m,d] = raw.split("-").map(Number);
+    const mon = new Date(y,m-1,d);
+    const sun = new Date(mon); sun.setDate(mon.getDate()+6);
+    return `Semana ${mon.getDate()} – ${sun.getDate()} ${MONTHS[sun.getMonth()]}`;
+  }
+  if(freq==="mensual"){
+    const [y,m] = period.split("-").map(Number);
+    return `${MONTHS[m-1]} ${y}`;
+  }
+  // trimestral: 2026-Q1
+  return `Trimestre ${period.replace("-","  ")}`;
+}
+
+function setHistFilter(f){ histFilter=f; render(); }
+
+// ══════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════
 function render(){
@@ -694,15 +868,17 @@ function render(){
   document.getElementById("hdr-date").textContent=`${DAYS[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
   updateScores();
   renderBanner();
+  updateSaveBtn();
   const el=document.getElementById("content");
   if(activeTab==="lista"){el.innerHTML=listView();return;}
+  if(activeTab==="historial"){el.innerHTML=histView();return;}
   const tasks=getTabTasks();
   const byFreq={};
   for(const t of tasks)(byFreq[t.freq]=byFreq[t.freq]||[]).push(t);
   const order=["diaria","semanal","mensual","trimestral"];
   let html="";
   for(const f of order)if(byFreq[f])html+=sectionHTML(byFreq[f],SC[f].label,SC[f]);
-  el.innerHTML=html||`<div style="text-align:center;padding:40px;color:#888;font-size:13px">Sin tareas para este período 🎉</div>`;
+  el.innerHTML=html||`<div style="text-align:center;padding:40px;color:rgba(255,255,255,0.2);font-size:13px">Sin tareas para este período 🎉</div>`;
 }
 
 function setTab(t){
