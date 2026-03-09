@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TAREAS DEPTO</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;font-family:'Inter',sans-serif;color:#1a1a2e}
+body{background:#080e14;background-image:
+  radial-gradient(ellipse at 10% 0%,rgba(4,120,87,0.35) 0%,transparent 50%),
+  radial-gradient(ellipse at 90% 5%,rgba(37,99,235,0.3) 0%,transparent 50%),
+  radial-gradient(ellipse at 50% 100%,rgba(29,78,216,0.15) 0%,transparent 60%),
+  radial-gradient(ellipse at 0% 60%,rgba(6,95,70,0.12) 0%,transparent 45%);
+background-attachment:fixed}
+button{font-family:inherit;border:none;cursor:pointer}
+
+.glass{background:rgba(15,25,35,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.glass-dark{background:rgba(26,26,46,0.90);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+
+.app{max-width:680px;margin:0 auto;padding:16px 12px 60px}
+
+/* ── HEADER ── */
+.hdr{padding:18px 20px 16px;margin-bottom:14px}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.hdr-sup{font-size:10px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:3px}
+.hdr-title{font-family:'Bebas Neue',sans-serif;font-size:52px;font-weight:400;color:#fff;letter-spacing:0.06em;line-height:0.95;text-transform:uppercase;text-shadow:0 2px 20px rgba(0,0,0,0.4)}
+.hdr-date{font-size:11px;color:rgba(255,255,255,0.45);margin-top:4px;font-weight:500}
+.hdr-reset{background:rgba(255,255,255,0.09);color:rgba(255,255,255,0.55);font-size:10px;font-weight:700;padding:6px 12px;border-radius:10px;letter-spacing:0.04em}
+
+/* ── PERSON CARDS — Framer glow style ── */
+.p-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@keyframes glowDan{0%,100%{box-shadow:0 0 24px 4px rgba(52,211,153,0.35),0 0 60px 10px rgba(16,185,129,0.15)}50%{box-shadow:0 0 36px 8px rgba(52,211,153,0.55),0 0 80px 18px rgba(16,185,129,0.25)}}
+@keyframes glowNic{0%,100%{box-shadow:0 0 24px 4px rgba(96,165,250,0.35),0 0 60px 10px rgba(59,130,246,0.15)}50%{box-shadow:0 0 36px 8px rgba(96,165,250,0.55),0 0 80px 18px rgba(59,130,246,0.25)}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.pc{border-radius:20px;padding:16px 18px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.15)}
+.pc-dan{background:linear-gradient(135deg,#064e3b 0%,#065f46 40%,#047857 100%);animation:glowDan 3s ease-in-out infinite}
+.pc-nic{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 50%,#2563eb 100%);animation:glowNic 3s ease-in-out infinite}
+/* animated gradient top border */
+.pc::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;border-radius:20px 20px 0 0}
+.pc-dan::before{background:linear-gradient(90deg,transparent,#34d399,#6ee7b7,#34d399,transparent);background-size:200% 100%;animation:borderSlide 2.5s linear infinite}
+.pc-nic::before{background:linear-gradient(90deg,transparent,#60a5fa,#93c5fd,#60a5fa,transparent);background-size:200% 100%;animation:borderSlide 2.5s linear infinite}
+@keyframes borderSlide{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* subtle radial glow inside */
+.pc-dan::after{content:"";position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:140%;height:90px;background:radial-gradient(ellipse,rgba(52,211,153,0.18) 0%,transparent 70%);pointer-events:none}
+.pc-nic::after{content:"";position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:140%;height:90px;background:radial-gradient(ellipse,rgba(96,165,250,0.18) 0%,transparent 70%);pointer-events:none}
+.pc-name{font-size:18px;font-weight:900;color:#fff;letter-spacing:-0.03em;margin-bottom:3px;position:relative;z-index:1}
+.pc-score{font-size:34px;font-weight:900;letter-spacing:-0.05em;line-height:1;position:relative;z-index:1}
+.pc-dan .pc-score{color:#34d399}
+.pc-nic .pc-score{color:#60a5fa}
+.pc-score-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:10px;position:relative;z-index:1}
+/* SEGMENTED BAR */
+.pc-seg-bar{display:flex;gap:3px;margin-top:2px;position:relative;z-index:1}
+.pc-seg{height:7px;flex:1;border-radius:99px;transition:all .4s cubic-bezier(.4,0,.2,1)}
+.pc-seg.off{background:rgba(255,255,255,0.08)}
+.pc-dan .pc-seg.on{background:linear-gradient(90deg,#34d399,#6ee7b7);box-shadow:0 0 6px rgba(52,211,153,0.6)}
+.pc-nic .pc-seg.on{background:linear-gradient(90deg,#60a5fa,#93c5fd);box-shadow:0 0 6px rgba(96,165,250,0.6)}
+.pc-sub{font-size:10px;color:rgba(255,255,255,0.3);margin-top:6px;font-weight:500;position:relative;z-index:1}
+
+/* ── LIQUID 3D PROGRESS BAR ── */
+@keyframes liquidFlow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes bubbleRise{
+  0%{transform:translateY(0) scale(1);opacity:0.7}
+  100%{transform:translateY(-18px) scale(0.3);opacity:0}
+}
+@keyframes waveAnim{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+@keyframes completeSweep{
+  0%{transform:translateX(-100%);opacity:0}
+  30%{opacity:1}
+  100%{transform:translateX(300%);opacity:0}
+}
+@keyframes burstDan{
+  0%{box-shadow:0 0 0 0 rgba(52,211,153,0),0 0 0 0 rgba(52,211,153,0)}
+  30%{box-shadow:0 0 30px 8px rgba(52,211,153,0.7),0 0 60px 20px rgba(52,211,153,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(52,211,153,0),0 0 0 0 rgba(52,211,153,0)}
+}
+@keyframes burstNic{
+  0%{box-shadow:0 0 0 0 rgba(96,165,250,0),0 0 0 0 rgba(96,165,250,0)}
+  30%{box-shadow:0 0 30px 8px rgba(96,165,250,0.7),0 0 60px 20px rgba(96,165,250,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(96,165,250,0),0 0 0 0 rgba(96,165,250,0)}
+}
+@keyframes scorePopDan{0%{transform:scale(1)}40%{transform:scale(1.25);color:#6ee7b7}70%{transform:scale(0.95)}100%{transform:scale(1);color:#34d399}}
+@keyframes scorePopNic{0%{transform:scale(1)}40%{transform:scale(1.25);color:#93c5fd}70%{transform:scale(0.95)}100%{transform:scale(1);color:#60a5fa}}
+@keyframes completePulseDan{
+  0%,100%{filter:drop-shadow(0 0 4px rgba(52,211,153,0.5))}
+  50%{filter:drop-shadow(0 0 14px rgba(52,211,153,1)) drop-shadow(0 0 28px rgba(52,211,153,0.6))}
+}
+@keyframes completePulseNic{
+  0%,100%{filter:drop-shadow(0 0 4px rgba(96,165,250,0.5))}
+  50%{filter:drop-shadow(0 0 14px rgba(96,165,250,1)) drop-shadow(0 0 28px rgba(96,165,250,0.6))}
+}
+
+/* Tube shell */
+.liquid-bar-wrap{position:relative;z-index:1;margin-top:4px}
+.liquid-tube{
+  position:relative;height:18px;border-radius:99px;overflow:hidden;
+  background:rgba(0,0,0,0.35);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,0.5), inset 0 -1px 2px rgba(255,255,255,0.05), 0 1px 0 rgba(255,255,255,0.08);
+}
+/* inner fill */
+.liquid-fill{
+  position:absolute;left:0;top:0;bottom:0;
+  border-radius:99px;
+  transition:width 0.9s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+  min-width:0%;
+}
+.pc-dan .liquid-fill{
+  background:linear-gradient(90deg,#059669,#34d399,#6ee7b7,#34d399,#059669);
+  background-size:300% 100%;
+  animation:liquidFlow 3s ease infinite;
+}
+.pc-nic .liquid-fill{
+  background:linear-gradient(90deg,#1d4ed8,#3b82f6,#93c5fd,#3b82f6,#1d4ed8);
+  background-size:300% 100%;
+  animation:liquidFlow 3s ease infinite;
+}
+/* wave on top of fill */
+.liquid-wave{
+  position:absolute;top:-6px;left:0;width:200%;height:14px;
+  background:rgba(255,255,255,0.15);
+  border-radius:40%;
+  animation:waveAnim 1.8s linear infinite;
+}
+/* shine streak on top */
+.liquid-shine{
+  position:absolute;top:2px;left:5%;right:10%;height:4px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent);
+  border-radius:99px;
+  pointer-events:none;
+}
+/* bubble */
+.liquid-bubble{
+  position:absolute;border-radius:50%;background:rgba(255,255,255,0.35);
+  animation:bubbleRise 1.4s ease-in infinite;
+}
+/* outer tube gloss (top reflection) */
+.liquid-gloss{
+  position:absolute;top:0;left:0;right:0;height:7px;border-radius:99px 99px 0 0;
+  background:linear-gradient(to bottom,rgba(255,255,255,0.18),transparent);
+  pointer-events:none;z-index:2;
+}
+/* pct label */
+.liquid-pct{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-size:10px;font-weight:800;color:rgba(255,255,255,0.9);
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);letter-spacing:0.02em;
+  z-index:3;pointer-events:none;
+}
+/* complete state */
+.liquid-tube.complete-dan{animation:completePulseDan 1.8s ease-in-out infinite}
+.liquid-tube.complete-nic{animation:completePulseNic 1.8s ease-in-out infinite}
+.sweep-overlay{position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.85),transparent);border-radius:99px;pointer-events:none;animation:completeSweep 1.1s ease-out 0.05s both;z-index:4}
+.pc.burst-dan{animation:glowDan 3s ease-in-out infinite,burstDan .6s ease-out}
+.pc.burst-nic{animation:glowNic 3s ease-in-out infinite,burstNic .6s ease-out}
+.score-pop-dan{animation:scorePopDan .5s cubic-bezier(.4,0,.2,1)}
+.score-pop-nic{animation:scorePopNic .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── TABS ── */
+.tabs-card{padding:6px;margin-bottom:14px}
+.tabs{display:flex;gap:4px}
+.tab{flex:1;padding:8px 2px;border-radius:10px;font-size:11px;font-weight:700;text-align:center;color:rgba(255,255,255,0.35);background:transparent;transition:all .2s;white-space:nowrap}
+.tab.on{background:rgba(255,255,255,0.1);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12)}
+
+/* ── BANNER ── */
+.pb{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.pb-title{font-size:13px;font-weight:800;color:#fff}
+.pb-sub{font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px}
+.pb-badge{font-size:11px;font-weight:800;padding:4px 11px;border-radius:20px;background:rgba(52,211,153,0.1);color:#34d399;white-space:nowrap;border:1px solid rgba(52,211,153,0.2)}
+
+/* ── SECTIONS ── */
+.sec{margin-bottom:22px}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:14px 18px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.3)}
+.sec-lbl{font-size:20px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;display:flex;align-items:center;gap:10px;line-height:1}
+.sec-dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0;box-shadow:0 0 8px rgba(0,0,0,0.4)}
+.sec-cnt{font-size:12px;font-weight:700;opacity:0.6;white-space:nowrap}
+
+/* ── TASK GRID ── */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:440px){.tgrid{grid-template-columns:1fr}}
+
+/* ── TASK CARD ── */
+.tc{border-radius:16px;display:flex;flex-direction:column;gap:0;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);transition:opacity .2s}
+.tc.done{opacity:0.42}
+
+/* Color header bar */
+.tc-header{padding:10px 13px 8px;display:flex;align-items:center;justify-content:space-between}
+.tc-header-dan{background:linear-gradient(135deg,#1b4332,#2d6a4f)}
+.tc-header-nic{background:linear-gradient(135deg,#0d3b6e,#1a6891)}
+.tc-person-name{font-size:13px;font-weight:900;color:rgba(255,255,255,0.9);letter-spacing:-0.02em;display:flex;align-items:center;gap:5px}
+.tc-person-icon{font-size:10px;background:rgba(255,255,255,0.15);padding:2px 7px;border-radius:20px;font-weight:700;color:rgba(255,255,255,0.8)}
+.chk{width:24px;height:24px;min-width:24px;border-radius:8px;border:2px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.chk.done-dan{background:#40916c;border-color:#40916c}
+.chk.done-nic{background:#2196f3;border-color:#2196f3}
+
+/* Card body */
+.tc-body{background:rgba(12,20,30,0.85);padding:10px 13px;flex:1;display:flex;flex-direction:column;gap:7px}
+.tc-body.done-bg{background:rgba(12,20,30,0.5)}
+.tc-icon-title{display:flex;gap:8px;align-items:flex-start}
+.tc-icon{font-size:17px;line-height:1.2;flex-shrink:0}
+.tc-title{font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.9);line-height:1.4}
+.tc-title.done{text-decoration:line-through;color:rgba(255,255,255,0.3)}
+.tc-chips{display:flex;gap:3px;flex-wrap:wrap}
+.chip{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.chip-time{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)}
+.chip-pts-dan{background:rgba(52,211,153,0.15);color:#6ee7b7}
+.chip-pts-nic{background:rgba(96,165,250,0.15);color:#93c5fd}
+.chip-note{background:rgba(245,158,11,0.15);color:#fbbf24;font-size:9px}
+
+/* Verify */
+.verify{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.05)}
+.v-ok-dan{font-size:10px;font-weight:700;color:#34d399;display:flex;align-items:center;gap:4px}
+.v-ok-nic{font-size:10px;font-weight:700;color:#60a5fa;display:flex;align-items:center;gap:4px}
+.v-pending{font-size:10px;font-weight:500;color:rgba(255,255,255,0.2)}
+.v-time{font-size:9px;color:rgba(255,255,255,0.25);font-weight:500}
+
+/* Instructions */
+.inst-btn{background:rgba(255,255,255,0.04);padding:7px 13px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,0.45);text-align:left;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.05)}
+.inst-body{background:rgba(0,0,0,0.2);padding:9px 13px;border-left:3px solid rgba(255,255,255,0.1)}
+.inst-body ol{padding-left:15px}
+.inst-body li{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:1px}
+
+/* List table */
+.score-table{width:100%;border-collapse:collapse}
+.score-table th{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);padding:8px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.07)}
+.score-table td{padding:9px 10px;font-size:12px;vertical-align:middle;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.8)}
+.score-table tr:last-child td{border-bottom:none}
+.trow-dan{border-left:3px solid #34d399}
+.trow-nic{border-left:3px solid #60a5fa}
+
+/* Flash */
+.save-flash{position:fixed;bottom:20px;right:16px;background:#1b4332;color:white;font-size:12px;font-weight:700;padding:8px 16px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.2);opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
+.save-flash.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="hdr glass-dark">
+    <div class="hdr-top">
+      <div>
+        <div class="hdr-sup">Sistema de limpieza · 2026</div>
+        <div class="hdr-title">Tareas Depto</div>
+        <div class="hdr-date" id="hdr-date">—</div>
+        <div id="sync-status" style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:3px;font-weight:600">☁️ Cargando...</div>
+      </div>
+      <button class="hdr-reset" onclick="resetPeriod()">↺ Resetear</button>
+    </div>
+    <div class="p-row">
+      <div class="pc pc-dan">
+        <div class="pc-name">Daniel</div>
+        <div class="pc-score" id="dan-score">0</div>
+        <div class="pc-score-lbl">puntos · periodo actual</div>
+        <div class="liquid-bar-wrap" id="dan-bar"></div>
+        <div class="pc-sub" id="dan-sub">0/0 tareas</div>
+      </div>
+      <div class="pc pc-nic">
+        <div class="pc-name">Nicolás</div>
+        <div class="pc-score" id="nic-score">0</div>
+        <div class="pc-score-lbl">puntos · periodo actual</div>
+        <div class="liquid-bar-wrap" id="nic-bar"></div>
+        <div class="pc-sub" id="nic-sub">0/0 tareas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-card glass">
+    <div class="tabs">
+      <button class="tab on" id="tab-hoy"       onclick="setTab('hoy')">Hoy</button>
+      <button class="tab"    id="tab-semana"     onclick="setTab('semana')">Semana</button>
+      <button class="tab"    id="tab-mes"        onclick="setTab('mes')">Mes</button>
+      <button class="tab"    id="tab-trimestre"  onclick="setTab('trimestre')">Trimestre</button>
+      <button class="tab"    id="tab-lista"      onclick="setTab('lista')">Lista</button>
+    </div>
+  </div>
+
+  <!-- BANNER -->
+  <div class="pb" id="pb" style="display:none"></div>
+
+  <!-- CONTENT -->
+  <div id="content"></div>
+</div>
+
+<div class="save-flash" id="save-flash">✓ Guardado</div>
+
+<script>
+// ══════════════════════════════════════
+// TAREAS — 127 pts Daniel / 127 pts Nicolás
+// ══════════════════════════════════════
+const TASKS = [
+  // ── DIARIAS (Daniel) ──
+  {id:"d1", icon:"🛋️", title:"Ordenar futón, frazada y cojines",  freq:"diaria",     person:"Daniel",  time:5,  pts:1,  note:null,
+   steps:["Dobla la frazada y déjala sobre el futón.","Acomoda los cojines en su lugar.","Fíjate que no haya cosas tiradas encima."]},
+  {id:"d2", icon:"🌿", title:"Regar las plantas",                   freq:"diaria",     person:"Daniel",  time:5,  pts:1,  note:null,
+   steps:["Revisa que la tierra esté seca al tacto.","Riega con moderación, sin encharcar.","Saca las hojas secas que haya."]},
+  {id:"d3", icon:"🏋️", title:"Ordenar cosas del gym",              freq:"diaria",     person:"Daniel",  time:10, pts:1,  note:null,
+   steps:["Guarda ropa o toallas de entrenamiento.","Ordena mancuernas y accesorios en su lugar.","Limpia el piso de esa zona."]},
+
+  // ── SEMANALES ──
+  {id:"s1", icon:"🗑️", title:"Sacar basura y cambiar bolsa",        freq:"semanal",    person:"Daniel",  time:5,  pts:3,  note:"Inicio de semana (lun–mar)",
+   steps:["Saca la bolsa y amárrala bien.","Baja al contenedor.","Ponle bolsa nueva al tarro.","Si está cochino, lávalo en la ducha."]},
+  {id:"s2", icon:"🗑️", title:"Sacar basura y cambiar bolsa",        freq:"semanal",    person:"Nicolas", time:5,  pts:3,  note:"Mitad de semana (jue–vie)",
+   steps:["Saca la bolsa y amárrala bien.","Baja al contenedor.","Ponle bolsa nueva al tarro.","Si está cochino, lávalo en la ducha."]},
+  {id:"s3", icon:"🧹", title:"Barrer y trapear piso y alfombra",     freq:"semanal",    person:"Nicolas", time:30, pts:15, note:null,
+   steps:["Aspira o barre la alfombra para sacar polvo y pelo.","Barre el piso hacia un solo lado.","Trapea con limpiapisos diluido en agua tibia, de adentro hacia la salida."]},
+  {id:"s4", icon:"🏠", title:"Limpiar piso de la cocina",            freq:"semanal",    person:"Daniel",  time:15, pts:3,  note:null,
+   steps:["Barre bien incluyendo los rincones.","Trapea con limpiapisos.","Deja secar antes de volver a pisar."]},
+  {id:"s5", icon:"🛋️", title:"Limpiar living: mueble y tele",       freq:"semanal",    person:"Nicolas", time:20, pts:8,  note:null,
+   steps:["Pasa limpiamuebles en el sillón con paño suave.","Limpia la tele con microfibra seco (nunca líquido directo).","Saca el polvo de los bordes y atrás de la tele."]},
+  {id:"s6", icon:"⚡", title:"Limpiar cocina eléctrica",              freq:"semanal",    person:"Daniel",  time:20, pts:10, note:null,
+   steps:["Asegúrate que esté fría y apagada.","Aplica KH7 en las zonas sucias.","Frota con esponja metálica donde haya restos quemados (con cuidado de no rayar).","Pasa paño húmedo para sacar residuos y seca bien."]},
+
+  // ── MENSUALES ──
+  {id:"m1", icon:"📡", title:"Limpiar microondas por dentro y fuera", freq:"mensual",   person:"Daniel",  time:10, pts:6,  note:null,
+   steps:["Saca el plato giratorio y lávalo con agua y detergente.","Limpia el interior con KH7 y paño, de arriba hacia los lados.","Limpia el exterior con paño húmedo.","Vuelve a poner el plato giratorio seco."]},
+  {id:"m2", icon:"🍽️", title:"Limpiar lavaplatos, muebles, loza y paredes", freq:"mensual", person:"Nicolas", time:15, pts:10, note:null,
+   steps:["Aplica KH7 en el lavaplatos, la llave y el escurreplatos.","Frota con esponja y enjuaga bien.","Limpia las paredes alrededor del lavaplatos.","Pasa paño húmedo por todos los muebles de cocina por fuera."]},
+  {id:"m3", icon:"🐱", title:"Limpiar rascador de la Zoe",            freq:"mensual",   person:"Nicolas", time:10, pts:6,  note:null,
+   steps:["Saca el pelo y la mugre a mano o con cepillo.","Aplica desinfectante apto para mascotas.","Pasa paño húmedo y deja secar al aire.","Revisa si hay partes muy desgastadas."]},
+  {id:"m4", icon:"🪑", title:"Limpiar comedor: lámpara, sillas, cuadros", freq:"mensual", person:"Daniel", time:25, pts:12, note:null,
+   steps:["Limpia la lámpara con KH7 y paño (sin mojar lo eléctrico).","Limpia las sillas con KH7 y esponja, frota bien patas y respaldo.","Limpia los cuadros con limpiavidrios y microfibra.","Limpia la mesa completa."]},
+  {id:"m5", icon:"🍳", title:"Limpieza profunda cocina (paredes, campana, refri por fuera)", freq:"mensual", person:"Nicolas", time:45, pts:15, note:null,
+   steps:["Limpia las paredes con KH7 de arriba pa' abajo.","Limpia la campana y su vidrio.","Bota lo vencido del mueble de especias.","Limpia el refri por fuera con KH7, incluyendo manillas y lados."]},
+  {id:"m6", icon:"❄️", title:"Limpiar refrigerador por dentro",       freq:"mensual",   person:"Daniel",  time:30, pts:20, note:null,
+   steps:["Vacía el refri por sección.","Saca cada vidrio de compartimento y lávalo con detergente.","Limpia las paredes internas con bicarbonato.","Limpia el cajón de las verduras.","Vuelve a poner todo y revisa fechas de vencimiento."]},
+  {id:"m7", icon:"🫧", title:"Limpiar lavadora completa (mantención)", freq:"mensual",   person:"Daniel",  time:20, pts:15, note:null,
+   steps:["Saca el cajón del detergente y lávalo con agua caliente.","Limpia la goma de la puerta con vinagre.","Abre el desagüe inferior y limpia lo acumulado.","Ciclo de autolimpieza con bicarbonato + vinagre sin ropa.","Limpia el exterior con paño húmedo."]},
+
+  // ── CADA 3 MESES ──
+  {id:"t1", icon:"🪟", title:"Limpiar vidrios del living (dentro y fuera)", freq:"trimestral", person:"Nicolas", time:20, pts:35, note:null,
+   steps:["Aplica limpiavidrios en spray por dentro.","Frota con microfibra haciendo movimientos en Z.","Repite por fuera con cuidado.","Limpia los marcos con paño húmedo."]},
+  {id:"t2", icon:"🌬️", title:"Limpiar el balcón",                     freq:"trimestral", person:"Daniel",  time:60, pts:55, note:null,
+   steps:["Recoge cualquier basura o mugre del piso.","Barre bien el balcón hacia la canaleta.","Trapea con agua y limpiapisos.","Limpia la canaleta sacando hojas y suciedad.","Revisa el estado de las plantas y macetas."]},
+  {id:"t3", icon:"🔥", title:"Limpiar el horno por dentro y fuera",    freq:"trimestral", person:"Nicolas", time:60, pts:35, note:null,
+   steps:["Limpia el vidrio exterior y las manillas con limpiavidrios.","Saca las rejillas y remójalas en agua caliente con detergente.","Aplica bicarbonato + vinagre por dentro, deja 15-20 min.","Frota el interior con esponja, atención al fondo y lados.","Limpia las rejillas y vuélvelas a poner."]},
+];
+
+// ══════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════
+const SC = {
+  diaria:     {bg:"rgba(245,158,11,0.12)",  tx:"#fbbf24", dot:"#f59e0b", brd:"rgba(245,158,11,0.25)",  label:"Diaria"},
+  semanal:    {bg:"rgba(52,211,153,0.10)",  tx:"#34d399", dot:"#10b981", brd:"rgba(52,211,153,0.22)",  label:"Semanal"},
+  mensual:    {bg:"rgba(96,165,250,0.10)",  tx:"#60a5fa", dot:"#3b82f6", brd:"rgba(96,165,250,0.22)",  label:"Mensual"},
+  trimestral: {bg:"rgba(167,139,250,0.10)", tx:"#a78bfa", dot:"#8b5cf6", brd:"rgba(167,139,250,0.22)", label:"Cada 3 meses"},
+};
+const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DAYS   = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+let activeTab = "hoy";
+let openCards = {};
+const NOW = new Date();
+
+// ══════════════════════════════════════
+// ⚙️  CONFIGURACIÓN FIREBASE
+// Pega aquí la URL de tu base de datos
+// ══════════════════════════════════════
+const FIREBASE_URL = "https://console.firebase.google.com/u/0/project/tareas-depto/database/tareas-depto-default-rtdb/data/~2F"; // Ej: "https://tareas-depto-XXXXX-default-rtdb.firebaseio.com"
+
+// ══════════════════════════════════════
+// STORAGE — Firebase + localStorage fallback
+// ══════════════════════════════════════
+let dbCache = {}; // local mirror of firebase data
+let syncInterval = null;
+
+function p2(n){return String(n).padStart(2,"0")}
+function fmtDate(d){return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`}
+function weekKey(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()-((t.getDay()+6)%7));return `W${fmtDate(t)}`}
+function monthKey(d){return `${d.getFullYear()}-${p2(d.getMonth()+1)}`}
+function quarterKey(d){return `${d.getFullYear()}-Q${Math.ceil((d.getMonth()+1)/3)}`}
+function periodKey(freq,d){
+  if(freq==="diaria")return fmtDate(d);
+  if(freq==="semanal")return weekKey(d);
+  if(freq==="mensual")return monthKey(d);
+  return quarterKey(d);
+}
+function sKey(id,period){return `td26_${id}_${period}`}
+
+// Check if Firebase is configured
+function hasFirebase(){ return FIREBASE_URL && FIREBASE_URL.length > 10; }
+
+// Read from cache (mirror of cloud)
+function isTaskDone(t){ return !!dbCache[sKey(t.id,periodKey(t.freq,NOW))]; }
+function getStamp(t){ return dbCache[sKey(t.id,periodKey(t.freq,NOW))] || null; }
+
+// Write — optimistic update + push to Firebase
+async function toggleTask(id){
+  const t = TASKS.find(x=>x.id===id);
+  const k = sKey(id, periodKey(t.freq,NOW));
+  const wasDone = !!dbCache[k];
+
+  if(wasDone){
+    delete dbCache[k];
+  } else {
+    const n = new Date();
+    dbCache[k] = `${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
+  }
+
+  // Always save to localStorage as backup
+  if(wasDone) localStorage.removeItem(k);
+  else localStorage.setItem(k, dbCache[k]);
+
+  flash(); render();
+
+  // Push to Firebase if configured
+  if(hasFirebase()){
+    try {
+      const safeKey = k.replace(/[.#$\[\]]/g,'_');
+      if(wasDone){
+        await fetch(`${FIREBASE_URL}/tareas/${safeKey}.json`, {method:'DELETE'});
+      } else {
+        await fetch(`${FIREBASE_URL}/tareas/${safeKey}.json`, {
+          method:'PUT',
+          body: JSON.stringify(dbCache[k])
+        });
+      }
+      showSyncStatus("☁️ Sincronizado");
+    } catch(e){ showSyncStatus("⚠️ Sin conexión"); }
+  }
+}
+
+// Pull all data from Firebase
+async function pullFromFirebase(){
+  if(!hasFirebase()) return;
+  try {
+    const res = await fetch(`${FIREBASE_URL}/tareas.json`);
+    const data = await res.json();
+    if(data && typeof data === 'object'){
+      // Merge: cloud wins
+      dbCache = {};
+      for(const [k,v] of Object.entries(data)){
+        const realKey = k.replace(/_/g,'.').replace(/td26\./,'td26_'); // rough reverse
+        dbCache[k.replace(/_([^_]+)_([^_]+)$/,'_$1_$2')] = v;
+      }
+      // Simpler: just use the keys as-is since we stored them with _ replacement
+      dbCache = {};
+      for(const [k,v] of Object.entries(data)){
+        dbCache[k] = v;
+      }
+      render();
+      showSyncStatus("☁️ Actualizado");
+    }
+  } catch(e){ /* offline fallback to localStorage */ }
+}
+
+// Load localStorage into cache on startup
+function loadLocalStorage(){
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith('td26_')) dbCache[k] = localStorage.getItem(k);
+  }
+}
+
+function showSyncStatus(msg){
+  const el = document.getElementById("sync-status");
+  if(el){ el.textContent = msg; setTimeout(()=>el.textContent = hasFirebase()?"☁️ En línea":"💾 Solo local", 2500); }
+}
+
+function flash(){const e=document.getElementById("save-flash");e.classList.add("show");setTimeout(()=>e.classList.remove("show"),2000)}
+
+// ══════════════════════════════════════
+// TAB TASKS
+// ══════════════════════════════════════
+function getTabTasks(){
+  if(activeTab==="hoy")       return TASKS.filter(t=>t.freq==="diaria");
+  if(activeTab==="semana")    return TASKS.filter(t=>t.freq==="semanal");
+  if(activeTab==="mes")       return TASKS.filter(t=>t.freq==="mensual");
+  if(activeTab==="trimestre") return TASKS.filter(t=>t.freq==="trimestral");
+  return TASKS;
+}
+
+// ══════════════════════════════════════
+// SCORES
+// ══════════════════════════════════════
+let _prevDanDone=-1, _prevNicDone=-1;
+
+function segBar(containerId, done, total, person){
+  const wrap=document.getElementById(containerId); if(!wrap)return;
+  const isDan=person==="Daniel";
+  const pct=total>0?Math.round(done/total*100):0;
+  const isComplete=total>0&&done>=total;
+  const completeCls=isDan?"complete-dan":"complete-nic";
+
+  // Build bubble HTML (3 bubbles at random positions)
+  const bubbles=[
+    {left:"15%",size:"4px",delay:"0s",dur:"1.6s"},
+    {left:"40%",size:"3px",delay:"0.5s",dur:"1.3s"},
+    {left:"65%",size:"5px",delay:"0.9s",dur:"1.8s"},
+  ].map(b=>`<div class="liquid-bubble" style="left:${b.left};bottom:2px;width:${b.size};height:${b.size};animation-duration:${b.dur};animation-delay:${b.delay}"></div>`).join("");
+
+  wrap.innerHTML=`
+    <div class="liquid-tube ${isComplete?completeCls:""}">
+      <div class="liquid-fill" style="width:${pct}%">
+        <div class="liquid-wave"></div>
+        <div class="liquid-shine"></div>
+        ${bubbles}
+      </div>
+      <div class="liquid-gloss"></div>
+      <div class="liquid-pct">${pct}%</div>
+    </div>`;
+
+  // complete sweep
+  if(isComplete){
+    const tube=wrap.querySelector(".liquid-tube");
+    const s=document.createElement("div"); s.className="sweep-overlay";
+    tube.appendChild(s);
+    setTimeout(()=>{if(s.parentNode)s.parentNode.removeChild(s);},1400);
+  }
+
+  // burst + score pop on newly completed
+  const prev=isDan?_prevDanDone:_prevNicDone;
+  if(isComplete&&prev>=0&&prev!==done){
+    const card=wrap.closest(".pc");
+    const bCls=isDan?"burst-dan":"burst-nic";
+    card.classList.remove(bCls); void card.offsetWidth; card.classList.add(bCls);
+    setTimeout(()=>card.classList.remove(bCls),700);
+    const scoreEl=document.getElementById(isDan?"dan-score":"nic-score");
+    const pCls=isDan?"score-pop-dan":"score-pop-nic";
+    scoreEl.classList.remove(pCls); void scoreEl.offsetWidth; scoreEl.classList.add(pCls);
+    setTimeout(()=>scoreEl.classList.remove(pCls),600);
+  }
+  if(isDan)_prevDanDone=done; else _prevNicDone=done;
+}
+
+function updateScores(){
+  const tasks=getTabTasks();
+  let dD=0,dT=0,dP=0,dTP=0,nD=0,nT=0,nP=0,nTP=0;
+  for(const t of tasks){
+    const done=isTaskDone(t);
+    if(t.person==="Daniel"){dT++;dTP+=t.pts;if(done){dD++;dP+=t.pts;}}
+    else                   {nT++;nTP+=t.pts;if(done){nD++;nP+=t.pts;}}
+  }
+  document.getElementById("dan-score").textContent=dP;
+  document.getElementById("dan-sub").textContent=`${dD}/${dT} tareas · ${dTP} pts totales`;
+  document.getElementById("nic-score").textContent=nP;
+  document.getElementById("nic-sub").textContent=`${nD}/${nT} tareas · ${nTP} pts totales`;
+  segBar("dan-bar",dD,dT,"Daniel");
+  segBar("nic-bar",nD,nT,"Nicolas");
+}
+
+// ══════════════════════════════════════
+// BANNER
+// ══════════════════════════════════════
+function renderBanner(){
+  const el=document.getElementById("pb");
+  if(activeTab==="lista"){el.style.display="none";return;}
+  el.style.display="flex";
+  const d=NOW,q=Math.ceil((d.getMonth()+1)/3);
+  const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const cfg={
+    hoy:      {title:`${DAYS[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]}`,      sub:"Tareas diarias — Daniel",                   badge:"Hoy"},
+    semana:   {title:`${mon.getDate()} – ${sun.getDate()} ${MONTHS[sun.getMonth()]}`,       sub:"Cada uno elige cuándo hacerla esta semana",  badge:"Semana"},
+    mes:      {title:MONTHS[d.getMonth()],                                                   sub:"Cada uno elige cuándo hacerla este mes",     badge:`${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()}`},
+    trimestre:{title:`Q${q} · ${MONTHS[(q-1)*3].slice(0,3)}–${MONTHS[q*3-1].slice(0,3)}`,  sub:"Cada uno elige cuándo hacerla este trimestre",badge:`Q${q} ${d.getFullYear()}`},
+  }[activeTab];
+  el.innerHTML=`<div><div class="pb-title">${cfg.title}</div><div class="pb-sub">${cfg.sub}</div></div><div class="pb-badge">${cfg.badge}</div>`;
+}
+
+// ══════════════════════════════════════
+// TASK CARD
+// ══════════════════════════════════════
+function cardHTML(t){
+  const done =isTaskDone(t);
+  const stamp=getStamp(t);
+  const isOpen=!!openCards[t.id];
+  const isDan=t.person==="Daniel";
+  const label=isDan?"Daniel":"Nicolás";
+  const hdrCls=isDan?"tc-header-dan":"tc-header-nic";
+  const chkCls=done?(isDan?"done-dan":"done-nic"):"";
+  const ptsCls=isDan?"chip-pts-dan":"chip-pts-nic";
+  const vCls  =isDan?"v-ok-dan":"v-ok-nic";
+  const tick=`<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5L4.5 8.5L9.5 2.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const tickV=`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5L4 8L9 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  return `<div class="tc ${done?"done":""}">
+    <!-- colored header -->
+    <div class="tc-header ${hdrCls}">
+      <div class="tc-person-name">
+        ${label}
+        <span class="tc-person-icon">${t.pts} pts</span>
+      </div>
+      <button class="chk ${chkCls}" onclick="toggleTask('${t.id}')">${done?tick:""}</button>
+    </div>
+    <!-- white body -->
+    <div class="tc-body${done?" done-bg":""}">
+      <div class="tc-icon-title">
+        <span class="tc-icon">${t.icon}</span>
+        <div class="tc-title${done?" done":""}">${t.title}</div>
+      </div>
+      <div class="tc-chips">
+        <span class="chip chip-time">⏱ ${t.time} min</span>
+        ${t.note?`<span class="chip chip-note">📅 ${t.note}</span>`:""}
+      </div>
+    </div>
+    <!-- verify strip -->
+    <div class="verify">
+      ${done
+        ?`<span class="${vCls}">${tickV} Hecho</span><span class="v-time">${stamp}</span>`
+        :`<span class="v-pending">Pendiente</span><span class="v-time">—</span>`}
+    </div>
+    <!-- instructions -->
+    <button class="inst-btn" onclick="openCard('${t.id}')">
+      📋 ${isOpen?"Ocultar":"Instrucciones"}
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="transform:${isOpen?"rotate(180deg)":"rotate(0)"};transition:.25s;flex-shrink:0">
+        <path d="M2 4L5.5 7.5L9 4" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    ${isOpen?`<div class="inst-body"><ol>${t.steps.map(s=>`<li>${s}</li>`).join("")}</ol></div>`:""}
+  </div>`;
+}
+
+function sectionHTML(tasks,label,sc){
+  if(!tasks.length)return "";
+  const doneC=tasks.filter(t=>isTaskDone(t)).length;
+  const ptsD =tasks.filter(t=>isTaskDone(t)).reduce((s,t)=>s+t.pts,0);
+  const ptsT =tasks.reduce((s,t)=>s+t.pts,0);
+  return `<div class="sec">
+    <div class="sec-hdr" style="background:${sc.bg};border:2px solid ${sc.brd}">
+      <div class="sec-lbl" style="color:${sc.tx}"><span class="sec-dot" style="background:${sc.dot}"></span>${label}</div>
+      <span class="sec-cnt" style="color:${sc.tx}">${doneC}/${tasks.length} · ${ptsD}/${ptsT} pts</span>
+    </div>
+    <div class="tgrid">${tasks.map(cardHTML).join("")}</div>
+  </div>`;
+}
+
+// ══════════════════════════════════════
+// LIST VIEW
+// ══════════════════════════════════════
+function listView(){
+  const freqs=["diaria","semanal","mensual","trimestral"];
+  let html="";
+  for(const f of freqs){
+    const tasks=TASKS.filter(t=>t.freq===f);
+    const sc=SC[f];
+    const dPts=tasks.filter(t=>t.person==="Daniel").reduce((s,t)=>s+t.pts,0);
+    const nPts=tasks.filter(t=>t.person==="Nicolas").reduce((s,t)=>s+t.pts,0);
+    html+=`<div class="sec">
+      <div class="sec-hdr">
+        <div class="sec-lbl" style="color:${sc.tx}"><span class="sec-dot" style="background:${sc.dot}"></span>${sc.label}</div>
+        <span class="sec-cnt">🟢 Dan ${dPts} · 🔵 Nico ${nPts} pts</span>
+      </div>
+      <div class="glass" style="overflow:hidden;border-radius:16px;padding:4px 0">
+        <table class="score-table"><thead><tr>
+          <th>Tarea</th><th>Quién</th><th style="text-align:center">Min</th><th style="text-align:center">Pts</th>
+        </tr></thead><tbody>
+        ${tasks.map(t=>{
+          const isDan=t.person==="Daniel";
+          return `<tr class="${isDan?"trow-dan":"trow-nic"}">
+            <td><span style="margin-right:5px">${t.icon}</span><span style="font-weight:600;font-size:12px">${t.title}</span>
+              ${t.note?`<br><span style="font-size:9px;color:#856404;background:#fff3cd;padding:1px 5px;border-radius:10px;margin-top:2px;display:inline-block">${t.note}</span>`:""}
+            </td>
+            <td><span style="font-size:12px;font-weight:800;color:${isDan?"#34d399":"#60a5fa"}">${isDan?"Daniel":"Nicolás"}</span></td>
+            <td style="text-align:center;color:rgba(255,255,255,0.4);font-size:12px">${t.time}</td>
+            <td style="text-align:center;font-weight:900;font-size:14px;color:${isDan?"#40916c":"#2196f3"}">${t.pts}</td>
+          </tr>`;
+        }).join("")}
+        </tbody></table>
+      </div>
+    </div>`;
+  }
+  const dTot=TASKS.filter(t=>t.person==="Daniel").reduce((s,t)=>s+t.pts,0);
+  const nTot=TASKS.filter(t=>t.person==="Nicolas").reduce((s,t)=>s+t.pts,0);
+  html+=`<div class="glass" style="padding:16px;margin-bottom:10px">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:12px">Puntaje total · ciclo completo</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:linear-gradient(135deg,#064e3b,#047857);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(52,211,153,0.2)">
+        <div style="font-size:32px;font-weight:900;color:#34d399">${dTot}</div>
+        <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:2px">Daniel</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1e3a8a,#1d4ed8);border-radius:14px;padding:14px;text-align:center;border:1px solid rgba(96,165,250,0.2)">
+        <div style="font-size:32px;font-weight:900;color:#60a5fa">${nTot}</div>
+        <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.6);margin-top:2px">Nicolás</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;text-align:center;font-size:10px;color:rgba(255,255,255,0.2)">Más puntos = tarea más exigente en tiempo y dificultad</div>
+  </div>`;
+  return html;
+}
+
+// ══════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════
+function render(){
+  const d=NOW;
+  document.getElementById("hdr-date").textContent=`${DAYS[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  updateScores();
+  renderBanner();
+  const el=document.getElementById("content");
+  if(activeTab==="lista"){el.innerHTML=listView();return;}
+  const tasks=getTabTasks();
+  const byFreq={};
+  for(const t of tasks)(byFreq[t.freq]=byFreq[t.freq]||[]).push(t);
+  const order=["diaria","semanal","mensual","trimestral"];
+  let html="";
+  for(const f of order)if(byFreq[f])html+=sectionHTML(byFreq[f],SC[f].label,SC[f]);
+  el.innerHTML=html||`<div style="text-align:center;padding:40px;color:#888;font-size:13px">Sin tareas para este período 🎉</div>`;
+}
+
+function setTab(t){
+  activeTab=t;
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("on"));
+  document.getElementById("tab-"+t).classList.add("on");
+  render();
+}
+function openCard(id){openCards[id]=!openCards[id];render();}
+function resetPeriod(){
+  const lbl={hoy:"de hoy",semana:"de esta semana",mes:"de este mes",trimestre:"de este trimestre",lista:"de todo"}[activeTab];
+  if(!confirm(`¿Resetear las tareas ${lbl}?`))return;
+  const tasks=getTabTasks();
+  for(const t of tasks){
+    const k=sKey(t.id,periodKey(t.freq,NOW));
+    delete dbCache[k];
+    localStorage.removeItem(k);
+    if(hasFirebase()){
+      const safeKey=k.replace(/[.#$\[\]]/g,'_');
+      fetch(`${FIREBASE_URL}/tareas/${safeKey}.json`,{method:'DELETE'}).catch(()=>{});
+    }
+  }
+  flash();render();
+}
+
+// Startup
+loadLocalStorage();
+render();
+if(hasFirebase()){
+  pullFromFirebase();
+  setInterval(pullFromFirebase, 30000);
+} else {
+  setTimeout(()=>showSyncStatus("💾 Sin Firebase — solo local"),500);
+}
+</script>
+</body>
+</html>
