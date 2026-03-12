@@ -1123,7 +1123,19 @@ async function openCamera(taskId){
   $("cam-shutter").style.display="";
   $("cam-flip").style.display="";
   $("cam-overlay").classList.remove("hidden");
-  await startStream();
+
+  // iOS Safari: try getUserMedia, if black/fails → use file input
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if(isIOS){
+    // On iOS use native file input with camera capture — 100% reliable
+    const fi = $("cam-file");
+    if(fi){ fi.accept="image/*"; fi.capture="environment"; fi.click(); }
+    $("cam-video").style.display="none";
+    $("cam-flip").style.display="none";
+  } else {
+    await startStream();
+  }
 }
 async function startStream(){
   stopStream();
