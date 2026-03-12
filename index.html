@@ -1127,14 +1127,26 @@ async function openCamera(taskId){
 }
 async function startStream(){
   stopStream();
+  const vid = $("cam-video");
   try{
-    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFacingMode,width:{ideal:1280},height:{ideal:960}},audio:false});
-    const vid=$("cam-video");
-    vid.srcObject=camStream; vid.style.display="";
+    // iOS Safari: avoid width/height constraints which can fail
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video:{ facingMode: camFacingMode },
+      audio: false
+    });
+    vid.srcObject = camStream;
+    vid.style.display = "";
+    $("cam-flip").style.display = "";
+    $("cam-shutter").style.display = "";
+    // iOS REQUIRES explicit .play() after srcObject
+    try{ await vid.play(); }catch(pe){ console.warn("play():", pe); }
   }catch(e){
-    $("cam-video").style.display="none";
-    $("cam-flip").style.display="none";
-    $("cam-file").click();
+    console.warn("Camera error:", e.name, e.message);
+    vid.style.display = "none";
+    $("cam-flip").style.display = "none";
+    // Fallback: file picker
+    const fi = $("cam-file");
+    if(fi){ fi.click(); }
   }
 }
 function stopStream(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
