@@ -1112,27 +1112,30 @@ function toggleTask(id){
 }
 
 async function openCamera(taskId){
-  camTaskId=taskId; capturedDataUrl=null;
-  const t=taskById(taskId);
-  $("cam-task-label").textContent=t.icon+" "+t.title;
-  $("cam-task-name").textContent=t.icon+" "+t.title;
-  const prev=$("cam-preview");
-  prev.classList.remove("show"); prev.src="";
+  camTaskId = taskId;
+  capturedDataUrl = null;
+  // Persist across iOS page suspension
+  sessionStorage.setItem("pendingCamTask", taskId);
+  sessionStorage.setItem("pendingCamType", "task");
+
+  const t = taskById(taskId);
+  $("cam-task-label").textContent = t.icon+" "+t.title;
+  $("cam-task-name").textContent  = t.icon+" "+t.title;
+  const prev = $("cam-preview");
+  prev.classList.remove("show"); prev.src = "";
   $("cam-confirm").classList.remove("show");
   $("cam-retake").classList.remove("show");
-  $("cam-shutter").style.display="";
-  $("cam-flip").style.display="";
+  $("cam-shutter").style.display = "";
+  $("cam-flip").style.display    = "";
   $("cam-overlay").classList.remove("hidden");
 
-  // iOS Safari: try getUserMedia, if black/fails → use file input
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if(isIOS){
-    // On iOS use native file input with camera capture — 100% reliable
     const fi = $("cam-file");
-    if(fi){ fi.accept="image/*"; fi.capture="environment"; fi.click(); }
-    $("cam-video").style.display="none";
-    $("cam-flip").style.display="none";
+    if(fi){ fi.accept = "image/*"; fi.capture = "environment"; fi.click(); }
+    $("cam-video").style.display = "none";
+    $("cam-flip").style.display  = "none";
   } else {
     await startStream();
   }
@@ -1175,24 +1178,40 @@ function capturePhoto(){
   showPreview(capturedDataUrl);
 }
 function handleFilePhoto(e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const img=new Image();
-    img.onload=()=>{
-      const canvas=document.createElement("canvas");
-      const scale=Math.min(1,640/img.width);
-      canvas.width=Math.round(img.width*scale);
-      canvas.height=Math.round(img.height*scale);
-      canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-      capturedDataUrl=canvas.toDataURL("image/jpeg",0.5);
-      showPreview(capturedDataUrl);
+  const file = e.target.files[0];
+  if(!file){ e.target.value=""; return; }
+
+  // Restore camTaskId in case iOS suspended the page
+  if(!camTaskId){
+    camTaskId = sessionStorage.getItem("pendingCamTask") || null;
+  }
+  const taskType = sessionStorage.getItem("pendingCamType") || "task";
+
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const scale  = Math.min(1, 640/img.width);
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      capturedDataUrl = canvas.toDataURL("image/jpeg", 0.5);
+
+      // Show preview and make overlay visible
+      stopStream();
+      $("cam-video").style.display = "none";
+      const prev = $("cam-preview");
+      prev.src = capturedDataUrl; prev.classList.add("show");
+      $("cam-shutter").style.display = "none";
+      $("cam-retake").classList.add("show");
+      $("cam-confirm").classList.add("show");
       $("cam-overlay").classList.remove("hidden");
     };
-    img.src=ev.target.result;
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
-  e.target.value="";
+  e.target.value = "";
 }
 function showPreview(dataUrl){
   stopStream();
@@ -1213,18 +1232,41 @@ function retakePhoto(){
   startStream();
 }
 function confirmPhoto(){
-  if(!capturedDataUrl||!camTaskId)return;
+  if(!capturedDataUrl) return;
+  // Restore from sessionStorage if iOS cleared JS state
+  if(!camTaskId) camTaskId = sessionStorage.getItem("pendingCamTask");
+  if(!camTaskId) return;
+
   stopStream();
   $("cam-overlay").classList.add("hidden");
-  const t=taskById(camTaskId);
-  const k=sKey(camTaskId,periodKey(t.freq,NOW));
-  const n=new Date();
-  const stamp=`${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
-  dbCache[k]=stamp; localStorage.setItem(k,stamp);
-  photoCache[k]=capturedDataUrl;
-  try{localStorage.setItem("td26_photo_"+k,capturedDataUrl);}catch(e){}
-  render();
-  schedulePush(); // auto-sync
+
+  const isZoe = camTaskId.startsWith("__zoe__");
+  if(isZoe){
+    // Delegate to zoe confirm
+    const zId = camTaskId.replace("__zoe__","");
+    const t = zoeById(zId);
+    if(!t){ camTaskId=null; capturedDataUrl=null; return; }
+    const k = "zoe_"+zId+"_"+periodKey(t.freq, NOW);
+    const n = new Date();
+    const stamp = `${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
+    dbCache[k]=stamp; localStorage.setItem(k,stamp);
+    photoCache[k]=capturedDataUrl;
+    try{localStorage.setItem("td26_photo_"+k,capturedDataUrl);}catch(e){}
+    renderZoeModule();
+  } else {
+    const t = taskById(camTaskId);
+    if(!t){ camTaskId=null; capturedDataUrl=null; return; }
+    const k = sKey(camTaskId, periodKey(t.freq, NOW));
+    const n = new Date();
+    const stamp = `${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
+    dbCache[k]=stamp; localStorage.setItem(k,stamp);
+    photoCache[k]=capturedDataUrl;
+    try{localStorage.setItem("td26_photo_"+k,capturedDataUrl);}catch(e){}
+    render();
+  }
+  schedulePush();
+  sessionStorage.removeItem("pendingCamTask");
+  sessionStorage.removeItem("pendingCamType");
   camTaskId=null; capturedDataUrl=null;
 }
 function closeCamera(){stopStream();$("cam-overlay").classList.add("hidden");camTaskId=null;capturedDataUrl=null;}
@@ -1961,21 +2003,34 @@ function toggleZoe(id){
 }
 
 let zoeCamTaskId = null;
-function openCameraZoe(taskId){
+async function openCameraZoe(taskId){
   zoeCamTaskId = taskId;
+  camTaskId    = "__zoe__"+taskId;
+  capturedDataUrl = null;
+  sessionStorage.setItem("pendingCamTask", "__zoe__"+taskId);
+  sessionStorage.setItem("pendingCamType", "zoe");
+
   const t = zoeById(taskId);
-  // reuse camTaskId mechanism but flag as zoe
-  camTaskId = "__zoe__"+taskId;
   $("cam-task-label").textContent = "🐱 Zoe · "+t.title;
-  $("cam-task-name").textContent = "🐱 "+t.title;
+  $("cam-task-name").textContent  = "🐱 "+t.title;
   const prev = $("cam-preview");
-  prev.classList.remove("show"); prev.src="";
+  prev.classList.remove("show"); prev.src = "";
   $("cam-confirm").classList.remove("show");
   $("cam-retake").classList.remove("show");
-  $("cam-shutter").style.display="";
-  $("cam-flip").style.display="";
+  $("cam-shutter").style.display = "";
+  $("cam-flip").style.display    = "";
   $("cam-overlay").classList.remove("hidden");
-  startStream();
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if(isIOS){
+    const fi = $("cam-file");
+    if(fi){ fi.accept = "image/*"; fi.capture = "environment"; fi.click(); }
+    $("cam-video").style.display = "none";
+    $("cam-flip").style.display  = "none";
+  } else {
+    await startStream();
+  }
 }
 
 // Override confirmPhoto to handle Zoe tasks
