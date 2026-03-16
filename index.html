@@ -969,6 +969,28 @@ button:active { transform:scale(.94) }
 
 
 
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" style="
+  position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 80px); left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--s3); border:1px solid var(--b2);
+  border-radius:16px; padding:12px 16px;
+  display:flex; align-items:center; gap:12px;
+  font-size:13px; font-weight:600; color:var(--t1);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  opacity:0; transition:opacity .25s, transform .25s;
+  pointer-events:none; z-index:9999; white-space:nowrap;
+  min-width:200px; max-width:90vw;
+">
+  <span id="toast-msg">✓ Tarea guardada</span>
+  <button id="toast-undo" onclick="toastUndo()" style="
+    display:none; background:rgba(61,255,163,.12); border:1px solid rgba(61,255,163,.3);
+    color:var(--d); font-size:11px; font-weight:800; border-radius:9px;
+    padding:5px 10px; cursor:pointer; flex-shrink:0;
+  ">Deshacer</button>
+</div>
+
 <script>
 // ── Tiny DOM helper ──
 const $=id=>document.getElementById(id);
@@ -1098,14 +1120,23 @@ let capturedDataUrl = null;
 function updateSaveBtn(){ /* auto-save active — no save button */ }
 
 function toggleTask(id){
-  const t=taskById(id);
-  const k=sKey(id,periodKey(t.freq,NOW));
-  const wasDone=!!dbCache[k];
+  const t = taskById(id);
+  const k = sKey(id, periodKey(t.freq, NOW));
+  const wasDone = !!dbCache[k];
   if(wasDone){
+    // Save backup for undo
+    const stampBak = dbCache[k];
+    const photoBak = photoCache[k] || localStorage.getItem("td26_photo_"+k);
     delete dbCache[k]; localStorage.removeItem(k);
     delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
     render();
     schedulePush();
+    showToast("↩ Tarea desmarcada", ()=>{
+      // UNDO: restore task
+      dbCache[k] = stampBak; localStorage.setItem(k, stampBak);
+      if(photoBak){ photoCache[k]=photoBak; try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){} }
+      render(); schedulePush();
+    });
   } else {
     openCamera(id);
   }
@@ -1219,15 +1250,27 @@ function autoConfirmPhoto(taskId, dataUrl){
   const n = new Date();
   const stamp = `${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
 
+  const _savedTaskId = taskId;
+
   if(isZoe){
     const zId = taskId.replace("__zoe__","");
     const t = zoeById(zId);
     if(!t) return;
-    const k = "zoe_"+zId+"_"+periodKey(t.freq, NOW);
+    const k = zoeKey(zId);              // ← usa zoeKey() para key consistente
     dbCache[k]=stamp; localStorage.setItem(k, stamp);
     photoCache[k]=dataUrl;
     try{ localStorage.setItem("td26_photo_"+k, dataUrl); }catch(err){}
     renderZoeModule();
+    schedulePush();
+    sessionStorage.removeItem("pendingCamTask");
+    sessionStorage.removeItem("pendingCamType");
+    camTaskId = null; capturedDataUrl = null;
+    showToast("✓ Zoe guardada 🐱", ()=>{
+      const k2 = zoeKey(zId);
+      delete dbCache[k2]; localStorage.removeItem(k2);
+      delete photoCache[k2]; localStorage.removeItem("td26_photo_"+k2);
+      renderZoeModule(); schedulePush();
+    });
   } else {
     const t = taskById(taskId);
     if(!t) return;
@@ -1236,20 +1279,18 @@ function autoConfirmPhoto(taskId, dataUrl){
     photoCache[k]=dataUrl;
     try{ localStorage.setItem("td26_photo_"+k, dataUrl); }catch(err){}
     render();
-  }
-
-  schedulePush();
-  sessionStorage.removeItem("pendingCamTask");
-  sessionStorage.removeItem("pendingCamType");
-  camTaskId = null;
-  capturedDataUrl = null;
-
-  // Brief visual feedback
-  const pill = $("sync-status-pill");
-  if(pill){
-    const orig = pill.style.background;
-    pill.style.background = "rgba(61,255,163,.2)";
-    setTimeout(()=>{ pill.style.background = orig; }, 800);
+    schedulePush();
+    sessionStorage.removeItem("pendingCamTask");
+    sessionStorage.removeItem("pendingCamType");
+    camTaskId = null; capturedDataUrl = null;
+    showToast("✓ Tarea guardada 🎉", ()=>{
+      const t2 = taskById(_savedTaskId);
+      if(!t2) return;
+      const k2 = sKey(_savedTaskId, periodKey(t2.freq, NOW));
+      delete dbCache[k2]; localStorage.removeItem(k2);
+      delete photoCache[k2]; localStorage.removeItem("td26_photo_"+k2);
+      render(); schedulePush();
+    });
   }
 }
 function showPreview(dataUrl){
@@ -2032,10 +2073,17 @@ function toggleZoe(id){
   const k = zoeKey(id);
   const wasDone = !!dbCache[k];
   if(wasDone){
+    const stampBak = dbCache[k];
+    const photoBak = photoCache[k] || localStorage.getItem("td26_photo_"+k);
     delete dbCache[k]; localStorage.removeItem(k);
     delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
     renderZoeModule();
-    schedulePush(); // ← sincroniza el desmarque
+    schedulePush();
+    showToast("↩ Zoe desmarcada", ()=>{
+      dbCache[k]=stampBak; localStorage.setItem(k, stampBak);
+      if(photoBak){ photoCache[k]=photoBak; try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){} }
+      renderZoeModule(); schedulePush();
+    });
   } else {
     openCameraZoe(id);
   }
@@ -2219,6 +2267,38 @@ function calendarioView(){
 // ── Push: debounced 2s after any change                       ──
 // ── Pull: on load + on tab focus + every 30s                  ──
 // ══════════════════════════════════════════════════════════════
+
+
+// ── TOAST ─────────────────────────────────────────────────
+let _toastTimer = null;
+let _toastUndoFn = null;
+
+function showToast(msg, undoFn, duration=3000){
+  const el    = $("toast");
+  const msgEl = $("toast-msg");
+  const undoEl= $("toast-undo");
+  if(!el) return;
+  clearTimeout(_toastTimer);
+  _toastUndoFn = undoFn || null;
+  msgEl.textContent = msg;
+  undoEl.style.display = undoFn ? "block" : "none";
+  el.style.opacity   = "1";
+  el.style.transform = "translateX(-50%) translateY(0)";
+  el.style.pointerEvents = "auto";
+  _toastTimer = setTimeout(hideToast, duration);
+}
+function hideToast(){
+  const el = $("toast");
+  if(!el) return;
+  el.style.opacity   = "0";
+  el.style.transform = "translateX(-50%) translateY(20px)";
+  el.style.pointerEvents = "none";
+  _toastUndoFn = null;
+}
+function toastUndo(){
+  if(_toastUndoFn){ _toastUndoFn(); }
+  hideToast();
+}
 
 // ══════════════════════════════════════════════════════════
 // ☁️  AUTO-SYNC — Firebase Realtime Database REST
