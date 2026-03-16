@@ -970,6 +970,36 @@ button:active { transform:scale(.94) }
 
 
 
+<!-- RESET CONFIRM MODAL -->
+<div id="reset-modal" class="hidden" style="
+  position:fixed; inset:0; z-index:9998;
+  background:rgba(6,6,10,.85); backdrop-filter:blur(16px);
+  display:flex; align-items:flex-end; justify-content:center;
+">
+  <div style="
+    width:100%; max-width:480px;
+    background:var(--s2); border:1px solid var(--b2);
+    border-top:2px solid rgba(255,107,107,.4);
+    border-radius:28px 28px 0 0;
+    padding:28px 22px max(env(safe-area-inset-bottom,0px),28px);
+  ">
+    <div style="font-size:28px; margin-bottom:12px; text-align:center">🔄</div>
+    <div style="font-size:17px; font-weight:800; color:var(--t1); text-align:center; margin-bottom:8px">Resetear período</div>
+    <div id="reset-modal-msg" style="font-size:13px; color:var(--t3); text-align:center; margin-bottom:24px">¿Resetear las tareas?</div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="document.getElementById('reset-modal').classList.add('hidden')" style="
+        flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:700;
+        background:var(--s4); border:1px solid var(--b2); color:var(--t2); cursor:pointer;
+      ">Cancelar</button>
+      <button onclick="confirmReset()" style="
+        flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:800;
+        background:rgba(255,107,107,.15); border:1px solid rgba(255,107,107,.4);
+        color:#ff6b6b; cursor:pointer;
+      ">Sí, resetear</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST NOTIFICATION -->
 <div id="toast" style="
   position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 80px); left:50%;
@@ -1124,16 +1154,14 @@ function toggleTask(id){
   const k = sKey(id, periodKey(t.freq, NOW));
   const wasDone = !!dbCache[k];
   if(wasDone){
-    // Save backup for undo
     const stampBak = dbCache[k];
     const photoBak = photoCache[k] || localStorage.getItem("td26_photo_"+k);
-    delete dbCache[k]; localStorage.removeItem(k);
+    deleteKey(k);                              // ← tombstone-aware delete
     delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
-    render();
-    schedulePush();
+    render(); schedulePush();
     showToast("↩ Tarea desmarcada", ()=>{
-      // UNDO: restore task
       dbCache[k] = stampBak; localStorage.setItem(k, stampBak);
+      delete _tombstones[k];                   // cancel tombstone on undo
       if(photoBak){ photoCache[k]=photoBak; try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){} }
       render(); schedulePush();
     });
@@ -1289,7 +1317,7 @@ function autoConfirmPhoto(taskId, dataUrl){
       const k2 = sKey(_savedTaskId, periodKey(t2.freq, NOW));
       delete dbCache[k2]; localStorage.removeItem(k2);
       delete photoCache[k2]; localStorage.removeItem("td26_photo_"+k2);
-      render(); schedulePush();
+      deleteKey(k2); render(); schedulePush();
     });
   }
 }
@@ -1920,16 +1948,36 @@ function setTab(t){
 }
 function openCard(id){openCards[id]=!openCards[id];render();}
 function resetPeriod(){
-  const lbl={hoy:"de hoy",semana:"de esta semana",mes:"de este mes",trimestre:"de este trimestre",lista:"de todo",historial:"",horario:"",calendario:""}[activeTab]
-  if(!confirm(`¿Resetear las tareas ${lbl}?`))return;
-  const tasks=activeTab==="lista"?TASKS:getTabTasks();
+  const lbl={hoy:"de hoy",semana:"de esta semana",mes:"de este mes",trimestre:"de este trimestre",lista:"de todo",historial:"",horario:"",calendario:""}[activeTab];
+  showResetModal(lbl);
+}
+
+function confirmReset(){
+  $('reset-modal').classList.add('hidden');
+  const tasks = activeTab==="lista" ? TASKS : getTabTasks();
   for(const t of tasks){
-    const k=tKey(t);
-    delete dbCache[k];localStorage.removeItem(k);
-    delete photoCache[k];localStorage.removeItem("td26_photo_"+k);
-    // (deleted from localStorage + dbCache)
+    const k = tKey(t);
+    deleteKey(k);                              // tombstone-aware
+    delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
   }
-  flash();render();schedulePush();
+  // Also reset zoe tasks if in lista view
+  if(activeTab==="lista"){
+    for(const t of ZOE_TASKS){
+      const k = zoeKey(t.id);
+      deleteKey(k);
+      delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
+    }
+    renderZoeModule();
+  }
+  render(); schedulePush();
+  showToast("🔄 Período reseteado");
+}
+
+function showResetModal(lbl){
+  const modal = $("reset-modal");
+  const msg   = $("reset-modal-msg");
+  if(msg) msg.textContent = `¿Resetear todas las tareas ${lbl||''}?`;
+  if(modal) modal.classList.remove("hidden");
 }
 
 
@@ -2075,12 +2123,12 @@ function toggleZoe(id){
   if(wasDone){
     const stampBak = dbCache[k];
     const photoBak = photoCache[k] || localStorage.getItem("td26_photo_"+k);
-    delete dbCache[k]; localStorage.removeItem(k);
+    deleteKey(k);
     delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
-    renderZoeModule();
-    schedulePush();
+    renderZoeModule(); schedulePush();
     showToast("↩ Zoe desmarcada", ()=>{
       dbCache[k]=stampBak; localStorage.setItem(k, stampBak);
+      delete _tombstones[k];
       if(photoBak){ photoCache[k]=photoBak; try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){} }
       renderZoeModule(); schedulePush();
     });
@@ -2319,13 +2367,21 @@ const SYNC_PUSH_DELAY = 1500;   // debounce delay ms
 const SYNC_PATH = "tasks";      // Firebase path
 
 // ── State ─────────────────────────────────────────────────
-let _syncUrl   = HARDCODED_SYNC_URL || localStorage.getItem("td26_sync_url") || "";
-let _pushTimer = null;
-let _pollTimer = null;
-let _pushing   = false;
-let _lastPull  = 0;
+let _syncUrl    = HARDCODED_SYNC_URL || localStorage.getItem("td26_sync_url") || "";
+let _pushTimer  = null;
+let _pollTimer  = null;
+let _pushing    = false;
+let _lastPull   = 0;
+let _tombstones = {};   // key → deletion timestamp ms, cleared after successful push
 
 // ── Helpers ───────────────────────────────────────────────
+// Call this instead of delete dbCache[k]+localStorage.removeItem(k)
+function deleteKey(k){
+  delete dbCache[k];
+  localStorage.removeItem(k);
+  _tombstones[k] = Date.now();   // record deletion time
+}
+
 function hasSyncUrl(){ return typeof _syncUrl === "string" && _syncUrl.length > 12 }
 
 // ── UI dot/pill ───────────────────────────────────────────
@@ -2400,13 +2456,20 @@ async function pullFromSync(showStatus){
     if(remote && typeof remote === "object"){
       let changed = false;
       for(const [k,v] of Object.entries(remote)){
-        // Only task data — skip photos and sync config
         if(!k.startsWith("td26_") || k.includes("_photo_") || k.includes("_sync_")) continue;
+        if(!v) continue;  // null = deleted on remote side
+
+        // If we deleted this key locally after the remote timestamp → skip (our delete wins)
+        const tombTs = _tombstones[k];
+        if(tombTs){
+          // Remote value is a timestamp string like "Lun 16 Mar 18:30"
+          // Our tombstone is ms epoch — if we deleted recently, trust local
+          // Simple rule: if tombstone exists and remote value hasn't changed since, skip
+          if(dbCache[k] === undefined) continue;  // we deleted it, keep it deleted
+        }
+
         const local = dbCache[k];
-        if(!local){
-          dbCache[k] = v; localStorage.setItem(k, v); changed = true;
-        } else if(v > local){
-          // Timestamps are ISO strings — lexicographic compare works
+        if(!local || v > local){
           dbCache[k] = v; localStorage.setItem(k, v); changed = true;
         }
       }
@@ -2436,10 +2499,15 @@ async function pushToSync(){
   setSyncDot("syncing","Guardando…");
   try{
     const patch = {};
+    // Add all current task keys
     for(let i=0; i<localStorage.length; i++){
       const k = localStorage.key(i);
       if(!k || !k.startsWith("td26_") || k.includes("_photo_") || k.includes("_sync_")) continue;
       patch[k] = localStorage.getItem(k);
+    }
+    // Add tombstones as null — Firebase PATCH with null DELETES the node
+    for(const k of Object.keys(_tombstones)){
+      patch[k] = null;
     }
     const res = await fetch(`${_syncUrl}/${SYNC_PATH}.json`, {
       method:"PATCH",
@@ -2447,6 +2515,7 @@ async function pushToSync(){
       body:JSON.stringify(patch)
     });
     if(!res.ok) throw new Error("http "+res.status);
+    _tombstones = {};  // clear tombstones after successful push
     setSyncDot("ok", new Date().toLocaleTimeString("es-CL",{hour:"2-digit",minute:"2-digit"}));
   } catch(e){
     console.warn("Push error:", e);
