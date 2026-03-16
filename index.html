@@ -974,7 +974,7 @@ button:active { transform:scale(.94) }
 <div id="reset-modal" class="hidden" style="
   position:fixed; inset:0; z-index:9998;
   background:rgba(6,6,10,.85); backdrop-filter:blur(16px);
-  display:flex; align-items:flex-end; justify-content:center;
+  align-items:flex-end; justify-content:center;
 ">
   <div style="
     width:100%; max-width:480px;
@@ -987,7 +987,7 @@ button:active { transform:scale(.94) }
     <div style="font-size:17px; font-weight:800; color:var(--t1); text-align:center; margin-bottom:8px">Resetear período</div>
     <div id="reset-modal-msg" style="font-size:13px; color:var(--t3); text-align:center; margin-bottom:24px">¿Resetear las tareas?</div>
     <div style="display:flex; gap:10px;">
-      <button onclick="document.getElementById('reset-modal').classList.add('hidden')" style="
+      <button onclick="hideResetModal()" style="
         flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:700;
         background:var(--s4); border:1px solid var(--b2); color:var(--t2); cursor:pointer;
       ">Cancelar</button>
@@ -1953,7 +1953,7 @@ function resetPeriod(){
 }
 
 function confirmReset(){
-  $('reset-modal').classList.add('hidden');
+  hideResetModal();
   const tasks = activeTab==="lista" ? TASKS : getTabTasks();
   for(const t of tasks){
     const k = tKey(t);
@@ -1977,7 +1977,11 @@ function showResetModal(lbl){
   const modal = $("reset-modal");
   const msg   = $("reset-modal-msg");
   if(msg) msg.textContent = `¿Resetear todas las tareas ${lbl||''}?`;
-  if(modal) modal.classList.remove("hidden");
+  if(modal){ modal.style.display = "flex"; modal.classList.remove("hidden"); }
+}
+function hideResetModal(){
+  const modal = $("reset-modal");
+  if(modal){ modal.style.display = ""; modal.classList.add("hidden"); }
 }
 
 
