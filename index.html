@@ -970,36 +970,6 @@ button:active { transform:scale(.94) }
 
 
 
-<!-- RESET CONFIRM MODAL -->
-<div id="reset-modal" class="hidden" style="
-  position:fixed; inset:0; z-index:9998;
-  background:rgba(6,6,10,.85); backdrop-filter:blur(16px);
-  align-items:flex-end; justify-content:center;
-">
-  <div style="
-    width:100%; max-width:480px;
-    background:var(--s2); border:1px solid var(--b2);
-    border-top:2px solid rgba(255,107,107,.4);
-    border-radius:28px 28px 0 0;
-    padding:28px 22px max(env(safe-area-inset-bottom,0px),28px);
-  ">
-    <div style="font-size:28px; margin-bottom:12px; text-align:center">🔄</div>
-    <div style="font-size:17px; font-weight:800; color:var(--t1); text-align:center; margin-bottom:8px">Resetear período</div>
-    <div id="reset-modal-msg" style="font-size:13px; color:var(--t3); text-align:center; margin-bottom:24px">¿Resetear las tareas?</div>
-    <div style="display:flex; gap:10px;">
-      <button onclick="hideResetModal()" style="
-        flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:700;
-        background:var(--s4); border:1px solid var(--b2); color:var(--t2); cursor:pointer;
-      ">Cancelar</button>
-      <button onclick="confirmReset()" style="
-        flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:800;
-        background:rgba(255,107,107,.15); border:1px solid rgba(255,107,107,.4);
-        color:#ff6b6b; cursor:pointer;
-      ">Sí, resetear</button>
-    </div>
-  </div>
-</div>
-
 <!-- TOAST NOTIFICATION -->
 <div id="toast" style="
   position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 80px); left:50%;
@@ -1977,11 +1947,11 @@ function showResetModal(lbl){
   const modal = $("reset-modal");
   const msg   = $("reset-modal-msg");
   if(msg) msg.textContent = `¿Resetear todas las tareas ${lbl||''}?`;
-  if(modal){ modal.style.display = "flex"; modal.classList.remove("hidden"); }
+  if(modal) modal.style.display = "flex";
 }
 function hideResetModal(){
   const modal = $("reset-modal");
-  if(modal){ modal.style.display = ""; modal.classList.add("hidden"); }
+  if(modal) modal.style.display = "none";
 }
 
 
@@ -2198,6 +2168,8 @@ window.confirmPhoto = function(){
 // STARTUP
 // ══════════════════════════════════════
 loadLocalStorage();loadPhotos();render();renderZoeModule();
+// Ensure all modals are hidden on load (iOS can restore DOM state)
+const _m=$("reset-modal"); if(_m) _m.style.display="none";
 // initSync() called in new sync block
 
 
@@ -2580,3 +2552,15 @@ function initSync(){
 }
 initSync();
 </script>
+<!-- RESET CONFIRM MODAL — outside app div, display:none hardcoded -->
+<div id="reset-modal" style="display:none; position:fixed; inset:0; z-index:9998; background:rgba(6,6,10,.88); backdrop-filter:blur(18px); align-items:flex-end; justify-content:center;">
+  <div style="width:100%; max-width:480px; background:#111119; border:1px solid rgba(255,255,255,.08); border-top:2px solid rgba(255,107,107,.4); border-radius:28px 28px 0 0; padding:28px 22px 32px;">
+    <div style="font-size:28px; margin-bottom:12px; text-align:center">🔄</div>
+    <div style="font-size:17px; font-weight:800; color:#f1f1f6; text-align:center; margin-bottom:8px">Resetear período</div>
+    <div id="reset-modal-msg" style="font-size:13px; color:#8888aa; text-align:center; margin-bottom:24px">¿Resetear las tareas?</div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="hideResetModal()" style="flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:700; background:#20202e; border:1px solid rgba(255,255,255,.08); color:#aaaacc; cursor:pointer;">Cancelar</button>
+      <button onclick="confirmReset()" style="flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:800; background:rgba(255,107,107,.15); border:1px solid rgba(255,107,107,.4); color:#ff6b6b; cursor:pointer;">Sí, resetear</button>
+    </div>
+  </div>
+</div>
