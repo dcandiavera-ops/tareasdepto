@@ -1181,37 +1181,76 @@ function handleFilePhoto(e){
   const file = e.target.files[0];
   if(!file){ e.target.value=""; return; }
 
-  // Restore camTaskId in case iOS suspended the page
-  if(!camTaskId){
-    camTaskId = sessionStorage.getItem("pendingCamTask") || null;
-  }
-  const taskType = sessionStorage.getItem("pendingCamType") || "task";
+  // Restore camTaskId — iOS suspends page and wipes JS variables
+  if(!camTaskId) camTaskId = sessionStorage.getItem("pendingCamTask") || null;
+  if(!camTaskId){ e.target.value=""; return; } // nothing to save
+
+  const savedTaskId = camTaskId; // capture before async
 
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
+      // Compress
       const canvas = document.createElement("canvas");
       const scale  = Math.min(1, 640/img.width);
       canvas.width  = Math.round(img.width  * scale);
       canvas.height = Math.round(img.height * scale);
       canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-      capturedDataUrl = canvas.toDataURL("image/jpeg", 0.5);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.5);
 
-      // Show preview and make overlay visible
-      stopStream();
-      $("cam-video").style.display = "none";
-      const prev = $("cam-preview");
-      prev.src = capturedDataUrl; prev.classList.add("show");
-      $("cam-shutter").style.display = "none";
-      $("cam-retake").classList.add("show");
-      $("cam-confirm").classList.add("show");
-      $("cam-overlay").classList.remove("hidden");
+      // AUTO-CONFIRM: save task immediately, no extra tap needed
+      autoConfirmPhoto(savedTaskId, dataUrl);
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
   e.target.value = "";
+}
+
+function autoConfirmPhoto(taskId, dataUrl){
+  if(!taskId || !dataUrl) return;
+  // Hide overlay if visible
+  const overlay = $("cam-overlay");
+  if(overlay) overlay.classList.add("hidden");
+  stopStream();
+
+  const isZoe = taskId.startsWith("__zoe__");
+  const n = new Date();
+  const stamp = `${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
+
+  if(isZoe){
+    const zId = taskId.replace("__zoe__","");
+    const t = zoeById(zId);
+    if(!t) return;
+    const k = "zoe_"+zId+"_"+periodKey(t.freq, NOW);
+    dbCache[k]=stamp; localStorage.setItem(k, stamp);
+    photoCache[k]=dataUrl;
+    try{ localStorage.setItem("td26_photo_"+k, dataUrl); }catch(err){}
+    renderZoeModule();
+  } else {
+    const t = taskById(taskId);
+    if(!t) return;
+    const k = sKey(taskId, periodKey(t.freq, NOW));
+    dbCache[k]=stamp; localStorage.setItem(k, stamp);
+    photoCache[k]=dataUrl;
+    try{ localStorage.setItem("td26_photo_"+k, dataUrl); }catch(err){}
+    render();
+  }
+
+  schedulePush();
+  sessionStorage.removeItem("pendingCamTask");
+  sessionStorage.removeItem("pendingCamType");
+  camTaskId = null;
+  capturedDataUrl = null;
+
+  // Brief visual feedback
+  const pill = $("sync-status-pill");
+  if(pill){
+    const orig = pill.style.background;
+    pill.style.background = "rgba(61,255,163,.2)";
+    setTimeout(()=>{ pill.style.background = orig; }, 800);
+  }
 }
 function showPreview(dataUrl){
   stopStream();
