@@ -914,6 +914,30 @@ button:active { transform:scale(.94) }
 }
 .chip:active{transform:scale(.93)}
 .chip.on{color:rgba(255,255,255,.82);background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.15)}
+
+/* ═══ DUE DAY BADGE ═══ */
+.tc-due-badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 99px;
+  background: rgba(255,255,255,.07);
+  color: var(--t3);
+  border: 1px solid rgba(255,255,255,.1);
+  margin-left: auto;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+.tc-due-today {
+  background: rgba(255,212,71,.15);
+  color: var(--warn);
+  border-color: rgba(255,212,71,.3);
+  animation: duePulse 2s ease-in-out infinite;
+}
+@keyframes duePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,212,71,.0) }
+  50%      { box-shadow: 0 0 0 4px rgba(255,212,71,.15) }
+}
 </style>
 </head>
 <body>
@@ -1136,9 +1160,13 @@ const TASKS = [
   {id:"d3",icon:"🏋️",title:"Ordenar cosas del gym",freq:"diaria",person:"Daniel",time:10,pts:1,note:null,
    steps:["Guarda ropa o toallas de entrenamiento.","Ordena mancuernas y accesorios en su lugar.","Limpia el piso de esa zona."]},
   // SEMANALES
-  {id:"s1",icon:"🗑️",title:"Sacar basura y cambiar bolsa",freq:"semanal",person:"Daniel",time:5,pts:3,note:"Inicio semana (lun–mar)",
+  {id:"s1",icon:"🗑️",title:"Basura — Lunes",freq:"semanal",person:"rotate",time:5,pts:3,
+   note:"Cada lunes · turno rotativo",
+   rotate:true, rotateStart:"Daniel", dueDay:1,
    steps:["Saca la bolsa y amárrala bien.","Baja al contenedor.","Ponle bolsa nueva al tarro.","Si está cochino, lávalo."]},
-  {id:"s2",icon:"🗑️",title:"Sacar basura y cambiar bolsa",freq:"semanal",person:"Nicolas",time:5,pts:3,note:"Mitad semana (jue–vie)",
+  {id:"s2",icon:"🗑️",title:"Basura — Jueves",freq:"semanal",person:"rotate",time:5,pts:3,
+   note:"Cada jueves · turno rotativo",
+   rotate:true, rotateStart:"Nicolas", dueDay:4,
    steps:["Saca la bolsa y amárrala bien.","Baja al contenedor.","Ponle bolsa nueva al tarro.","Si está cochino, lávalo."]},
   {id:"s3",icon:"🧹",title:"Barrer y trapear piso y alfombra",freq:"semanal",person:"Nicolas",time:30,pts:15,note:null,
    steps:["Aspira o barre la alfombra para sacar polvo y pelo.","Barre el piso hacia un solo lado.","Trapea con limpiapisos diluido en agua tibia, de adentro hacia la salida."]},
@@ -1198,6 +1226,32 @@ let NOW = getNow();
 let dbCache = {};
 function p2(n){return String(n).padStart(2,"0")}
 function fmtDate(d){return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`}
+
+// ── Rotación semanal de basura ─────────────────────────────
+// Número de semana ISO del año (1–53)
+function getISOWeekNumber(d){
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+// Devuelve la persona responsable esta semana para una tarea rotativa
+// rotateStart: quién empieza en semana impar (1,3,5...)
+function rotatingPerson(task, d){
+  const weekNum = getISOWeekNumber(d || NOW);
+  const isOdd   = weekNum % 2 === 1;
+  const startsOdd = task.rotateStart === "Daniel";
+  // Si starts en impar y es impar → Daniel; si par → Nicolas
+  if(startsOdd) return isOdd ? "Daniel" : "Nicolas";
+  else          return isOdd ? "Nicolas" : "Daniel";
+}
+
+// Devuelve persona efectiva de una tarea (considera rotación)
+function effectivePerson(t){
+  if(t.rotate) return rotatingPerson(t, NOW);
+  return t.person;
+}
 function weekKey(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()-((t.getDay()+6)%7));return `W${fmtDate(t)}`}
 function monthKey(d){return `${d.getFullYear()}-${p2(d.getMonth()+1)}`}
 function quarterKey(d){return `${d.getFullYear()}-Q${Math.ceil((d.getMonth()+1)/3)}`}
@@ -1488,7 +1542,8 @@ function updateScores(){
   let dD=0,dT=0,dP=0,dTP=0,nD=0,nT=0,nP=0,nTP=0;
   for(const t of tasks){
     const done=isTaskDone(t);
-    if(t.person==="Daniel"){dT++;dTP+=t.pts;if(done){dD++;dP+=t.pts;}}
+    const ep=effectivePerson(t);
+    if(ep==="Daniel"){dT++;dTP+=t.pts;if(done){dD++;dP+=t.pts;}}
     else{nT++;nTP+=t.pts;if(done){nD++;nP+=t.pts;}}
   }
   $("dan-score").textContent=dP;
@@ -1580,7 +1635,7 @@ function getMissedBanner(){
       <div class="missed-count">${missed.length}</div>
     </div>
     ${missed.map(t=>{
-      const isDan=t.person==="Daniel";
+      const isDan=effectivePerson(t)==="Daniel";
       return `<div class="missed-item">
         <span class="missed-icon">${t.icon}</span>
         <div class="missed-info">
@@ -1618,6 +1673,13 @@ function renderBanner(){
 const tick=`<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5L4.5 8.5L9.5 2.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const tickV=`<svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3.5 7L8 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
+
+function dueDayBadge(dueDay, done){
+  const labels=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+  const isToday = dueDay===NOW.getDay() && !done;
+  return '<span class="tc-due-badge'+(isToday?' tc-due-today':'')+'">'
+    +labels[dueDay]+'</span>';
+}
 function cardHTML(t){
   const done=isTaskDone(t);
   const stamp=getStamp(t);
@@ -1641,9 +1703,10 @@ function cardHTML(t){
 
   return `<div class="tc${done?" done":""}${needsPhoto?" needs-photo":""}">
     <div class="tc-top">
-      <div class="tc-pdot ${isDan?"tc-pdot-d":"tc-pdot-n"}"></div>
-      <span class="tc-plbl ${isDan?"tc-plbl-d":"tc-plbl-n"}">${isDan?"Daniel":"Nicolás"}</span>
-      <span class="tc-pts">${t.pts} pts · ${t.time} min</span>
+      <div class="tc-pdot \${isDan?"tc-pdot-d":"tc-pdot-n"}"></div>
+      <span class="tc-plbl \${isDan?"tc-plbl-d":"tc-plbl-n"}">\${isDan?"Daniel":"Nicolás"}</span>
+      \${t.dueDay!==undefined?dueDayBadge(t.dueDay,done):""}
+      <span class="tc-pts">\${t.pts} pts · \${t.time} min</span>
     </div>
     <div class="tc-main">
       <span class="tc-icon">${t.icon}</span>
@@ -1977,7 +2040,7 @@ function histView(){
       </div>`;
     items.sort((a,b)=>(a.missed?1:-1)-(b.missed?1:-1)||(b.stamp||"").localeCompare(a.stamp||""));
     for(const e of items){
-      const isDan=e.task.person==="Daniel";
+      const isDan=effectivePerson(e.task)==="Daniel";
       const pc=isDan?"var(--d)":"var(--n)";
       const pl=isDan?"Daniel":"Nicolás";
       if(e.missed){
@@ -2010,7 +2073,13 @@ function setHistFilter(f){histFilter=f;render();}
 // TAB + RENDER
 // ══════════════════════════════════════
 function getTabTasks(){
-  if(activeTab==="hoy")       return TASKS.filter(t=>t.freq==="diaria");
+  if(activeTab==="hoy"){
+    const todayDow = NOW.getDay(); // 0=dom,1=lun...6=sab
+    return TASKS.filter(t =>
+      t.freq === "diaria" ||
+      (t.dueDay !== undefined && t.dueDay === todayDow)
+    );
+  }
   if(activeTab==="semana")    return TASKS.filter(t=>t.freq==="semanal");
   if(activeTab==="mes")       return TASKS.filter(t=>t.freq==="mensual");
   if(activeTab==="trimestre") return TASKS.filter(t=>t.freq==="trimestral");
