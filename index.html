@@ -1684,7 +1684,7 @@ function cardHTML(t){
   const done=isTaskDone(t);
   const stamp=getStamp(t);
   const isOpen=!!openCards[t.id];
-  const isDan=t.person==="Daniel";
+  const isDan=effectivePerson(t)==="Daniel";
   const k=tKey(t);
   const photo=photoCache[k]||localStorage.getItem("td26_photo_"+k);
   const needsPhoto=done&&!photo;
@@ -1703,10 +1703,10 @@ function cardHTML(t){
 
   return `<div class="tc${done?" done":""}${needsPhoto?" needs-photo":""}">
     <div class="tc-top">
-      <div class="tc-pdot \${isDan?"tc-pdot-d":"tc-pdot-n"}"></div>
-      <span class="tc-plbl \${isDan?"tc-plbl-d":"tc-plbl-n"}">\${isDan?"Daniel":"Nicolás"}</span>
-      \${t.dueDay!==undefined?dueDayBadge(t.dueDay,done):""}
-      <span class="tc-pts">\${t.pts} pts · \${t.time} min</span>
+      <div class="tc-pdot ${isDan?"tc-pdot-d":"tc-pdot-n"}"></div>
+      <span class="tc-plbl ${isDan?"tc-plbl-d":"tc-plbl-n"}">${isDan?"Daniel":"Nicolás"}</span>
+      ${t.dueDay!==undefined?dueDayBadge(t.dueDay,done):""}
+      <span class="tc-pts">${t.pts} pts · ${t.time} min</span>
     </div>
     <div class="tc-main">
       <span class="tc-icon">${t.icon}</span>
