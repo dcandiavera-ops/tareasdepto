@@ -938,6 +938,34 @@ button:active { transform:scale(.94) }
   0%,100% { box-shadow: 0 0 0 0 rgba(255,212,71,.0) }
   50%      { box-shadow: 0 0 0 4px rgba(255,212,71,.15) }
 }
+
+/* ═══ HDR MENU ═══ */
+.hdr { position:relative }
+.hdr-menu-btn {
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  cursor:pointer;flex-shrink:0;
+}
+.hdr-menu-btn span {
+  display:block;width:14px;height:1.5px;
+  background:rgba(244,244,250,.5);border-radius:2px;
+}
+.hdr-menu {
+  position:absolute;top:calc(100% + 6px);right:0;z-index:200;
+  background:var(--s3);border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;padding:6px;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  min-width:200px;
+}
+.hdr-menu.hidden{display:none}
+.hdr-menu-item {
+  display:block;width:100%;text-align:left;
+  padding:10px 14px;border-radius:10px;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:rgba(244,244,250,.7);
+  background:transparent;border:none;cursor:pointer;transition:background .15s;
+}
+.hdr-menu-item:active{background:rgba(255,255,255,.07)}
 </style>
 </head>
 <body>
@@ -960,8 +988,17 @@ button:active { transform:scale(.94) }
           <span class="sync-dot" id="sync-dot"></span>
           <span class="sync-status-txt" id="sync-status-txt">Activar sync</span>
         </button>
-        <button class="hdr-reset" onclick="resetPeriod()">↺ Resetear</button>
+        <button class="hdr-menu-btn" id="hdr-menu-btn" onclick="toggleHdrMenu()" aria-label="Opciones">
+          <span></span><span></span><span></span>
+        </button>
       </div>
+    </div>
+    <div class="hdr-menu hidden" id="hdr-menu">
+      <button class="hdr-menu-item" onclick="resetPeriod();toggleHdrMenu()">↺ Resetear período</button>
+      <button class="hdr-menu-item" onclick="toggleHdrMenu();openSyncSheet()">☁️ Configurar sync</button>
+      <div style="height:1px;background:rgba(255,255,255,.07);margin:4px 6px"></div>
+      <button class="hdr-menu-item" onclick="toggleHdrMenu();document.getElementById('identity-modal').style.display='flex'">👤 Cambiar usuario</button>
+      <button class="hdr-menu-item" style="color:var(--err)" onclick="toggleHdrMenu();showClearAllModal()">🗑️ Borrar todo el historial</button>
     </div>
 
     <!-- SYNC SHEET (bottom sheet, opens on pill tap) -->
@@ -1118,6 +1155,7 @@ button:active { transform:scale(.94) }
 
 
 
+
 <!-- TOAST NOTIFICATION -->
 <div id="toast" style="
   position:fixed; bottom:calc(env(safe-area-inset-bottom,0px) + 80px); left:50%;
@@ -1139,7 +1177,129 @@ button:active { transform:scale(.94) }
   ">Deshacer</button>
 </div>
 
+<!-- IDENTITY MODAL — quién eres -->
+<div id="identity-modal" style="display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(6,6,10,.97);backdrop-filter:blur(24px);
+  align-items:center;justify-content:center;flex-direction:column;padding:24px;">
+  <div style="width:100%;max-width:380px;">
+    <div style="font-size:42px;text-align:center;margin-bottom:20px">🏠</div>
+    <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:900;
+      color:#f4f4fa;text-align:center;margin-bottom:8px;letter-spacing:-.03em">
+      Tareas Depto
+    </div>
+    <div style="font-family:'Inter',sans-serif;font-size:15px;font-weight:400;
+      color:rgba(244,244,250,.45);text-align:center;margin-bottom:36px;line-height:1.5">
+      ¿Quién está usando esta app en este celular?
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <button onclick="chooseUser('Daniel')" style="
+        width:100%;padding:18px;border-radius:18px;
+        background:rgba(61,255,163,.12);border:1.5px solid rgba(61,255,163,.3);
+        font-family:'Inter',sans-serif;font-size:16px;font-weight:700;
+        color:var(--d);cursor:pointer;transition:all .15s;
+        display:flex;align-items:center;justify-content:center;gap:10px;">
+        <span style="font-size:20px">🟢</span> Soy Daniel
+      </button>
+      <button onclick="chooseUser('Nicolas')" style="
+        width:100%;padding:18px;border-radius:18px;
+        background:rgba(200,127,255,.12);border:1.5px solid rgba(200,127,255,.3);
+        font-family:'Inter',sans-serif;font-size:16px;font-weight:700;
+        color:var(--n);cursor:pointer;transition:all .15s;
+        display:flex;align-items:center;justify-content:center;gap:10px;">
+        <span style="font-size:20px">🔵</span> Soy Nicolás
+      </button>
+    </div>
+    <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:400;
+      color:rgba(244,244,250,.2);text-align:center;margin-top:20px;line-height:1.6">
+      Esta elección se guarda en este celular.<br>Solo se pregunta una vez.
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR ALL MODAL -->
+<div id="clear-all-modal" style="display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(6,6,10,.9);backdrop-filter:blur(20px);
+  align-items:flex-end;justify-content:center;">
+  <div style="width:100%;max-width:480px;background:#0c0c14;
+    border:1px solid rgba(255,107,107,.2);border-top:2px solid rgba(255,107,107,.5);
+    border-radius:28px 28px 0 0;padding:28px 22px 36px;">
+    <div style="font-size:32px;text-align:center;margin-bottom:12px">🗑️</div>
+    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:900;
+      color:#f4f4fa;text-align:center;margin-bottom:8px">Borrar todo el historial</div>
+    <div style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(244,244,250,.45);
+      text-align:center;margin-bottom:24px;line-height:1.6">
+      Se borrará todo el historial y las tareas completadas en ambos celulares.<br>
+      <strong style="color:rgba(255,107,107,.75)">Esta acción no se puede deshacer.</strong>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="hideClearAllModal()" style="flex:1;padding:14px;border-radius:14px;
+        font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+        background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+        color:rgba(244,244,250,.6);cursor:pointer;">Cancelar</button>
+      <button onclick="confirmClearAll()" style="flex:1;padding:14px;border-radius:14px;
+        font-family:'Inter',sans-serif;font-size:14px;font-weight:700;
+        background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);
+        color:#ff6b6b;cursor:pointer;">Sí, borrar todo</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET CONFIRM MODAL -->
+<div id="reset-modal" style="display:none;position:fixed;inset:0;z-index:9998;
+  background:rgba(6,6,10,.88);backdrop-filter:blur(18px);
+  align-items:flex-end;justify-content:center;">
+  <div style="width:100%;max-width:480px;background:#111119;border:1px solid rgba(255,255,255,.08);
+    border-top:2px solid rgba(255,107,107,.4);border-radius:28px 28px 0 0;padding:28px 22px 32px;">
+    <div style="font-size:28px;margin-bottom:12px;text-align:center">🔄</div>
+    <div style="font-size:17px;font-weight:800;color:#f1f1f6;text-align:center;margin-bottom:8px">Resetear período</div>
+    <div id="reset-modal-msg" style="font-size:13px;color:#8888aa;text-align:center;margin-bottom:24px">¿Resetear las tareas?</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="hideResetModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:#20202e;border:1px solid rgba(255,255,255,.08);color:#aaaacc;cursor:pointer;">Cancelar</button>
+      <button onclick="confirmReset()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:800;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);color:#ff6b6b;cursor:pointer;">Sí, resetear</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV BAR -->
+<nav class="bnav" id="bnav">
+  <div class="pill-bar" id="pill-bar">
+    <button class="pill-btn on" id="bnav-hoy"      onclick="setTab('hoy')">
+      <span class="pill-ic">☀️</span><span class="pill-lbl">Hoy</span>
+    </button>
+    <button class="pill-btn" id="bnav-semana"      onclick="setTab('semana')">
+      <span class="pill-ic">📅</span><span class="pill-lbl">Semana</span>
+    </button>
+    <button class="pill-btn" id="bnav-mes"         onclick="setTab('mes')">
+      <span class="pill-ic">🗓</span><span class="pill-lbl">Mes</span>
+    </button>
+    <button class="pill-btn" id="bnav-trimestre"   onclick="setTab('trimestre')">
+      <span class="pill-ic">📊</span><span class="pill-lbl">Trim.</span>
+    </button>
+  </div>
+  <div class="chips-row">
+    <button class="chip" id="bnav-lista"      onclick="setTab('lista')">Lista</button>
+    <button class="chip" id="bnav-historial"  onclick="setTab('historial')">Historial</button>
+    <button class="chip" id="bnav-horario"    onclick="setTab('horario')">Cocina</button>
+    <button class="chip" id="bnav-calendario" onclick="setTab('calendario')">Calendario</button>
+  </div>
+</nav>
+
 <script>
+function toggleHdrMenu(){
+  const m=$("hdr-menu");if(!m)return;
+  m.classList.toggle("hidden");
+  if(!m.classList.contains("hidden")){
+    setTimeout(()=>{
+      document.addEventListener("click",function close(e){
+        if(!m.contains(e.target)&&e.target.id!=="hdr-menu-btn"){
+          m.classList.add("hidden");
+        }
+        document.removeEventListener("click",close);
+      });
+    },10);
+  }
+}
+
 // ── Tiny DOM helper ──
 const $=id=>document.getElementById(id);
 
@@ -2089,7 +2249,7 @@ function getTabTasks(){
 function render(){
   NOW = getNow(); // actualiza fecha en cada render
   const d=NOW;
-  $("hdr-date").textContent=`${DAYS[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  $("hdr-date").textContent=`${DAYS[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]}${getCurrentUser()?" · "+(getCurrentUser()==="Daniel"?"🟢 Dan":"🔵 Nico"):""}`;
   updateScores();renderBanner();
   const el=$("content");
   if(activeTab==="lista"){el.innerHTML=listView();return;}
@@ -2378,8 +2538,113 @@ window.confirmPhoto = function(){
 // ══════════════════════════════════════
 // STARTUP
 // ══════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════
+// 👤 IDENTIDAD  +  🔔 NOTIFICACIONES
+// ════════════════════════════════════════════════════════════
+let currentUser = localStorage.getItem("td26_user") || null;
+function getCurrentUser(){ return currentUser; }
+
+function chooseUser(name){
+  currentUser = name;
+  localStorage.setItem("td26_user", name);
+  var m = document.getElementById("identity-modal");
+  if(m) m.style.display = "none";
+  render(); renderZoeModule();
+  requestNotifPermission();
+}
+
+function initIdentity(){
+  if(!currentUser){
+    var m = document.getElementById("identity-modal");
+    if(m) m.style.display = "flex";
+  } else {
+    initNotifications();
+  }
+}
+
+function requestNotifPermission(){
+  if(!("Notification" in window)){ initNotifications(); return; }
+  if(Notification.permission === "granted"){
+    initNotifications();
+  } else if(Notification.permission !== "denied"){
+    Notification.requestPermission().then(function(p){
+      if(p === "granted") initNotifications();
+    });
+  }
+}
+
+function initNotifications(){
+  if(!currentUser) return;
+  if(!("Notification" in window)) return;
+  if(Notification.permission !== "granted") return;
+  scheduleRemindersForToday();
+}
+
+var _notifTimers = {};
+
+function scheduleRemindersForToday(){
+  var now = new Date();
+  var today = now.getDay();
+  var myTasks = TASKS.filter(function(t){
+    var p = effectivePerson(t);
+    if(p !== currentUser) return false;
+    if(t.freq === "diaria") return true;
+    if(t.dueDay !== undefined && t.dueDay === today) return true;
+    return false;
+  });
+  var zoeOwner = zoeOwnerForMonth(now.getMonth());
+  var myZoe = ZOE_TASKS.filter(function(t){
+    return zoeOwner === currentUser && t.freq === "diaria";
+  });
+  var all = myTasks.concat(myZoe);
+  if(!all.length) return;
+  var listText = all.map(function(t){ return t.icon+" "+t.title; }).join("\n");
+  scheduleNotifAt(9,  0, "\uD83C\uDFE0 Tareas del d\u00eda", listText, "morning");
+  scheduleNotifAt(19, 0, "\u23F0 \u00bfYa hiciste tus tareas?", "Todav\u00eda tienes tareas pendientes hoy.", "evening");
+}
+
+function scheduleNotifAt(hour, min, title, body, key){
+  var now = new Date();
+  var target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, min, 0);
+  var ms = target - now;
+  if(ms <= 0) return;
+  if(_notifTimers[key]) clearTimeout(_notifTimers[key]);
+  _notifTimers[key] = setTimeout(function(){
+    if(key === "evening"){
+      var td = new Date().getDay();
+      var pend = TASKS.filter(function(t){
+        return effectivePerson(t)===currentUser &&
+          (t.freq==="diaria"||t.dueDay===td) && !isTaskDone(t);
+      });
+      if(!pend.length) return;
+    }
+    showPushNotif(title, body);
+  }, ms);
+}
+
+function showPushNotif(title, body){
+  if(!("Notification" in window)) return;
+  if(Notification.permission !== "granted") return;
+  try{
+    var n = new Notification(title, {
+      body: body,
+      tag: "tareas-depto",
+      renotify: true
+    });
+    n.onclick = function(){ window.focus(); n.close(); };
+  } catch(e){ console.warn("Notif:", e); }
+}
+
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState==="visible" && currentUser &&
+     "Notification" in window && Notification.permission==="granted"){
+    scheduleRemindersForToday();
+  }
+});
 loadLocalStorage();loadPhotos();render();renderZoeModule();updateTabProgress();
 (()=>{const b=$("bnav-"+activeTab);if(b)b.classList.add("on");updateBnavPips();})()
+initIdentity();
 // Ensure all modals are hidden on load (iOS can restore DOM state)
 const _m=$("reset-modal"); if(_m) _m.style.display="none";
 // initSync() called in new sync block
@@ -2802,6 +3067,56 @@ function updateTabProgress(){
   }
 }
 
+
+function clearAllData(){
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("td26_"))keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+  for(const k in dbCache)delete dbCache[k];
+  for(const k in photoCache)delete photoCache[k];
+  if(hasSyncUrl()){
+    fetch(`${_syncUrl}/${SYNC_PATH}.json`,{
+      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
+    }).then(()=>setSyncDot("ok","☁️ Limpio"))
+      .catch(()=>setSyncDot("err","Error Firebase"));
+  }
+  render();renderZoeModule();
+  showToast("🗑️ Historial borrado — ¡Empezamos!");
+}
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+function clearAllData(){
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("td26_"))keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+  for(const k in dbCache)delete dbCache[k];
+  for(const k in photoCache)delete photoCache[k];
+  if(hasSyncUrl()){
+    fetch(String(_syncUrl)+"/"+SYNC_PATH+".json",{
+      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
+    }).then(()=>setSyncDot("ok","☁️ Limpio"))
+      .catch(()=>setSyncDot("err","Error Firebase"));
+  }
+  render();renderZoeModule();
+  showToast("🗑️ Historial borrado — ¡Empezamos!");
+}
+function showClearAllModal(){const m=$("clear-all-modal");if(m)m.style.display="flex";}
+function hideClearAllModal(){const m=$("clear-all-modal");if(m)m.style.display="none";}
+function confirmClearAll(){hideClearAllModal();clearAllData();}
 function initSync(){
   if(hasSyncUrl()){
     setSyncDot("syncing","Conectando…");
@@ -2814,40 +3129,18 @@ function initSync(){
   }
 }
 initSync();
-</script>
-<!-- BOTTOM NAV BAR -->
-<nav class="bnav" id="bnav">
-  <div class="pill-bar" id="pill-bar">
-    <button class="pill-btn on" id="bnav-hoy"      onclick="setTab('hoy')">
-      <span class="pill-ic">☀️</span><span class="pill-lbl">Hoy</span>
-    </button>
-    <button class="pill-btn" id="bnav-semana"      onclick="setTab('semana')">
-      <span class="pill-ic">📅</span><span class="pill-lbl">Semana</span>
-    </button>
-    <button class="pill-btn" id="bnav-mes"         onclick="setTab('mes')">
-      <span class="pill-ic">🗓</span><span class="pill-lbl">Mes</span>
-    </button>
-    <button class="pill-btn" id="bnav-trimestre"   onclick="setTab('trimestre')">
-      <span class="pill-ic">📊</span><span class="pill-lbl">Trim.</span>
-    </button>
-  </div>
-  <div class="chips-row">
-    <button class="chip" id="bnav-lista"      onclick="setTab('lista')">Lista</button>
-    <button class="chip" id="bnav-historial"  onclick="setTab('historial')">Historial</button>
-    <button class="chip" id="bnav-horario"    onclick="setTab('horario')">Cocina</button>
-    <button class="chip" id="bnav-calendario" onclick="setTab('calendario')">Calendario</button>
-  </div>
-</nav>
 
-<!-- RESET CONFIRM MODAL — outside app div, display:none hardcoded -->
-<div id="reset-modal" style="display:none; position:fixed; inset:0; z-index:9998; background:rgba(6,6,10,.88); backdrop-filter:blur(18px); align-items:flex-end; justify-content:center;">
-  <div style="width:100%; max-width:480px; background:#111119; border:1px solid rgba(255,255,255,.08); border-top:2px solid rgba(255,107,107,.4); border-radius:28px 28px 0 0; padding:28px 22px 32px;">
-    <div style="font-size:28px; margin-bottom:12px; text-align:center">🔄</div>
-    <div style="font-size:17px; font-weight:800; color:#f1f1f6; text-align:center; margin-bottom:8px">Resetear período</div>
-    <div id="reset-modal-msg" style="font-size:13px; color:#8888aa; text-align:center; margin-bottom:24px">¿Resetear las tareas?</div>
-    <div style="display:flex; gap:10px;">
-      <button onclick="hideResetModal()" style="flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:700; background:#20202e; border:1px solid rgba(255,255,255,.08); color:#aaaacc; cursor:pointer;">Cancelar</button>
-      <button onclick="confirmReset()" style="flex:1; padding:14px; border-radius:14px; font-size:14px; font-weight:800; background:rgba(255,107,107,.15); border:1px solid rgba(255,107,107,.4); color:#ff6b6b; cursor:pointer;">Sí, resetear</button>
-    </div>
-  </div>
-</div>
+function initSync(){
+  if(hasSyncUrl()){
+    setSyncDot("syncing","Conectando…");
+    pullFromSync(true).then(ok=>{
+      if(ok) startPoll();
+      else setSyncDot("err","Sin conexión");
+    });
+  } else {
+    setSyncDot("","Activar sync");
+  }
+}
+initSync();
+
+</script>
