@@ -375,7 +375,19 @@ button:active { transform:scale(.94) }
 .tc-title { font-size:14px; font-weight:700; color:var(--t0); line-height:1.35 }
 .tc-title.done { color:var(--t3); text-decoration:line-through }
 .tc-chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px }
-.chip { font-size:11px; font-weight:700; padding:2px 8px; border-radius:var(--r99); background:var(--s3); color:var(--t2); border:1px solid var(--b1) }
+.chip {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:3px;
+  padding:8px 2px 9px; min-height:52px;
+  font-family:'Inter',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:.025em; text-transform:uppercase;
+  color:rgba(255,255,255,.32);
+  background:rgba(10,10,20,.78); border:1px solid rgba(255,255,255,.09);
+  border-radius:14px; cursor:pointer; transition:all .18s;
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 2px 10px rgba(0,0,0,.28);
+}
 .chip-note { background:rgba(255,212,71,.07); color:var(--warn); border-color:rgba(255,212,71,.15) }
 
 .tc-chk {
@@ -549,8 +561,8 @@ button:active { transform:scale(.94) }
 @keyframes pulseRing{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:.2}}
 .hor-wrap { padding:4px 0 24px }
 .hor-top { text-align:center; padding:18px 0 20px }
-.hor-eyebrow { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.22em; color:var(--t3); margin-bottom:8px }
-.hor-title { font-family:'Inter',sans-serif; font-size:28px; font-weight:900; letter-spacing:-.04em; line-height:1; margin-bottom:6px; color:var(--t0) }
+.hor-eyebrow { font-family:'Inter',sans-serif; font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--t3); margin-bottom:6px }
+.hor-title { font-family:'Syne',sans-serif; font-size:30px; font-weight:900; letter-spacing:-.03em; line-height:1.05; color:var(--t0); margin-bottom:4px }
 .hor-sub { font-size:11px; color:var(--t3); font-weight:600 }
 .hor-live { display:flex; align-items:center; gap:14px; border-radius:22px; padding:18px 20px; margin-bottom:20px; position:relative; overflow:hidden }
 .hor-free { background:var(--s3); border:1px solid var(--b1) }
@@ -866,7 +878,7 @@ button:active { transform:scale(.94) }
 /* ═══ BOTTOM NAV ═══ */
 .bnav {
   position:fixed; bottom:0; left:0; right:0; z-index:300;
-  padding:10px 16px calc(env(safe-area-inset-bottom,0px)+10px);
+  padding:12px 16px calc(env(safe-area-inset-bottom,0px)+14px);
   background:transparent; pointer-events:none;
 }
 .bnav>*{pointer-events:auto}
@@ -874,25 +886,25 @@ button:active { transform:scale(.94) }
 .pill-bar {
   display:flex; align-items:center; gap:5px; width:100%;
   background:rgba(10,10,20,.80); border:1px solid rgba(255,255,255,.11);
-  border-radius:18px; padding:5px; margin-bottom:7px; box-sizing:border-box;
+  border-radius:20px; padding:6px; margin-bottom:9px; box-sizing:border-box;
   backdrop-filter:blur(32px) saturate(1.8);
   -webkit-backdrop-filter:blur(32px) saturate(1.8);
   box-shadow:0 8px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
 }
 .pill-btn {
   flex:1; display:flex; align-items:center; justify-content:center; gap:0;
-  height:44px; padding:0 8px; border-radius:13px; border:none;
+  height:52px; padding:0 8px; border-radius:15px; border:none;
   background:transparent; cursor:pointer; overflow:hidden; white-space:nowrap;
   transition:flex .3s cubic-bezier(.4,0,.2,1), background .2s;
   -webkit-tap-highlight-color:transparent; min-width:0;
 }
 .pill-btn:active{opacity:.7;transform:scale(.96)}
 .pill-ic {
-  font-size:17px; line-height:1; flex-shrink:0;
+  font-size:19px; line-height:1; flex-shrink:0;
   filter:grayscale(1) opacity(.4); transition:filter .22s;
 }
 .pill-lbl {
-  font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+  font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
   letter-spacing:-.01em; color:transparent; white-space:nowrap;
   max-width:0; overflow:hidden; margin-left:0;
   transition:max-width .3s cubic-bezier(.4,0,.2,1), color .2s, margin-left .3s cubic-bezier(.4,0,.2,1);
@@ -905,9 +917,9 @@ button:active { transform:scale(.94) }
 .pill-btn.on .pill-lbl{max-width:90px;color:rgba(8,8,18,.85);margin-left:0}
 .chips-row{display:flex;gap:5px;width:100%;box-sizing:border-box}
 .chip {
-  flex:1; padding:7px 4px; font-family:'Inter',sans-serif; font-size:11px; font-weight:500;
+  flex:1; padding:10px 6px; font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
   color:rgba(255,255,255,.32); background:rgba(10,10,20,.72); border:1px solid rgba(255,255,255,.08);
-  border-radius:11px; cursor:pointer; transition:all .17s; white-space:nowrap; text-align:center;
+  border-radius:13px; cursor:pointer; transition:all .17s; white-space:nowrap; text-align:center;
   backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   -webkit-tap-highlight-color:transparent;
   box-shadow:0 3px 12px rgba(0,0,0,.25);
@@ -966,6 +978,28 @@ button:active { transform:scale(.94) }
   background:transparent;border:none;cursor:pointer;transition:background .15s;
 }
 .hdr-menu-item:active{background:rgba(255,255,255,.07)}
+
+.chip-ic { font-size:16px; line-height:1; display:block; filter:grayscale(1) opacity(.38); transition:filter .2s }
+.chip-lbl { font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; line-height:1 }
+.chip.on .chip-ic { filter:none }
+.chip.on .chip-lbl { color:rgba(255,255,255,.88) }
+.chip:active { transform:scale(.91) }
+
+.hor-title em { font-style:normal; background:linear-gradient(135deg,var(--d),#7affcc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
+
+.gym-section { margin-top:24px }
+.gym-day { display:flex; align-items:flex-start; gap:10px; padding:11px 14px; border-radius:14px; background:var(--s2); border:1px solid var(--b1); margin-bottom:7px }
+.gym-today { background:rgba(61,255,163,.06); border-color:rgba(61,255,163,.2) }
+.gym-day-name { font-family:'Inter',sans-serif; font-size:12px; font-weight:700; color:var(--t2); width:72px; flex-shrink:0; display:flex; align-items:center; gap:5px; padding-top:3px }
+.gym-now-pip { width:6px; height:6px; border-radius:50%; background:var(--d); box-shadow:0 0 6px rgba(61,255,163,.5); flex-shrink:0 }
+.gym-slots { display:flex; flex-direction:column; gap:5px; flex:1 }
+.gym-slot { display:flex; align-items:center; justify-content:space-between; padding:6px 10px; border-radius:10px; gap:8px }
+.gym-slot-dan { background:rgba(61,255,163,.08); border:1px solid rgba(61,255,163,.15) }
+.gym-slot-nic { background:rgba(200,127,255,.08); border:1px solid rgba(200,127,255,.15) }
+.gym-slot-who { font-family:'Inter',sans-serif; font-size:12px; font-weight:700 }
+.gym-slot-who.dan { color:var(--d) }
+.gym-slot-who.nic { color:var(--n) }
+.gym-slot-time { font-family:'Inter',sans-serif; font-size:11px; font-weight:500; color:var(--t3) }
 </style>
 </head>
 <body>
@@ -1141,8 +1175,8 @@ button:active { transform:scale(.94) }
     </button>
     <button class="cam-retake" id="cam-retake" onclick="retakePhoto()">↩ Retomar</button>
     <button class="cam-confirm" id="cam-confirm" onclick="confirmPhoto()">✓ Confirmar</button>
-    <input type="file" accept="image/*" id="cam-file" style="display:none" onchange="handleFilePhoto(event)"/>
-    <button class="cam-upload-btn" onclick="$('cam-file').click()">Subir desde galería</button>
+    <input type="file" accept="image/*" capture="environment" id="cam-file" style="display:none" onchange="handleFilePhoto(event)"/>
+    
   </div>
 </div>
 
@@ -1260,6 +1294,8 @@ button:active { transform:scale(.94) }
   </div>
 </div>
 
+
+
 <!-- BOTTOM NAV BAR -->
 <nav class="bnav" id="bnav">
   <div class="pill-bar" id="pill-bar">
@@ -1277,10 +1313,18 @@ button:active { transform:scale(.94) }
     </button>
   </div>
   <div class="chips-row">
-    <button class="chip" id="bnav-lista"      onclick="setTab('lista')">Lista</button>
-    <button class="chip" id="bnav-historial"  onclick="setTab('historial')">Historial</button>
-    <button class="chip" id="bnav-horario"    onclick="setTab('horario')">Cocina</button>
-    <button class="chip" id="bnav-calendario" onclick="setTab('calendario')">Calendario</button>
+    <button class="chip" id="bnav-lista"      onclick="setTab('lista')">
+      <span class="chip-ic">☰</span><span class="chip-lbl">Lista</span>
+    </button>
+    <button class="chip" id="bnav-historial"  onclick="setTab('historial')">
+      <span class="chip-ic">📋</span><span class="chip-lbl">Historial</span>
+    </button>
+    <button class="chip" id="bnav-horario"    onclick="setTab('horario')">
+      <span class="chip-ic">🍳</span><span class="chip-lbl">Cocina</span>
+    </button>
+    <button class="chip" id="bnav-calendario" onclick="setTab('calendario')">
+      <span class="chip-ic">📅</span><span class="chip-lbl">Cal.</span>
+    </button>
   </div>
 </nav>
 
@@ -1317,8 +1361,12 @@ const TASKS = [
    steps:["Dobla la frazada y déjala sobre el futón.","Acomoda los cojines en su lugar.","Fíjate que no haya cosas tiradas encima."]},
   {id:"d2",icon:"🌿",title:"Regar las plantas",freq:"diaria",person:"Daniel",time:5,pts:1,note:null,
    steps:["Revisa que la tierra esté seca al tacto.","Riega con moderación, sin encharcar.","Saca las hojas secas que haya."]},
-  {id:"d3",icon:"🏋️",title:"Ordenar cosas del gym",freq:"diaria",person:"Daniel",time:10,pts:1,note:null,
+  {id:"d3",icon:"🏋️",title:"Ordenar gym",freq:"diaria",person:"Daniel",time:10,pts:1,note:null,
    steps:["Guarda ropa o toallas de entrenamiento.","Ordena mancuernas y accesorios en su lugar.","Limpia el piso de esa zona."]},
+  {id:"d4",icon:"🏋️",title:"Ordenar gym",freq:"diaria",person:"Nicolas",time:10,pts:1,note:null,
+   steps:["Guarda ropa o toallas de entrenamiento.","Ordena mancuernas y accesorios en su lugar.","Limpia el piso de esa zona."]},
+  {id:"d5",icon:"🛋️",title:"Ordenar futón, frazada y cojines",freq:"diaria",person:"Nicolas",time:5,pts:2,note:null,
+   steps:["Dobla la frazada y déjala sobre el futón.","Acomoda los cojines en su lugar.","Fíjate que no haya cosas tiradas encima."]},
   // SEMANALES
   {id:"s1",icon:"🗑️",title:"Basura — Lunes",freq:"semanal",person:"rotate",time:5,pts:3,
    note:"Cada lunes · turno rotativo",
@@ -1332,7 +1380,7 @@ const TASKS = [
    steps:["Aspira o barre la alfombra para sacar polvo y pelo.","Barre el piso hacia un solo lado.","Trapea con limpiapisos diluido en agua tibia, de adentro hacia la salida."]},
   {id:"s4",icon:"🏠",title:"Limpiar piso de la cocina",freq:"semanal",person:"Daniel",time:15,pts:3,note:null,
    steps:["Barre bien incluyendo los rincones.","Trapea con limpiapisos.","Deja secar antes de volver a pisar."]},
-  {id:"s5",icon:"🛋️",title:"Limpiar living: mueble y tele",freq:"semanal",person:"Nicolas",time:20,pts:8,note:null,
+  {id:"s5",icon:"🛋️",title:"Limpiar living: mueble, tele y plumero",freq:"semanal",person:"Nicolas",time:25,pts:8,note:null,
    steps:["Pasa limpiamuebles en el sillón con paño suave.","Limpia la tele con microfibra seco.","Saca el polvo de los bordes y atrás de la tele."]},
   {id:"s6",icon:"⚡",title:"Limpiar cocina eléctrica",freq:"semanal",person:"Daniel",time:20,pts:10,note:null,
    steps:["Asegúrate que esté fría y apagada.","Aplica KH7 en las zonas sucias.","Frota con esponja metálica donde haya restos quemados.","Pasa paño húmedo y seca bien."]},
@@ -1372,6 +1420,7 @@ const SC = {
 const MONTHS = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DAYS   = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
 const LOOK_BACK = {diaria:7, semanal:8, mensual:6, trimestral:4};
+const APP_START_DATE = "2026-03-24"; // App starts today
 
 let activeTab = sessionStorage.getItem("td26_tab") || "hoy";
 let openCards = {};
@@ -1432,6 +1481,19 @@ function loadLocalStorage(){
   for(let i=0;i<localStorage.length;i++){
     const k=localStorage.key(i);
     if(k&&k.startsWith('td26_')&&!k.startsWith('td26_photo_'))dbCache[k]=localStorage.getItem(k);
+  }
+}
+
+function pruneOldPhotos(){
+  const photoKeys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("td26_photo_"))photoKeys.push(k);
+  }
+  const toRemove=Math.max(1,Math.floor(photoKeys.length/2));
+  for(let i=0;i<toRemove;i++){
+    localStorage.removeItem(photoKeys[i]);
+    delete photoCache[photoKeys[i].replace("td26_photo_","")];
   }
 }
 function loadPhotos(){
@@ -1562,11 +1624,11 @@ function handleFilePhoto(e){
     img.onload = () => {
       // Compress
       const canvas = document.createElement("canvas");
-      const scale  = Math.min(1, 640/img.width);
+      const scale  = Math.min(1,480/img.width);
       canvas.width  = Math.round(img.width  * scale);
       canvas.height = Math.round(img.height * scale);
       canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.5);
+      const dataUrl = canvas.toDataURL("image/jpeg",0.38);
 
       // AUTO-CONFIRM: save task immediately, no extra tap needed
       autoConfirmPhoto(savedTaskId, dataUrl);
@@ -1597,7 +1659,10 @@ function autoConfirmPhoto(taskId, dataUrl){
     const k = zoeKey(zId);              // ← usa zoeKey() para key consistente
     dbCache[k]=stamp; localStorage.setItem(k, stamp);
     photoCache[k]=dataUrl;
-    try{ localStorage.setItem("td26_photo_"+k, dataUrl); }catch(err){}
+    try{
+      localStorage.setItem("td26_photo_"+k,dataUrl);
+      if(!localStorage.getItem("td26_photo_"+k)){ pruneOldPhotos(); localStorage.setItem("td26_photo_"+k,dataUrl); }
+    }catch(err){ pruneOldPhotos(); try{localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e2){} }
     renderZoeModule();
     schedulePush();
     sessionStorage.removeItem("pendingCamTask");
@@ -1615,7 +1680,10 @@ function autoConfirmPhoto(taskId, dataUrl){
     const k = sKey(taskId, periodKey(t.freq, NOW));
     dbCache[k]=stamp; localStorage.setItem(k, stamp);
     photoCache[k]=dataUrl;
-    try{ localStorage.setItem("td26_photo_"+k, dataUrl); }catch(err){}
+    try{
+      localStorage.setItem("td26_photo_"+k,dataUrl);
+      if(!localStorage.getItem("td26_photo_"+k)){ pruneOldPhotos(); localStorage.setItem("td26_photo_"+k,dataUrl); }
+    }catch(err){ pruneOldPhotos(); try{localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e2){} }
     render();
     schedulePush();
     sessionStorage.removeItem("pendingCamTask");
@@ -1847,7 +1915,7 @@ function cardHTML(t){
   const isDan=effectivePerson(t)==="Daniel";
   const k=tKey(t);
   const photo=photoCache[k]||localStorage.getItem("td26_photo_"+k);
-  const needsPhoto=done&&!photo;
+  const needsPhoto=false; // photo always on local device
   const ckCls=done?(isDan?"ck-d":"ck-n"):"";
 
   let verifyContent;
@@ -1855,7 +1923,8 @@ function cardHTML(t){
     if(photo){
       verifyContent=`<span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">${tickV} Verificado · ${stamp}</span><img class="v-img" src="${photo}" onclick="openLightbox('${photo}')" title="Ver foto"/>`;
     } else {
-      verifyContent=`<span style="font-size:10px;font-weight:700;color:var(--err);display:flex;align-items:center;gap:4px">📷 Falta foto</span><button class="v-photo-btn" onclick="openCamera('${t.id}')">Tomar foto</button>`;
+      // Photo is on the other person's device — show verified anyway
+      verifyContent=`<span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">${tickV} Verificado · ${stamp}</span>`;
     }
   } else {
     verifyContent=`<span class="v-pend">Pendiente</span><span class="v-time">—</span>`;
@@ -2114,14 +2183,43 @@ function horarioView(){
     </div>`;
   }
 
-  return `<div class="hor-wrap">
+  
+  // Gym schedule
+  const gymSchedule = [
+    {day:"Lunes",    dan:"07:00-08:00", nic:"08:00-09:00"},
+    {day:"Martes",   dan:"18:00-19:00", nic:"07:00-08:00"},
+    {day:"Miercoles",dan:"07:00-08:00", nic:"08:00-09:00"},
+    {day:"Jueves",   dan:"18:00-19:00", nic:"07:00-08:00"},
+    {day:"Viernes",  dan:"07:00-08:00", nic:"08:00-09:00"},
+    {day:"Sabado",   dan:"Libre",       nic:"Libre"},
+    {day:"Domingo",  dan:"Libre",       nic:"Libre"},
+  ];
+  const todayDow = now.getDay();
+  const gymRows = gymSchedule.map(function(d,i){
+    const isToday = i === (todayDow===0?6:todayDow-1);
+    return '<div class="gym-day'+(isToday?' gym-today':'')+'">'+
+      '<div class="gym-day-name">'+d.day+(isToday?'<span class="gym-now-pip"></span>':'')+'</div>'+
+      '<div class="gym-slots">'+
+        '<div class="gym-slot gym-slot-dan"><span class="gym-slot-who dan">Daniel</span><span class="gym-slot-time">'+d.dan+'</span></div>'+
+        '<div class="gym-slot gym-slot-nic"><span class="gym-slot-who nic">Nicolas</span><span class="gym-slot-time">'+d.nic+'</span></div>'+
+      '</div></div>';
+  }).join("");
+return `<div class="hor-wrap">
     <div class="hor-top">
       <div class="hor-eyebrow">Organización del depto</div>
-      <div class="hor-title">Uso de Cocina</div>
+      <div class="hor-title">Cocina <em>Depto</em></div>
       <div class="hor-sub">Lunes a Viernes · turnos sin conflicto</div>
     </div>
     ${liveCard}
     ${blocksHtml}
+    <div class="gym-section">
+      <div style="margin-bottom:14px">
+        <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,244,250,.22);margin-bottom:6px">Horario semanal</div>
+        <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:900;letter-spacing:-.03em;color:#f4f4fa;margin-bottom:2px">Gym <em style=\"font-style:normal;background:linear-gradient(135deg,#3dffa3,#7affcc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text\">Depto</em></div>
+        <div style="font-family:'Inter',sans-serif;font-size:12px;color:rgba(244,244,250,.3)">Turnos para evitar conflictos</div>
+      </div>
+      \${gymRows}
+    </div>
     <div class="hor-footer">
       <div class="hor-footer-dot"></div>
       Sin conflictos de horario · cada persona tiene su turno asignado
@@ -2141,12 +2239,14 @@ function histView(){
     for(const t of TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
     if(!taskId)continue;
     const task=taskById(taskId);
+    if(period < APP_START_DATE) continue;
     entries.push({task,period,stamp,key:k,missed:false});
   }
-  const freqs=["semanal","mensual","trimestral"];
+  const freqs=["diaria","semanal","mensual","trimestral"];
   for(const t of TASKS){
     if(!freqs.includes(t.freq))continue;
     for(const pk of pastPeriodKeys(t.freq,LOOK_BACK[t.freq])){
+      if(pk < APP_START_DATE) continue;
       const k=sKey(t.id,pk);
       if(!dbCache[k]&&!dbCache[k.replace(/[.#$\[\]]/g,'_')]){
         entries.push({task:t,period:pk,stamp:null,key:k,missed:true});
@@ -2161,6 +2261,7 @@ function histView(){
     for(const t of ZOE_TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
     if(!taskId)continue;
     const task={...ZOE_taskById(taskId),person:"Zoe"};
+    if(period < APP_START_DATE) continue;
     entries.push({task,period,stamp,key:k,missed:false,isZoe:true});
   }
   if(!entries.length)return `<div class="hist-empty">Sin historial todavía.<br>Marca tu primera tarea ✅</div>`;
@@ -2435,7 +2536,7 @@ function zoeCardHTML(t, isDan){
   const stamp = getZoeStamp(t.id);
   const k = zoeKey(t.id);
   const photo = photoCache[k] || localStorage.getItem("td26_photo_"+k);
-  const needsPhoto = done && !photo;
+  const _needsPhoto=false; // photo on device
   const ckCls = done ? "done-zoe" : "";
 
   let verifyContent;
@@ -2443,7 +2544,7 @@ function zoeCardHTML(t, isDan){
     if(photo){
       verifyContent = `<span class="v-ok" style="color:#f9a8d4">${tickV} Verificado · ${stamp}</span><img class="v-img" src="${photo}" onclick="openLightbox('${photo}')" title="Ver foto"/>`;
     } else {
-      verifyContent = `<span style="font-size:10px;font-weight:700;color:var(--err);display:flex;align-items:center;gap:4px">📷 Falta foto</span><button class="v-photo-btn" onclick="openCameraZoe('${t.id}')">Tomar foto</button>`;
+      verifyContent = `<span class="v-ok" style="color:#f9a8d4">${tickV} Verificado · ${stamp}</span>`;
     }
   } else {
     verifyContent = `<span class="v-pend">Pendiente</span><span class="v-time">—</span>`;
@@ -2645,8 +2746,10 @@ document.addEventListener("visibilitychange", function(){
 loadLocalStorage();loadPhotos();render();renderZoeModule();updateTabProgress();
 (()=>{const b=$("bnav-"+activeTab);if(b)b.classList.add("on");updateBnavPips();})()
 initIdentity();
-// Ensure all modals are hidden on load (iOS can restore DOM state)
+// Ensure reset modal is hidden on load (iOS can restore DOM state)
 const _m=$("reset-modal"); if(_m) _m.style.display="none";
+const _cm=$("clear-all-modal"); if(_cm) _cm.style.display="none";
+// Note: identity-modal is handled by initIdentity()
 // initSync() called in new sync block
 
 
@@ -3142,5 +3245,102 @@ function initSync(){
   }
 }
 initSync();
+
+function clearAllData(){
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("td26_"))keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+  for(const k in dbCache)delete dbCache[k];
+  for(const k in photoCache)delete photoCache[k];
+  if(hasSyncUrl()){
+    fetch(String(_syncUrl)+"/"+SYNC_PATH+".json",{
+      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
+    }).then(()=>setSyncDot("ok","☁️ Limpio"))
+      .catch(()=>setSyncDot("err","Error Firebase"));
+  }
+  render();renderZoeModule();
+  showToast("🗑️ Historial borrado — ¡Empezamos!");
+}
+function showClearAllModal(){const m=$("clear-all-modal");if(m)m.style.display="flex";}
+function hideClearAllModal(){const m=$("clear-all-modal");if(m)m.style.display="none";}
+function confirmClearAll(){hideClearAllModal();clearAllData();}
+function initSync(){
+  if(hasSyncUrl()){
+    setSyncDot("syncing","Conectando…");
+    pullFromSync(true).then(ok=>{
+      if(ok) startPoll();
+      else setSyncDot("err","Sin conexión");
+    });
+  } else {
+    setSyncDot("","Activar sync");
+  }
+}
+initSync();
+
+function initSync(){
+  if(hasSyncUrl()){
+    setSyncDot("syncing","Conectando…");
+    pullFromSync(true).then(ok=>{
+      if(ok) startPoll();
+      else setSyncDot("err","Sin conexión");
+    });
+  } else {
+    setSyncDot("","Activar sync");
+  }
+}
+initSync();
+
+function clearAllData(){
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("td26_"))keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+  for(const k in dbCache)delete dbCache[k];
+  for(const k in photoCache)delete photoCache[k];
+  if(hasSyncUrl()){
+    fetch(String(_syncUrl)+"/"+SYNC_PATH+".json",{
+      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
+    }).then(()=>setSyncDot("ok","☁️ Limpio"))
+      .catch(()=>setSyncDot("err","Error Firebase"));
+  }
+  render();renderZoeModule();
+  showToast("🗑️ Historial borrado — ¡Empezamos!");
+}
+function showClearAllModal(){const m=$("clear-all-modal");if(m)m.style.display="flex";}
+function hideClearAllModal(){const m=$("clear-all-modal");if(m)m.style.display="none";}
+function confirmClearAll(){hideClearAllModal();clearAllData();}
+function initSync(){
+  if(hasSyncUrl()){
+    setSyncDot("syncing","Conectando…");
+    pullFromSync(true).then(ok=>{
+      if(ok) startPoll();
+      else setSyncDot("err","Sin conexión");
+    });
+  } else {
+    setSyncDot("","Activar sync");
+  }
+}
+initSync();
+
+function initSync(){
+  if(hasSyncUrl()){
+    setSyncDot("syncing","Conectando…");
+    pullFromSync(true).then(ok=>{
+      if(ok) startPoll();
+      else setSyncDot("err","Sin conexión");
+    });
+  } else {
+    setSyncDot("","Activar sync");
+  }
+}
+initSync();
+
+
+
 
 </script>
