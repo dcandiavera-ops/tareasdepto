@@ -503,7 +503,7 @@ button:active { transform:scale(.94) }
 .save-flash.show { opacity:1; transform:translateY(0) }
 
 /* ═══ CAMERA ═══ */
-.cam-overlay { position:fixed; inset:0; background:#000; z-index:200; display:flex; flex-direction:column }
+.cam-overlay { position:fixed; inset:0; background:#000; z-index:400; display:flex; flex-direction:column }
 .cam-overlay.hidden { display:none }
 .cam-topbar { display:flex; align-items:center; justify-content:space-between; padding:max(env(safe-area-inset-top),20px) 16px 14px; background:rgba(0,0,0,.55); backdrop-filter:blur(12px); flex-shrink:0 }
 .cam-topbar-title { font-size:11px; font-weight:800; color:rgba(255,255,255,.45); text-transform:uppercase; letter-spacing:.16em }
@@ -518,7 +518,7 @@ button:active { transform:scale(.94) }
 .cam-info { padding:12px 20px 8px; background:rgba(0,0,0,.65); backdrop-filter:blur(8px); flex-shrink:0; text-align:center }
 .cam-hint { font-size:12px; color:rgba(255,255,255,.75); font-weight:600; margin-bottom:3px }
 .cam-req { font-size:11px; color:var(--warn); font-weight:800 }
-.cam-actions { display:flex; align-items:center; justify-content:space-around; padding:16px 20px max(env(safe-area-inset-bottom),22px); background:rgba(0,0,0,.65); backdrop-filter:blur(8px); flex-shrink:0 }
+.cam-actions { display:flex; align-items:center; justify-content:space-around; padding:16px 20px max(env(safe-area-inset-bottom,0px),24px); background:rgba(0,0,0,.65); backdrop-filter:blur(8px); flex-shrink:0 }
 .cam-shutter { width:70px; height:70px; border-radius:50%; background:#fff; border:4px solid rgba(255,255,255,.35); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 3px rgba(255,255,255,.18) }
 .cam-shutter-inner { width:54px; height:54px; border-radius:50%; background:#fff; border:2px solid #d0d0d0 }
 .cam-retake { display:none; font-size:13px; font-weight:800; color:#fff; background:rgba(255,255,255,.1); padding:11px 20px; border-radius:var(--r99); border:1px solid rgba(255,255,255,.15) }
@@ -526,7 +526,7 @@ button:active { transform:scale(.94) }
 .cam-upload-btn { font-size:11px; font-weight:800; color:rgba(255,255,255,.55); background:rgba(255,255,255,.07); padding:9px 15px; border-radius:var(--r99); border:1px solid rgba(255,255,255,.1) }
 
 /* ═══ LIGHTBOX ═══ */
-.lightbox { position:fixed; inset:0; background:rgba(0,0,0,.94); z-index:300; display:flex; align-items:center; justify-content:center; padding:20px }
+.lightbox { position:fixed; inset:0; background:rgba(0,0,0,.94); z-index:401; display:flex; align-items:center; justify-content:center; padding:20px }
 .lightbox.hidden { display:none }
 .lightbox img { max-width:100%; max-height:90dvh; border-radius:16px; object-fit:contain }
 .lightbox-x { position:absolute; top:18px; right:18px; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.1); color:#fff; font-size:16px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.12) }
