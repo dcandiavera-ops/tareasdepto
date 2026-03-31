@@ -1582,8 +1582,10 @@ async function openCamera(taskId){
 async function startStream(){
   stopStream();
   const vid = $("cam-video");
+  // Disable shutter until stream is ready
+  const shutterBtn = $("cam-shutter");
+  if(shutterBtn) shutterBtn.disabled = true;
   try{
-    // iOS Safari: avoid width/height constraints which can fail
     camStream = await navigator.mediaDevices.getUserMedia({
       video:{ facingMode: camFacingMode },
       audio: false
@@ -1591,13 +1593,24 @@ async function startStream(){
     vid.srcObject = camStream;
     vid.style.display = "";
     $("cam-flip").style.display = "";
-    $("cam-shutter").style.display = "";
-    // iOS REQUIRES explicit .play() after srcObject
+    if(shutterBtn) shutterBtn.style.display = "";
+    // Wait for video metadata so videoWidth/videoHeight are valid (Android fix)
+    await new Promise(resolve => {
+      if(vid.readyState >= 1){ resolve(); return; }
+      vid.addEventListener("loadedmetadata", resolve, {once:true});
+    });
     try{ await vid.play(); }catch(pe){ console.warn("play():", pe); }
+    // Enable shutter only after video is actually playing and has dimensions
+    await new Promise(resolve => {
+      if(vid.readyState >= 3){ resolve(); return; }
+      vid.addEventListener("canplay", resolve, {once:true});
+    });
+    if(shutterBtn) shutterBtn.disabled = false;
   }catch(e){
     console.warn("Camera error:", e.name, e.message);
     vid.style.display = "none";
     $("cam-flip").style.display = "none";
+    if(shutterBtn){ shutterBtn.disabled = false; shutterBtn.style.display = "none"; }
     // Fallback: file picker
     const fi = $("cam-file");
     if(fi){ fi.click(); }
@@ -1608,11 +1621,37 @@ function flipCamera(){camFacingMode=camFacingMode==="environment"?"user":"enviro
 
 function capturePhoto(){
   const vid=$("cam-video");
+  // Android fix: if video dimensions not ready yet, wait for them
+  if(!vid.videoWidth || !vid.videoHeight || vid.readyState < 2){
+    // Disable shutter briefly to avoid double-tap
+    const btn = $("cam-shutter");
+    if(btn) btn.disabled = true;
+    vid.addEventListener("canplay", function onReady(){
+      vid.removeEventListener("canplay", onReady);
+      if(btn) btn.disabled = false;
+      _doCapture(vid);
+    }, {once:true});
+    return;
+  }
+  _doCapture(vid);
+}
+function _doCapture(vid){
   const canvas=document.createElement("canvas");
-  const scale=Math.min(1,640/vid.videoWidth);
-  canvas.width=Math.round(vid.videoWidth*scale);
-  canvas.height=Math.round(vid.videoHeight*scale);
-  canvas.getContext("2d").drawImage(vid,0,0,canvas.width,canvas.height);
+  const w = vid.videoWidth  || vid.clientWidth  || 640;
+  const h = vid.videoHeight || vid.clientHeight || 480;
+  const scale=Math.min(1,640/w);
+  canvas.width=Math.round(w*scale);
+  canvas.height=Math.round(h*scale);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(vid,0,0,canvas.width,canvas.height);
+  // Verify we didn't get a black frame (sum of a few pixels > 0)
+  const px = ctx.getImageData(canvas.width>>1, canvas.height>>1, 4, 4).data;
+  const bright = px.reduce((a,b)=>a+b,0);
+  if(bright === 0){
+    // Frame is black — wait one more frame and retry
+    requestAnimationFrame(()=>_doCapture(vid));
+    return;
+  }
   capturedDataUrl=canvas.toDataURL("image/jpeg",0.5);
   showPreview(capturedDataUrl);
 }
@@ -1723,7 +1762,9 @@ function retakePhoto(){
   $("cam-shutter").style.display="";
   $("cam-retake").classList.remove("show");
   $("cam-confirm").classList.remove("show");
-  startStream();
+  const shutterBtn = $("cam-shutter");
+  if(shutterBtn) shutterBtn.disabled = true;
+  startStream(); // startStream() re-enables shutter when ready
 }
 function confirmPhoto(){
   if(!capturedDataUrl) return;
