@@ -615,6 +615,77 @@ button:active { transform:scale(.94) }
 .extra-modal-save { flex:2; padding:13px; border-radius:13px; font-size:13px; font-weight:800; background:linear-gradient(135deg,#ffd447,#ffbb00); color:#000; border:none }
 .extra-modal-save:disabled { opacity:.4 }
 
+
+/* ═══ ZOE SUPPLY (Abastecimiento) ═══ */
+.zs-wrap { padding:4px 0 8px }
+
+/* Dashboard cards */
+/* summary cards removed — no duration tracking */
+
+/* Section titles */
+.zs-section-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:10px; margin-top:4px;
+}
+.zs-section-title { font-size:12px; font-weight:900; color:var(--t0); letter-spacing:-.01em }
+.zs-add-btn {
+  font-size:11px; font-weight:800; padding:6px 12px; border-radius:99px;
+  border:none; cursor:pointer;
+}
+.zs-add-food { background:rgba(251,191,36,.15); color:#fbbf24; border:1px solid rgba(251,191,36,.3) }
+.zs-add-sand { background:rgba(167,139,250,.15); color:#a78bfa; border:1px solid rgba(167,139,250,.3) }
+
+/* Log entries */
+.zs-log { display:flex; flex-direction:column; gap:6px; margin-bottom:18px }
+.zs-entry {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 13px; border-radius:13px;
+  background:var(--s2); border:1px solid var(--b1);
+  position:relative; overflow:hidden;
+}
+.zs-entry::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px;
+}
+.zs-entry-food::before { background:linear-gradient(180deg,#fbbf24,rgba(251,191,36,.1)) }
+.zs-entry-sand::before { background:linear-gradient(180deg,#a78bfa,rgba(167,139,250,.1)) }
+.zs-entry-icon { font-size:18px; flex-shrink:0 }
+.zs-entry-info { flex:1; min-width:0 }
+.zs-entry-kg { font-size:13px; font-weight:800; color:var(--t0) }
+.zs-entry-meta { font-size:11px; color:var(--t3); margin-top:2px; display:flex; gap:6px; flex-wrap:wrap }
+.zs-entry-price { font-weight:700 }
+.zs-entry-date { color:var(--t2) }
+.zs-entry-del { font-size:11px; font-weight:700; color:var(--err); background:rgba(255,107,107,.07); border:1px solid rgba(255,107,107,.15); border-radius:8px; padding:4px 9px; flex-shrink:0 }
+.zs-empty { text-align:center; padding:12px 0 6px; font-size:12px; color:var(--t3) }
+
+/* Supply modal */
+.zs-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:300; display:flex; align-items:flex-end; justify-content:center }
+.zs-modal-overlay.hidden { display:none }
+.zs-modal {
+  width:100%; max-width:480px; flex-shrink:0;
+  background:#1a1a26; border:1px solid rgba(255,255,255,.14);
+  border-radius:26px 26px 0 0;
+  padding:20px 18px max(env(safe-area-inset-bottom,0px),32px);
+  margin-top:auto;
+}
+.zs-modal-handle { width:38px; height:4px; background:var(--s5); border-radius:99px; margin:0 auto 18px }
+.zs-modal-title { font-size:18px; font-weight:900; color:var(--t0); letter-spacing:-.03em; margin-bottom:16px }
+.zs-modal-title span { font-size:20px; margin-right:6px }
+.zs-field-label { font-size:11px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:5px }
+.zs-input-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px }
+.zs-input {
+  width:100%; padding:12px 14px; border-radius:12px;
+  background:var(--s4); border:1px solid var(--b2);
+  color:var(--t0); font-size:14px; font-family:'Inter',sans-serif;
+  outline:none;
+}
+.zs-input-food:focus { border-color:rgba(251,191,36,.4) }
+.zs-input-sand:focus { border-color:rgba(167,139,250,.4) }
+.zs-input-full { grid-column:1/-1 }
+.zs-modal-actions { display:flex; gap:8px; margin-top:4px }
+.zs-modal-cancel { flex:1; padding:13px; border-radius:13px; font-size:13px; font-weight:800; background:var(--s3); border:1px solid var(--b1); color:var(--t2) }
+.zs-modal-save-food { flex:2; padding:13px; border-radius:13px; font-size:13px; font-weight:800; background:linear-gradient(135deg,#f59e0b,#fbbf24); color:#000; border:none }
+.zs-modal-save-sand { flex:2; padding:13px; border-radius:13px; font-size:13px; font-weight:800; background:linear-gradient(135deg,#7c3aed,#a78bfa); color:#fff; border:none }
+
 /* ═══ SAVE BUTTON ═══ */
 .save-wrap { position:fixed; bottom:22px; right:16px; z-index:90; transform:translateY(90px); opacity:0; transition:transform .35s cubic-bezier(.34,1.28,.64,1),opacity .3s; pointer-events:none }
 .save-wrap.show { transform:translateY(0); opacity:1; pointer-events:all }
@@ -1254,10 +1325,11 @@ button:active { transform:scale(.94) }
   <div class="zoe-body">
     <!-- Zoe Tabs -->
     <div class="zoe-tabs">
-      <button class="ztab on" id="ztab-hoy"       onclick="setZoeTab('hoy')">Hoy</button>
-      <button class="ztab"    id="ztab-semana"     onclick="setZoeTab('semana')">Semana</button>
-      <button class="ztab"    id="ztab-mes"        onclick="setZoeTab('mes')">Mes</button>
-      <button class="ztab"    id="ztab-trimestre"  onclick="setZoeTab('trimestre')">Trimestre</button>
+      <button class="ztab on" id="ztab-hoy"        onclick="setZoeTab('hoy')">Hoy</button>
+      <button class="ztab"    id="ztab-semana"      onclick="setZoeTab('semana')">Semana</button>
+      <button class="ztab"    id="ztab-mes"         onclick="setZoeTab('mes')">Mes</button>
+      <button class="ztab"    id="ztab-trimestre"   onclick="setZoeTab('trimestre')">Trim.</button>
+      <button class="ztab"    id="ztab-abastec"     onclick="setZoeTab('abastec')">🛒 Stock</button>
     </div>
     <!-- Progress -->
     <div class="zoe-prog-row">
@@ -1304,6 +1376,53 @@ button:active { transform:scale(.94) }
   </div>
 </div>
 
+
+
+<!-- ZOE SUPPLY MODALS -->
+<div class="zs-modal-overlay hidden" id="zs-food-modal" onclick="if(event.target===this)closeZsModal('food')">
+  <div class="zs-modal">
+    <div class="zs-modal-handle"></div>
+    <div class="zs-modal-title"><span>🐱</span>Compra de alimento</div>
+    <div class="zs-field-label">Kilos comprados</div>
+    <input class="zs-input zs-input-food" id="zs-food-kg" type="number" min="0.1" step="0.1" placeholder="Ej: 3.5" style="margin-bottom:12px;width:100%"/>
+    <div class="zs-input-row">
+      <div>
+        <div class="zs-field-label">Precio ($)</div>
+        <input class="zs-input zs-input-food" id="zs-food-price" type="number" min="0" step="100" placeholder="Ej: 12000"/>
+      </div>
+      <div>
+        <div class="zs-field-label">Fecha de compra</div>
+        <input class="zs-input zs-input-food" id="zs-food-date" type="date"/>
+      </div>
+    </div>
+    <div class="zs-modal-actions">
+      <button class="zs-modal-cancel" onclick="closeZsModal('food')">Cancelar</button>
+      <button class="zs-modal-save-food" onclick="saveZsEntry('food')">Guardar compra</button>
+    </div>
+  </div>
+</div>
+<div class="zs-modal-overlay hidden" id="zs-sand-modal" onclick="if(event.target===this)closeZsModal('sand')">
+  <div class="zs-modal">
+    <div class="zs-modal-handle"></div>
+    <div class="zs-modal-title"><span>🪨</span>Compra de arena</div>
+    <div class="zs-field-label">Kilos comprados</div>
+    <input class="zs-input zs-input-sand" id="zs-sand-kg" type="number" min="0.1" step="0.1" placeholder="Ej: 10" style="margin-bottom:12px;width:100%"/>
+    <div class="zs-input-row">
+      <div>
+        <div class="zs-field-label">Precio ($)</div>
+        <input class="zs-input zs-input-sand" id="zs-sand-price" type="number" min="0" step="100" placeholder="Ej: 4500"/>
+      </div>
+      <div>
+        <div class="zs-field-label">Fecha de compra</div>
+        <input class="zs-input zs-input-sand" id="zs-sand-date" type="date"/>
+      </div>
+    </div>
+    <div class="zs-modal-actions">
+      <button class="zs-modal-cancel" onclick="closeZsModal('sand')">Cancelar</button>
+      <button class="zs-modal-save-sand" onclick="saveZsEntry('sand')">Guardar compra</button>
+    </div>
+  </div>
+</div>
 
 <!-- EXTRA TASKS MODAL -->
 <div class="extra-modal-overlay hidden" id="extra-modal-overlay" onclick="if(event.target===this)closeExtraModal()">
@@ -2765,6 +2884,15 @@ function renderZoeModule(){
   $("zoe-prog-pct").textContent=pct+"%";
   $("zoe-sub").textContent=`${allDone}/${allTotal} tareas · ${MONTHS[monthIdx]}`;
 
+  // Supply tab
+  if(zoeActiveTab==="abastec"){
+    const prog=$("zoe-prog-fill"); if(prog) prog.style.width="100%";
+    const pct=$("zoe-prog-pct"); if(pct) pct.textContent="🛒";
+    const sub=$("zoe-sub"); if(sub) sub.textContent="Registro de compras";
+    $("zoe-tasks").innerHTML = renderZsTab();
+    return;
+  }
+
   // Tasks for active tab
   const tasks=getZoeTabTasks();
   const container=$("zoe-tasks");
@@ -3553,6 +3681,153 @@ autoConfirmPhoto = function(taskId, dataUrl){
     camTaskId = pending;
   }
 })();
+
+
+// ══════════════════════════════════════
+// ZOE SUPPLY — Registro de compras
+// ══════════════════════════════════════
+
+// Food: kg/día consumo = 1 gato adulto ≈ 60g/día = 0.06 kg/día
+// Sand: ≈ 0.15 kg/día (cambio 1x semana ~1kg, o 0.15 avg)
+// ZS constants removed — no duration tracking
+
+let zsFood = JSON.parse(localStorage.getItem("td26_zs_food") || "[]");
+let zsSand = JSON.parse(localStorage.getItem("td26_zs_sand") || "[]");
+
+function saveZsData(){
+  try{ localStorage.setItem("td26_zs_food", JSON.stringify(zsFood)); }catch(e){}
+  try{ localStorage.setItem("td26_zs_sand", JSON.stringify(zsSand)); }catch(e){}
+}
+
+function openZsModal(type){
+  const today = new Date().toISOString().slice(0,10);
+  if(type==="food"){
+    $("zs-food-kg").value=""; $("zs-food-price").value=""; $("zs-food-date").value=today;
+    $("zs-food-modal").classList.remove("hidden");
+  } else {
+    $("zs-sand-kg").value=""; $("zs-sand-price").value=""; $("zs-sand-date").value=today;
+    $("zs-sand-modal").classList.remove("hidden");
+  }
+}
+function closeZsModal(type){
+  $(type==="food"?"zs-food-modal":"zs-sand-modal").classList.add("hidden");
+}
+function saveZsEntry(type){
+  if(type==="food"){
+    const kg   = parseFloat($("zs-food-kg").value)||0;
+    const price= parseFloat($("zs-food-price").value)||0;
+    const date = $("zs-food-date").value || new Date().toISOString().slice(0,10);
+    if(!kg){ alert("Ingresa los kilos"); return; }
+    zsFood.unshift({id:Date.now(), kg, price, date});
+    saveZsData(); closeZsModal("food");
+  } else {
+    const kg   = parseFloat($("zs-sand-kg").value)||0;
+    const price= parseFloat($("zs-sand-price").value)||0;
+    const date = $("zs-sand-date").value || new Date().toISOString().slice(0,10);
+    if(!kg){ alert("Ingresa los kilos"); return; }
+    zsSand.unshift({id:Date.now(), kg, price, date});
+    saveZsData(); closeZsModal("sand");
+  }
+  // Re-render supply tab if active
+  if(zoeActiveTab==="abastec") renderZoeModule();
+}
+function deleteZsEntry(type, id){
+  if(type==="food") zsFood = zsFood.filter(e=>e.id!==id);
+  else              zsSand = zsSand.filter(e=>e.id!==id);
+  saveZsData();
+  if(zoeActiveTab==="abastec") renderZoeModule();
+}
+
+// zsCalcDaysLeft removed — no duration tracking
+
+function zsFormatDate(dateStr){
+  const [y,m,d] = dateStr.split("-").map(Number);
+  return `${d} ${MONTHS[m-1].slice(0,3)} ${y}`;
+}
+
+function renderZsTab(){
+  function lastBuy(entries){
+    if(!entries.length) return null;
+    // already sorted newest first
+    return entries[0];
+  }
+  function summaryCard(type, entries){
+    const isFood = type==="food";
+    const icon   = isFood ? "🐱" : "🪨";
+    const label  = isFood ? "Alimento" : "Arena";
+    const accent = isFood ? "#fbbf24" : "#a78bfa";
+    const bg     = isFood ? "rgba(251,191,36,.08)" : "rgba(167,139,250,.08)";
+    const border = isFood ? "rgba(251,191,36,.2)"  : "rgba(167,139,250,.2)";
+    const last   = lastBuy(entries);
+    if(!last){
+      return `<div style="flex:1;padding:14px 13px;border-radius:16px;background:${bg};border:1px solid ${border}">
+        <div style="font-size:20px;margin-bottom:6px">${icon}</div>
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:${accent};opacity:.6;margin-bottom:8px">${label}</div>
+        <div style="font-size:12px;color:var(--t3)">Sin compras aún</div>
+      </div>`;
+    }
+    // Days since last purchase
+    const today = new Date(); today.setHours(0,0,0,0);
+    const buyDate = new Date(last.date+"T00:00:00");
+    const daysSince = Math.floor((today - buyDate)/(1000*60*60*24));
+    const priceStr = last.price ? `$${Number(last.price).toLocaleString("es-CL")}` : "";
+    return `<div style="flex:1;padding:14px 13px;border-radius:16px;background:${bg};border:1px solid ${border};position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${accent},transparent);opacity:.5"></div>
+      <div style="font-size:20px;margin-bottom:6px">${icon}</div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:${accent};opacity:.6;margin-bottom:6px">${label}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1;color:${accent}">${last.kg}<span style="font-size:14px;font-weight:700;opacity:.7"> kg</span></div>
+      <div style="font-size:11px;color:var(--t3);margin-top:4px">${zsFormatDate(last.date)}</div>
+      ${priceStr?`<div style="font-size:11px;font-weight:700;color:var(--t2);margin-top:2px">${priceStr}</div>`:""}
+      <div style="font-size:10px;margin-top:6px;padding:3px 8px;border-radius:99px;display:inline-block;background:${bg};border:1px solid ${border};color:${accent};font-weight:700">
+        hace ${daysSince===0?"hoy":daysSince===1?"1 día":daysSince+" días"}
+      </div>
+    </div>`;
+  }
+
+  function entryRow(e, type){
+    const isFood = type==="food";
+    const icon   = isFood ? "🐱" : "🪨";
+    const priceStr = e.price ? `$${Number(e.price).toLocaleString("es-CL")}` : "Sin precio";
+    return `<div class="zs-entry zs-entry-${type}">
+      <span class="zs-entry-icon">${icon}</span>
+      <div class="zs-entry-info">
+        <div class="zs-entry-kg">${e.kg} kg</div>
+        <div class="zs-entry-meta">
+          <span class="zs-entry-price">${priceStr}</span>
+          <span>·</span>
+          <span class="zs-entry-date">${zsFormatDate(e.date)}</span>
+        </div>
+      </div>
+      <button class="zs-entry-del" onclick="deleteZsEntry('${type}',${e.id})">🗑</button>
+    </div>`;
+  }
+
+  return `<div class="zs-wrap">
+    <!-- Last purchase summary -->
+    <div style="display:flex;gap:10px;margin-bottom:16px">
+      ${summaryCard("food", zsFood)}
+      ${summaryCard("sand", zsSand)}
+    </div>
+
+    <!-- Food log -->
+    <div class="zs-section-hdr">
+      <div class="zs-section-title">🐱 Alimento · compras</div>
+      <button class="zs-add-btn zs-add-food" onclick="openZsModal('food')">+ Agregar</button>
+    </div>
+    <div class="zs-log">
+      ${zsFood.length ? zsFood.map(e=>entryRow(e,"food")).join("") : '<div class="zs-empty">Sin compras registradas</div>'}
+    </div>
+
+    <!-- Sand log -->
+    <div class="zs-section-hdr">
+      <div class="zs-section-title">🪨 Arena · compras</div>
+      <button class="zs-add-btn zs-add-sand" onclick="openZsModal('sand')">+ Agregar</button>
+    </div>
+    <div class="zs-log">
+      ${zsSand.length ? zsSand.map(e=>entryRow(e,"sand")).join("") : '<div class="zs-empty">Sin compras registradas</div>'}
+    </div>
+  </div>`;
+}
 
 // ── Pull-to-refresh (swipe down) ──────────────────────────
 (function(){
