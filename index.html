@@ -520,6 +520,99 @@ button:active { transform:scale(.94) }
 .hi-miss .hist-done-chip { background:rgba(255,107,107,.1); color:var(--err); border:1px solid rgba(255,107,107,.2) }
 .hist-empty { text-align:center; padding:48px 16px; color:var(--t3); font-size:13px; line-height:1.8 }
 
+
+/* ═══ TAREAS EXTRA ═══ */
+.extra-section {
+  background:linear-gradient(135deg,rgba(255,212,71,.06) 0%,rgba(255,212,71,.02) 100%);
+  border:1px solid rgba(255,212,71,.18);
+  border-radius:20px; padding:16px; margin-bottom:14px;
+  position:relative; overflow:hidden;
+}
+.extra-section::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,212,71,.5),transparent);
+}
+.extra-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px }
+.extra-title { font-family:'Inter',sans-serif; font-size:13px; font-weight:900; color:var(--t0); letter-spacing:-.02em }
+.extra-sub { font-size:11px; color:var(--t3); margin-top:2px; font-weight:500 }
+.extra-add-btn {
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:800; color:#000;
+  background:linear-gradient(135deg,#ffd447,#ffbb00);
+  padding:8px 14px; border-radius:var(--r99);
+  border:none; white-space:nowrap;
+}
+.extra-list { display:flex; flex-direction:column; gap:6px }
+.extra-item {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 13px; border-radius:13px;
+  background:var(--s2); border:1px solid var(--b1);
+  position:relative; overflow:hidden;
+  transition:transform .12s;
+}
+.extra-item.done {
+  background:rgba(61,255,163,.05);
+  border-color:rgba(61,255,163,.18);
+}
+.extra-item::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; border-radius:3px 0 0 3px;
+  background:rgba(255,212,71,.5);
+}
+.extra-item.done::before { background:var(--d) }
+.extra-item-icon { font-size:20px; flex-shrink:0 }
+.extra-item-info { flex:1; min-width:0 }
+.extra-item-title { font-size:13px; font-weight:700; color:var(--t0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.extra-item.done .extra-item-title { color:rgba(244,244,250,.5); text-decoration:line-through; text-decoration-color:rgba(61,255,163,.4) }
+.extra-item-meta { font-size:11px; color:var(--t3); margin-top:2px; display:flex; gap:6px; align-items:center }
+.extra-item-who { font-weight:800 }
+.extra-item-stamp { font-size:10px; color:var(--t2) }
+.extra-item-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0 }
+.extra-chk {
+  width:30px; height:30px; border-radius:9px; flex-shrink:0;
+  background:var(--s3); border:1.5px solid var(--b2);
+  display:flex; align-items:center; justify-content:center;
+  color:transparent; font-size:13px;
+}
+.extra-chk.done-d { background:rgba(61,255,163,.15); border-color:rgba(61,255,163,.4); color:var(--d) }
+.extra-chk.done-n { background:rgba(200,127,255,.15); border-color:rgba(200,127,255,.4); color:var(--n) }
+.extra-del { font-size:11px; font-weight:700; color:var(--err); background:rgba(255,107,107,.07); border:1px solid rgba(255,107,107,.15); border-radius:8px; padding:4px 9px; white-space:nowrap }
+.extra-photo-btn { font-size:11px; font-weight:700; color:var(--warn); background:rgba(255,212,71,.08); border:1px solid rgba(255,212,71,.2); border-radius:8px; padding:4px 9px; white-space:nowrap }
+.extra-v-img { width:40px; height:40px; border-radius:8px; object-fit:cover; cursor:pointer; flex-shrink:0; border:1px solid var(--b1) }
+.extra-empty { text-align:center; padding:10px 0 2px; font-size:12px; color:var(--t3) }
+
+/* Modal agregar tarea extra */
+.extra-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(10px); z-index:300; display:flex; align-items:flex-end; justify-content:center }
+.extra-modal-overlay.hidden { display:none }
+.extra-modal {
+  width:100%; max-width:480px;
+  background:var(--s2); border:1px solid var(--b2);
+  border-radius:26px 26px 0 0; padding:20px 18px 44px;
+}
+.extra-modal-handle { width:38px; height:4px; background:var(--s5); border-radius:99px; margin:0 auto 18px }
+.extra-modal-title { font-family:'Inter',sans-serif; font-size:18px; font-weight:900; color:var(--t0); letter-spacing:-.03em; margin-bottom:14px }
+.extra-field-label { font-size:11px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:5px }
+.extra-input {
+  width:100%; padding:12px 14px; border-radius:12px;
+  background:var(--s4); border:1px solid var(--b2);
+  color:var(--t0); font-size:14px; font-family:'Inter',sans-serif;
+  outline:none; margin-bottom:12px;
+}
+.extra-input:focus { border-color:rgba(255,212,71,.4) }
+.extra-who-row { display:flex; gap:8px; margin-bottom:14px }
+.extra-who-btn {
+  flex:1; padding:10px; border-radius:12px;
+  font-size:13px; font-weight:800;
+  background:var(--s3); border:1.5px solid var(--b1); color:var(--t2);
+  transition:all .15s;
+}
+.extra-who-btn.sel-d { background:rgba(61,255,163,.12); border-color:rgba(61,255,163,.35); color:var(--d) }
+.extra-who-btn.sel-n { background:rgba(200,127,255,.12); border-color:rgba(200,127,255,.35); color:var(--n) }
+.extra-modal-actions { display:flex; gap:8px; margin-top:4px }
+.extra-modal-cancel { flex:1; padding:13px; border-radius:13px; font-size:13px; font-weight:800; background:var(--s3); border:1px solid var(--b1); color:var(--t2) }
+.extra-modal-save { flex:2; padding:13px; border-radius:13px; font-size:13px; font-weight:800; background:linear-gradient(135deg,#ffd447,#ffbb00); color:#000; border:none }
+.extra-modal-save:disabled { opacity:.4 }
+
 /* ═══ SAVE BUTTON ═══ */
 .save-wrap { position:fixed; bottom:22px; right:16px; z-index:90; transform:translateY(90px); opacity:0; transition:transform .35s cubic-bezier(.34,1.28,.64,1),opacity .3s; pointer-events:none }
 .save-wrap.show { transform:translateY(0); opacity:1; pointer-events:all }
@@ -1133,6 +1226,7 @@ button:active { transform:scale(.94) }
 
   <!-- CONTENT -->
   <div id="content"></div>
+  <div id="extra-section-wrap"></div>
 <!-- ZOE MODULE -->
 <div class="zoe-module" id="zoe-module">
 
@@ -1205,6 +1299,26 @@ button:active { transform:scale(.94) }
     <button class="cam-confirm" id="cam-confirm" onclick="confirmPhoto()">✓ Confirmar</button>
     <input type="file" accept="image/*" capture="environment" id="cam-file" style="display:none" onchange="handleFilePhoto(event)"/>
     
+  </div>
+</div>
+
+
+<!-- EXTRA TASKS MODAL -->
+<div class="extra-modal-overlay hidden" id="extra-modal-overlay" onclick="if(event.target===this)closeExtraModal()">
+  <div class="extra-modal">
+    <div class="extra-modal-handle"></div>
+    <div class="extra-modal-title">➕ Agregar tarea extra</div>
+    <div class="extra-field-label">Nombre de la tarea</div>
+    <input class="extra-input" id="extra-input-title" placeholder="Ej: Comprar detergente…" maxlength="60" oninput="updateExtraSaveBtn()"/>
+    <div class="extra-field-label">¿Quién la hizo?</div>
+    <div class="extra-who-row">
+      <button class="extra-who-btn" id="extra-who-d" onclick="selectExtraWho('Daniel')">🟢 Daniel</button>
+      <button class="extra-who-btn" id="extra-who-n" onclick="selectExtraWho('Nicolas')">🟣 Nicolás</button>
+    </div>
+    <div class="extra-modal-actions">
+      <button class="extra-modal-cancel" onclick="closeExtraModal()">Cancelar</button>
+      <button class="extra-modal-save" id="extra-modal-save" onclick="saveExtraTask()" disabled>Agregar y fotografiar</button>
+    </div>
   </div>
 </div>
 
@@ -2309,6 +2423,8 @@ return `<div class="hor-wrap">
 // ══════════════════════════════════════
 function histView(){
   const entries=[];
+
+  // ── Completed tasks ──
   for(const[k,stamp]of Object.entries(dbCache)){
     if(!k.startsWith("td26_")||!stamp||typeof stamp!=="string")continue;
     const inner=k.replace("td26_","");
@@ -2317,8 +2433,12 @@ function histView(){
     if(!taskId)continue;
     const task=taskById(taskId);
     if(period < APP_START_DATE) continue;
+    // sortDate: for done tasks use the period key (YYYY-MM-DD / W-YYYY-MM-DD / etc)
+    // We use period for grouping AND sorting; stamp has no parseable date
     entries.push({task,period,stamp,key:k,missed:false});
   }
+
+  // ── Missed tasks ──
   const freqs=["diaria","semanal","mensual","trimestral"];
   for(const t of TASKS){
     if(!freqs.includes(t.freq))continue;
@@ -2330,7 +2450,8 @@ function histView(){
       }
     }
   }
-  // Zoe tasks in history
+
+  // ── Zoe completed tasks ──
   for(const[k,stamp] of Object.entries(dbCache)){
     if(!k.startsWith("td26_zoe_")||!stamp||typeof stamp!=="string")continue;
     const inner=k.replace("td26_zoe_","");
@@ -2341,14 +2462,58 @@ function histView(){
     if(period < APP_START_DATE) continue;
     entries.push({task,period,stamp,key:k,missed:false,isZoe:true});
   }
+
   if(!entries.length)return `<div class="hist-empty">Sin historial todavía.<br>Marca tu primera tarea ✅</div>`;
-  const grouped={};
-  for(const e of entries){
-    const label=periodKeyLabel(e.task.freq,e.period);
-    if(!grouped[label])grouped[label]={label,sortKey:e.period,items:[]};
-    grouped[label].items.push(e);
+
+  // ── Apply filter ──
+  let filtered = entries.filter(e=>{
+    if(histFilter==="daniel") return effectivePerson(e.task)==="Daniel";
+    if(histFilter==="nicolas") return effectivePerson(e.task)==="Nicolas";
+    if(histFilter==="missed") return e.missed;
+    return true;
+  });
+
+  // ── Helper: convert any period key to a comparable YYYY-MM-DD date string ──
+  function periodToDate(freq, pk){
+    if(freq==="diaria") return pk; // already YYYY-MM-DD
+    if(freq==="semanal"){
+      // weekKey format: W2026-03-30 → strip W
+      return pk.replace(/^W/,"");
+    }
+    if(freq==="mensual"){
+      // YYYY-MM → last day of month as YYYY-MM-28 (good enough for sorting)
+      return pk + "-28";
+    }
+    // quarterly: YYYY-Q1 → use end month
+    const [y,q] = pk.split("-Q");
+    const endMonth = String(parseInt(q)*3).padStart(2,"0");
+    return `${y}-${endMonth}-28`;
   }
-  const groups=Object.values(grouped).sort((a,b)=>b.sortKey.localeCompare(a.sortKey));
+
+  // ── Sort ALL entries by period date, newest first ──
+  filtered.sort((a,b)=>{
+    const da = periodToDate(a.task.freq, a.period);
+    const db2 = periodToDate(b.task.freq, b.period);
+    if(db2 !== da) return db2.localeCompare(da);
+    // Same period: done before missed, then by stamp
+    if(!a.missed && b.missed) return -1;
+    if(a.missed && !b.missed) return 1;
+    return (b.stamp||"").localeCompare(a.stamp||"");
+  });
+
+  // ── Group by human-readable date label for visual separation ──
+  const groups=[];
+  const groupMap={};
+  for(const e of filtered){
+    const dateKey = periodToDate(e.task.freq, e.period);
+    const label = periodKeyLabel(e.task.freq, e.period);
+    if(!groupMap[dateKey]){
+      groupMap[dateKey]={dateKey,label,items:[]};
+      groups.push(groupMap[dateKey]);
+    }
+    groupMap[dateKey].items.push(e);
+  }
+  // groups are already in sorted order because filtered is sorted
 
   let html=`<div class="hist-filter">
     <button class="hf-btn ${histFilter==="todo"?"on":""}" onclick="setHistFilter('todo')">📋 Todos</button>
@@ -2358,13 +2523,8 @@ function histView(){
   </div>`;
 
   for(const g of groups){
-    let items=g.items.filter(e=>{
-      if(histFilter==="daniel")return e.task.person==="Daniel";
-      if(histFilter==="nicolas")return e.task.person==="Nicolas";
-      if(histFilter==="missed")return e.missed;
-      return true;
-    });
-    if(!items.length)continue;
+    const items = g.items;
+    if(!items.length) continue;
     const doneC=items.filter(e=>!e.missed).length;
     const missedC=items.filter(e=>e.missed).length;
     const totalC=doneC+missedC;
@@ -2385,7 +2545,6 @@ function histView(){
         </div>
         <div class="hist-sec-pct ${pctCls}">${pct}%</div>
       </div>`;
-    items.sort((a,b)=>(a.missed?1:-1)-(b.missed?1:-1)||(b.stamp||"").localeCompare(a.stamp||""));
     for(const e of items){
       const isDan=effectivePerson(e.task)==="Daniel";
       const whoColor=isDan?"var(--d)":"var(--n)";
@@ -2473,6 +2632,8 @@ function setTab(t){
   const zoeHide=["lista","historial","horario","calendario"].includes(t);
   const zoeMod=$("zoe-module");
   if(zoeMod) zoeMod.style.display=zoeHide?"none":"";
+  const extraWrap=$("extra-section-wrap");
+  if(extraWrap) extraWrap.style.display=(t==="hoy"||t==="semana"||t==="mes"||t==="trimestre"||t==="lista")?"":"none";
   const hm=$("hdr-menu"); if(hm) hm.classList.add("hidden");
   render();
 }
@@ -3226,6 +3387,168 @@ function confirmSave(){
 
 // ── Init ──────────────────────────────────────────────────
 
+
+// ══════════════════════════════════════
+// TAREAS EXTRA (ad-hoc)
+// ══════════════════════════════════════
+let extraTasks = JSON.parse(localStorage.getItem("td26_extra_tasks") || "[]");
+let extraWhoSelected = null;
+
+function saveExtraTasks(){
+  try{ localStorage.setItem("td26_extra_tasks", JSON.stringify(extraTasks)); }catch(e){}
+}
+
+function openExtraModal(){
+  extraWhoSelected = null;
+  $("extra-input-title").value = "";
+  $("extra-who-d").className = "extra-who-btn";
+  $("extra-who-n").className = "extra-who-btn";
+  $("extra-modal-save").disabled = true;
+  $("extra-modal-overlay").classList.remove("hidden");
+  setTimeout(()=>$("extra-input-title").focus(), 120);
+}
+function closeExtraModal(){
+  $("extra-modal-overlay").classList.add("hidden");
+}
+function selectExtraWho(who){
+  extraWhoSelected = who;
+  $("extra-who-d").className = "extra-who-btn" + (who==="Daniel"?" sel-d":"");
+  $("extra-who-n").className = "extra-who-btn" + (who==="Nicolas"?" sel-n":"");
+  updateExtraSaveBtn();
+}
+function updateExtraSaveBtn(){
+  const title = ($("extra-input-title").value||"").trim();
+  $("extra-modal-save").disabled = !(title.length > 0 && extraWhoSelected);
+}
+function saveExtraTask(){
+  const title = ($("extra-input-title").value||"").trim();
+  if(!title || !extraWhoSelected) return;
+  const id = "xtr_" + Date.now();
+  const task = { id, title, person: extraWhoSelected, createdAt: new Date().toISOString(), done: false, stamp: null };
+  extraTasks.unshift(task);
+  saveExtraTasks();
+  closeExtraModal();
+  renderExtraSection();
+  // Open camera immediately for this new task
+  openCameraExtra(id);
+}
+function deleteExtraTask(id){
+  extraTasks = extraTasks.filter(t=>t.id !== id);
+  const k = "td26_extra_" + id;
+  delete photoCache[k]; localStorage.removeItem("td26_photo_"+k);
+  saveExtraTasks();
+  renderExtraSection();
+}
+function openCameraExtra(id){
+  camTaskId = "__extra__" + id;
+  capturedDataUrl = null;
+  sessionStorage.setItem("pendingCamTask", camTaskId);
+  sessionStorage.setItem("pendingCamType", "extra");
+  const t = extraTasks.find(x=>x.id===id);
+  const label = t ? t.title : "Tarea extra";
+  $("cam-task-label").textContent = "➕ Extra · "+label;
+  $("cam-task-name").textContent  = "➕ "+label;
+  const prev = $("cam-preview");
+  prev.classList.remove("show"); prev.src = "";
+  $("cam-confirm").classList.remove("show");
+  $("cam-retake").classList.remove("show");
+  $("cam-shutter").style.display = "";
+  $("cam-flip").style.display = "";
+  $("cam-overlay").classList.remove("hidden");
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if(isMobile){
+    $("cam-overlay").classList.add("hidden");
+    const fi = $("cam-file");
+    if(fi){
+      fi.value=""; fi.accept="image/*";
+      fi.removeAttribute("capture"); fi.setAttribute("capture","environment");
+      setTimeout(()=>fi.click(), 80);
+    }
+  } else {
+    startStream();
+  }
+}
+function renderExtraSection(){
+  const el = $("extra-section-wrap");
+  if(!el) return;
+  const today = new Date().toDateString();
+  const tickSvg = `<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5L4.5 8.5L9.5 2.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const items = extraTasks.map(t=>{
+    const k = "td26_extra_" + t.id;
+    const photo = photoCache[k] || localStorage.getItem("td26_photo_"+k);
+    const isDan = t.person === "Daniel";
+    const whoColor = isDan ? "var(--d)" : "var(--n)";
+    const whoLabel = isDan ? "Daniel" : "Nicolás";
+    const ckCls = t.done ? (isDan?"done-d":"done-n") : "";
+    return `<div class="extra-item${t.done?" done":""}">
+      <div class="extra-item-icon">${t.done?"✅":"⬜"}</div>
+      <div class="extra-item-info">
+        <div class="extra-item-title">${t.title}</div>
+        <div class="extra-item-meta">
+          <span class="extra-item-who" style="color:${whoColor}">${whoLabel}</span>
+          ${t.stamp?`<span class="extra-item-stamp">${t.stamp}</span>`:""}
+        </div>
+      </div>
+      <div class="extra-item-right">
+        ${photo?`<img class="extra-v-img" src="${photo}" onclick="openLightbox('${photo}')" title="Ver foto"/>`
+               :`<button class="extra-photo-btn" onclick="openCameraExtra('${t.id}')">📷 Foto</button>`}
+        <button class="extra-del" onclick="deleteExtraTask('${t.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+  el.innerHTML = `<div class="extra-section">
+    <div class="extra-hdr">
+      <div>
+        <div class="extra-title">➕ Tareas extra</div>
+        <div class="extra-sub">Tareas que no están en la lista</div>
+      </div>
+      <button class="extra-add-btn" onclick="openExtraModal()">+ Agregar</button>
+    </div>
+    <div class="extra-list">
+      ${items || '<div class="extra-empty">No hay tareas extra hoy · toca "+ Agregar"</div>'}
+    </div>
+  </div>`;
+}
+
+// Hook into autoConfirmPhoto for extra tasks
+const _origAutoConfirm = autoConfirmPhoto;
+autoConfirmPhoto = function(taskId, dataUrl){
+  if(taskId && taskId.startsWith("__extra__")){
+    const xId = taskId.replace("__extra__","");
+    const t = extraTasks.find(x=>x.id===xId);
+    if(!t){ camTaskId=null; capturedDataUrl=null; return; }
+    const k = "td26_extra_" + xId;
+    const n = new Date();
+    const stamp = `${DAYS[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()].slice(0,3)} ${p2(n.getHours())}:${p2(n.getMinutes())}`;
+    t.done = true; t.stamp = stamp;
+    photoCache[k] = dataUrl;
+    try{
+      localStorage.setItem("td26_photo_"+k, dataUrl);
+      if(!localStorage.getItem("td26_photo_"+k)){ pruneOldPhotos(); localStorage.setItem("td26_photo_"+k,dataUrl); }
+    }catch(err){ pruneOldPhotos(); try{localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e2){} }
+    saveExtraTasks();
+    const overlay = $("cam-overlay");
+    if(overlay) overlay.classList.add("hidden");
+    stopStream();
+    sessionStorage.removeItem("pendingCamTask");
+    sessionStorage.removeItem("pendingCamType");
+    camTaskId = null; capturedDataUrl = null;
+    renderExtraSection();
+    showToast("✓ Tarea extra guardada ✨");
+  } else {
+    _origAutoConfirm(taskId, dataUrl);
+  }
+};
+
+// Also restore pendingCamTask for extra tasks on page reload
+(function(){
+  const pending = sessionStorage.getItem("pendingCamTask");
+  if(pending && pending.startsWith("__extra__")){
+    camTaskId = pending;
+  }
+})();
+
 // ── Pull-to-refresh (swipe down) ──────────────────────────
 (function(){
   let _ptrY0 = 0, _ptrActive = false;
@@ -3291,6 +3614,7 @@ function initSync(){
   }
 }
 initSync();
+renderExtraSection();
 
 function clearAllData(){
   const keys=[];
