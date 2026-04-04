@@ -582,12 +582,14 @@ button:active { transform:scale(.94) }
 .extra-empty { text-align:center; padding:10px 0 2px; font-size:12px; color:var(--t3) }
 
 /* Modal agregar tarea extra */
-.extra-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(10px); z-index:300; display:flex; align-items:flex-end; justify-content:center }
+.extra-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:300; display:flex; align-items:flex-end; justify-content:center; overflow-y:auto }
 .extra-modal-overlay.hidden { display:none }
 .extra-modal {
-  width:100%; max-width:480px;
-  background:var(--s2); border:1px solid var(--b2);
-  border-radius:26px 26px 0 0; padding:20px 18px 44px;
+  width:100%; max-width:480px; flex-shrink:0;
+  background:#1a1a26; border:1px solid rgba(255,255,255,.14);
+  border-radius:26px 26px 0 0;
+  padding:20px 18px max(env(safe-area-inset-bottom,0px),32px);
+  margin-top:auto;
 }
 .extra-modal-handle { width:38px; height:4px; background:var(--s5); border-radius:99px; margin:0 auto 18px }
 .extra-modal-title { font-family:'Inter',sans-serif; font-size:18px; font-weight:900; color:var(--t0); letter-spacing:-.03em; margin-bottom:14px }
@@ -3405,7 +3407,10 @@ function openExtraModal(){
   $("extra-who-n").className = "extra-who-btn";
   $("extra-modal-save").disabled = true;
   $("extra-modal-overlay").classList.remove("hidden");
-  setTimeout(()=>$("extra-input-title").focus(), 120);
+  // Don't auto-focus on mobile — keyboard hides the modal on iOS
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                   (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+  if(!isMobile) setTimeout(()=>$("extra-input-title").focus(), 120);
 }
 function closeExtraModal(){
   $("extra-modal-overlay").classList.add("hidden");
