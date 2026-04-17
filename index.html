@@ -87,7 +87,7 @@ button { font-family:'Inter',sans-serif; border:none; cursor:pointer; transition
 button:active { transform:scale(.94) }
 
 /* ═══ LAYOUT ═══ */
-.app { max-width:520px; margin:0 auto; padding:20px 14px 175px}
+.app { max-width:520px; margin:0 auto; padding:20px 14px 180px}
 
 /* ═══ HEADER ═══ */
 .hdr {
@@ -374,19 +374,7 @@ button:active { transform:scale(.94) }
 .tc-title { font-size:14px; font-weight:700; color:var(--t0); line-height:1.35 }
 .tc-title.done { color:var(--t3); text-decoration:line-through }
 .tc-chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px }
-.chip {
-  flex:1; display:flex; flex-direction:column; align-items:center;
-  justify-content:center; gap:3px;
-  padding:8px 2px 9px; min-height:52px;
-  font-family:'Inter',sans-serif; font-size:10px; font-weight:600;
-  letter-spacing:.025em; text-transform:uppercase;
-  color:rgba(255,255,255,.32);
-  background:rgba(10,10,20,.78); border:1px solid rgba(255,255,255,.09);
-  border-radius:14px; cursor:pointer; transition:all .18s;
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  -webkit-tap-highlight-color:transparent;
-  box-shadow:0 2px 10px rgba(0,0,0,.28);
-}
+
 .chip-note { background:rgba(255,212,71,.07); color:var(--warn); border-color:rgba(255,212,71,.15) }
 
 .tc-chk {
@@ -908,56 +896,21 @@ button:active { transform:scale(.94) }
 .pc-nic .pc-score { color:var(--n) }
 
 /* ═══ BOTTOM NAV ═══ */
-.bnav {
-  position:fixed; bottom:0; left:0; right:0; z-index:300;
-  padding:12px 16px calc(env(safe-area-inset-bottom,0px)+14px);
-  background:transparent; pointer-events:none;
-}
+
 .bnav>*{pointer-events:auto}
-@media(min-width:521px){.bnav{max-width:520px;left:50%;transform:translateX(-50%)}}
-.pill-bar {
-  display:flex; align-items:center; gap:5px; width:100%;
-  background:rgba(10,10,20,.80); border:1px solid rgba(255,255,255,.11);
-  border-radius:20px; padding:6px; margin-bottom:9px; box-sizing:border-box;
-  backdrop-filter:blur(32px) saturate(1.8);
-  -webkit-backdrop-filter:blur(32px) saturate(1.8);
-  box-shadow:0 8px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
-}
-.pill-btn {
-  flex:1; display:flex; align-items:center; justify-content:center; gap:0;
-  height:52px; padding:0 8px; border-radius:15px; border:none;
-  background:transparent; cursor:pointer; overflow:hidden; white-space:nowrap;
-  transition:flex .3s cubic-bezier(.4,0,.2,1), background .2s;
-  -webkit-tap-highlight-color:transparent; min-width:0;
-}
+@media(min-width:521px){}
+
+
 .pill-btn:active{opacity:.7;transform:scale(.96)}
-.pill-ic {
-  font-size:19px; line-height:1; flex-shrink:0;
-  filter:grayscale(1) opacity(.4); transition:filter .22s;
-}
-.pill-lbl {
-  font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
-  letter-spacing:-.01em; color:transparent; white-space:nowrap;
-  max-width:0; overflow:hidden; margin-left:0;
-  transition:max-width .3s cubic-bezier(.4,0,.2,1), color .2s, margin-left .3s cubic-bezier(.4,0,.2,1);
-}
-.pill-btn.on {
-  flex:2.2; background:rgba(255,255,255,.93); gap:7px; justify-content:center;
-  box-shadow:0 2px 10px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.8);
-}
-.pill-btn.on .pill-ic{filter:none}
-.pill-btn.on .pill-lbl{max-width:90px;color:rgba(8,8,18,.85);margin-left:0}
-.chips-row{display:flex;gap:5px;width:100%;box-sizing:border-box}
-.chip {
-  flex:1; padding:10px 6px; font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
-  color:rgba(255,255,255,.32); background:rgba(10,10,20,.72); border:1px solid rgba(255,255,255,.08);
-  border-radius:13px; cursor:pointer; transition:all .17s; white-space:nowrap; text-align:center;
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  -webkit-tap-highlight-color:transparent;
-  box-shadow:0 3px 12px rgba(0,0,0,.25);
-}
+
+
+
+
+
+
+
 .chip:active{transform:scale(.93)}
-.chip.on{color:rgba(255,255,255,.82);background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.15)}
+
 
 /* ═══ DUE DAY BADGE ═══ */
 .tc-due-badge {
@@ -1028,10 +981,10 @@ button:active { transform:scale(.94) }
 .hdr-menu-item:active { background: rgba(255,255,255,.05); }
 .hdr-menu-item:active{background:rgba(255,255,255,.07)}
 
-.chip-ic { font-size:16px; line-height:1; display:block; filter:grayscale(1) opacity(.38); transition:filter .2s }
-.chip-lbl { font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; line-height:1 }
-.chip.on .chip-ic { filter:none }
-.chip.on .chip-lbl { color:rgba(255,255,255,.88) }
+
+
+
+
 .chip:active { transform:scale(.91) }
 
 .hor-title em { font-style:normal; background:linear-gradient(135deg,var(--d),#7affcc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text }
@@ -1219,8 +1172,8 @@ button:active { transform:scale(.94) }
   margin-bottom: 12px;
 }
 .zoe-stock-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 .stock-card {
@@ -1316,6 +1269,288 @@ button:active { transform:scale(.94) }
   height: 100%; border-radius: 99px;
   background: linear-gradient(90deg, var(--err) 0%, #fbbf24 40%, var(--d) 70%);
   transition: width .4s;
+}
+
+/* ═══ STOCK — Current purchase + history ═══ */
+.stock-card { padding: 13px 14px 12px; min-height: unset; }
+.stock-current {
+  margin-top: 4px; padding: 10px 12px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+.stock-current-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--t0); margin-bottom: 4px;
+}
+.stock-stats-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  padding: 8px 10px; margin-bottom: 10px;
+  background: rgba(249,168,212,.04);
+  border: 1px dashed rgba(249,168,212,.15);
+  border-radius: 10px;
+}
+.stock-stat {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; color: var(--t2);
+  white-space: nowrap;
+}
+.stock-stat b {
+  color: var(--t0); font-weight: 800;
+}
+.stock-actions {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-top: 8px;
+}
+.stock-btn {
+  flex: 1; min-width: 110px; min-height: 40px;
+  padding: 9px 12px; border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 700;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.08);
+  color: var(--t1);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .15s, transform .1s;
+}
+.stock-btn:active { transform: scale(.97); }
+.stock-btn:hover { background: rgba(255,255,255,.08); }
+.stock-btn-primary {
+  background: rgba(249,168,212,.15);
+  border-color: rgba(249,168,212,.35);
+  color: #f9a8d4;
+}
+.stock-btn-primary:hover {
+  background: rgba(249,168,212,.22);
+}
+.stock-btn-ghost {
+  background: transparent;
+  color: var(--t2);
+}
+.stock-history {
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  display: flex; flex-direction: column; gap: 6px;
+  animation: stockHistIn .2s ease-out;
+}
+.stock-history.hidden { display: none; }
+@keyframes stockHistIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.stock-hist-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 10px;
+}
+.stock-hist-main { flex: 1; min-width: 0; }
+.stock-hist-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 700;
+  color: var(--t0); margin-bottom: 3px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.stock-hist-meta {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; color: var(--t2);
+}
+.stock-hist-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; color: var(--t3);
+  margin-top: 2px;
+}
+.stock-hist-del {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(248,113,113,.08);
+  border: 1px solid rgba(248,113,113,.2);
+  color: var(--err);
+  cursor: pointer; flex-shrink: 0;
+  font-size: 11px; font-weight: 800;
+  -webkit-tap-highlight-color: transparent;
+}
+.stock-hist-del:active { transform: scale(.9); }
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM NAV — Material You / Stitch inspired
+   ═══════════════════════════════════════════════════════════ */
+.bnav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 300;
+  padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  background: transparent;
+  pointer-events: none;
+}
+.pill-bar,
+.chips-row {
+  pointer-events: auto;
+}
+
+/* ─── PRIMARY TABS (period) ────────────────────────────── */
+.pill-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 8px;
+  background: rgba(20, 20, 32, .85);
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 22px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, .4),
+    inset 0 1px 0 rgba(255, 255, 255, .04);
+  box-sizing: border-box;
+}
+.pill-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 10px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: flex .28s cubic-bezier(.4, 0, .2, 1),
+              background .2s,
+              color .2s;
+  -webkit-tap-highlight-color: transparent;
+  color: rgba(255, 255, 255, .45);
+  min-width: 0;
+}
+.pill-btn:active { transform: scale(.97); }
+.pill-ic {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+  filter: grayscale(1) opacity(.55);
+  transition: filter .22s;
+}
+.pill-lbl {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -.005em;
+  color: transparent;
+  white-space: nowrap;
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width .28s cubic-bezier(.4, 0, .2, 1),
+              color .22s, margin-left .22s;
+}
+/* Active pill expands to show label */
+.pill-btn.on {
+  flex: 2.3;
+  background: rgba(255, 255, 255, .97);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, .25),
+    inset 0 1px 0 rgba(255, 255, 255, .8);
+  color: rgba(8, 8, 18, .9);
+}
+.pill-btn.on .pill-ic {
+  filter: none;
+}
+.pill-btn.on .pill-lbl {
+  max-width: 120px;
+  color: rgba(8, 8, 18, .9);
+  margin-left: 2px;
+}
+
+/* ─── SECONDARY CHIPS (tools) ──────────────────────────── */
+.chips-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 56px;
+  padding: 7px 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .38);
+  background: rgba(20, 20, 32, .85);
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s, transform .1s;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .3);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.chip:active { transform: scale(.96); }
+.chip-ic {
+  font-size: 17px;
+  line-height: 1;
+  display: block;
+  filter: grayscale(1) opacity(.5);
+  transition: filter .2s;
+}
+.chip-lbl {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: rgba(255, 255, 255, .55);
+  white-space: nowrap;
+}
+.chip.on {
+  color: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, .12);
+  border-color: rgba(255, 255, 255, .18);
+}
+.chip.on .chip-ic { filter: none; }
+.chip.on .chip-lbl { color: rgba(255, 255, 255, .95); }
+
+/* Progress dot on chips (shows done/total ratio) */
+.chip .tab-prog {
+  position: absolute;
+  bottom: 3px; left: 50%;
+  transform: translateX(-50%);
+  width: var(--pct, 0%);
+  max-width: 60%;
+  height: 2px;
+  background: var(--d);
+  border-radius: 99px;
+  transition: width .3s, opacity .2s;
+  pointer-events: none;
+}
+.chip { position: relative; }
+
+/* ─── Responsive tweaks ──────────────────────────────── */
+@media (max-width: 360px) {
+  .pill-btn { min-height: 44px; padding: 0 6px; }
+  .pill-ic  { font-size: 16px; }
+  .pill-lbl { font-size: 12px; }
+  .pill-btn.on .pill-lbl { max-width: 80px; }
+  .chip-ic  { font-size: 15px; }
+  .chip-lbl { font-size: 9px; }
 }
 </style>
 </head>
@@ -1472,24 +1707,39 @@ button:active { transform:scale(.94) }
   <div style="width:100%;max-width:480px;background:#111119;
     border:1px solid rgba(255,255,255,.1);border-top:2px solid rgba(249,168,212,.4);
     border-radius:28px 28px 0 0;
-    padding:24px 22px calc(env(safe-area-inset-bottom,0px) + 28px);">
-    <div style="text-align:center;margin-bottom:18px">
+    padding:24px 22px calc(env(safe-area-inset-bottom,0px) + 28px);
+    max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div style="text-align:center;margin-bottom:20px">
       <div style="font-size:32px;margin-bottom:6px">📦</div>
-      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:900;color:#f4f4fa">
+      <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:900;color:#f4f4fa">
         <span id="stock-modal-title">Stock</span>
       </div>
     </div>
+
     <div style="margin-bottom:14px">
-      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">📅 Fecha de apertura</label>
+      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">📅 Fecha de compra</label>
       <input type="date" id="stock-date" style="width:100%;padding:12px 14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box;color-scheme:dark"/>
     </div>
-    <div style="margin-bottom:20px">
-      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">⏳ Duración estimada (días)</label>
-      <input type="number" id="stock-days" min="1" max="365" placeholder="30" style="width:100%;padding:12px 14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/>
+
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">🏷️ Nombre / marca</label>
+      <input type="text" id="stock-name" placeholder="Ej: Whiskas 3kg" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/>
     </div>
+
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">💰 Precio (CLP)</label>
+      <input type="number" id="stock-price" placeholder="Ej: 12990" inputmode="numeric" style="width:100%;padding:12px 14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/>
+    </div>
+
+    <div style="margin-bottom:22px" id="stock-opendate-row">
+      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">🔓 Fecha cuando empezó a usar</label>
+      <input type="date" id="stock-opendate" style="width:100%;padding:12px 14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box;color-scheme:dark"/>
+      <div style="font-family:'Inter',sans-serif;font-size:11px;color:rgba(244,244,250,.35);margin-top:4px">Si hay otro abierto, se marcará como terminado en esta fecha.</div>
+    </div>
+
     <div style="display:flex;gap:10px">
-      <button onclick="hideStockModal()" style="flex:1;padding:14px;border-radius:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(244,244,250,.6);cursor:pointer;">Cancelar</button>
-      <button onclick="saveStock()" style="flex:1;padding:14px;border-radius:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;background:rgba(249,168,212,.18);border:1px solid rgba(249,168,212,.4);color:#f9a8d4;cursor:pointer;">Guardar</button>
+      <button onclick="hideStockModal()" style="flex:1;padding:14px;border-radius:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(244,244,250,.6);cursor:pointer;min-height:44px;">Cancelar</button>
+      <button onclick="saveStock()" style="flex:1;padding:14px;border-radius:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;background:rgba(249,168,212,.18);border:1px solid rgba(249,168,212,.4);color:#f9a8d4;cursor:pointer;min-height:44px;">Guardar</button>
     </div>
   </div>
 </div>
@@ -1597,27 +1847,21 @@ button:active { transform:scale(.94) }
 </div>
 
 <!-- CLEAR ALL MODAL -->
-<div id="clear-all-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(6,6,10,.9);backdrop-filter:blur(20px);align-items:flex-end;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-  <div style="width:100%;max-width:480px;background:#0c0c14;
-    border:1px solid rgba(255,107,107,.2);border-top:2px solid rgba(255,107,107,.5);
-    border-radius:28px 28px 0 0;padding:28px 22px calc(env(safe-area-inset-bottom,0px) + 36px);">
+<div id="clear-all-modal" style="display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(6,6,10,.9);backdrop-filter:blur(20px);
+  align-items:flex-end;justify-content:center;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;">
+  <div style="width:100%;max-width:480px;background:#111119;border:1px solid rgba(255,255,255,.08);
+    border-top:2px solid rgba(255,107,107,.4);border-radius:28px 28px 0 0;
+    padding:28px 22px calc(env(safe-area-inset-bottom,0px) + 36px);">
     <div style="font-size:32px;text-align:center;margin-bottom:12px">🗑️</div>
-    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:900;
-      color:#f4f4fa;text-align:center;margin-bottom:8px">Borrar todo el historial</div>
-    <div style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(244,244,250,.45);
-      text-align:center;margin-bottom:24px;line-height:1.6">
-      Se borrará todo el historial y las tareas completadas en ambos celulares.<br>
-      <strong style="color:rgba(255,107,107,.75)">Esta acción no se puede deshacer.</strong>
-    </div>
+    <div style="font-size:17px;font-weight:800;color:#f1f1f6;text-align:center;margin-bottom:8px">Borrar todo el historial</div>
+    <div style="font-family:'Inter',sans-serif;font-size:13px;color:#8888aa;text-align:center;margin-bottom:24px;line-height:1.5">¿Estás seguro? Se eliminarán todas las marcas de tareas completadas y no podrán recuperarse.</div>
     <div style="display:flex;gap:10px;">
-      <button onclick="hideClearAllModal()" style="flex:1;padding:14px;border-radius:14px;
-        font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
-        background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-        color:rgba(244,244,250,.6);cursor:pointer;">Cancelar</button>
-      <button onclick="confirmClearAll()" style="flex:1;padding:14px;border-radius:14px;
-        font-family:'Inter',sans-serif;font-size:14px;font-weight:700;
+      <button onclick="hideClearAllModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:#20202e;border:1px solid rgba(255,255,255,.08);color:#aaaacc;cursor:pointer;min-height:44px;">Cancelar</button>
+      <button onclick="confirmClearAll()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:800;
         background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);
-        color:#ff6b6b;cursor:pointer;">Sí, borrar todo</button>
+        color:#ff6b6b;cursor:pointer;min-height:44px;">Sí, borrar todo</button>
     </div>
   </div>
 </div>
@@ -1634,19 +1878,20 @@ button:active { transform:scale(.94) }
     <div style="font-size:17px;font-weight:800;color:#f1f1f6;text-align:center;margin-bottom:8px">Resetear período</div>
     <div id="reset-modal-msg" style="font-size:13px;color:#8888aa;text-align:center;margin-bottom:24px">¿Resetear las tareas?</div>
     <div style="display:flex;gap:10px;">
-      <button onclick="hideResetModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:#20202e;border:1px solid rgba(255,255,255,.08);color:#aaaacc;cursor:pointer;">Cancelar</button>
-      <button onclick="confirmReset()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:800;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);color:#ff6b6b;cursor:pointer;">Sí, resetear</button>
+      <button onclick="hideResetModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:#20202e;border:1px solid rgba(255,255,255,.08);color:#aaaacc;cursor:pointer;min-height:44px;">Cancelar</button>
+      <button onclick="confirmReset()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:800;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);color:#ff6b6b;cursor:pointer;min-height:44px;">Sí, resetear</button>
     </div>
   </div>
 </div>
 
+<!-- HEADER MENU (moved outside .hdr to escape backdrop-filter stacking context) -->
 <div class="hdr-menu hidden" id="hdr-menu">
-      <button class="hdr-menu-item" onclick="resetPeriod();toggleHdrMenu()">↺ Resetear período</button>
-      <button class="hdr-menu-item" onclick="toggleHdrMenu();openSyncSheet()">☁️ Configurar sync</button>
-      <div style="height:1px;background:rgba(255,255,255,.07);margin:4px 6px"></div>
-      <button class="hdr-menu-item" onclick="toggleHdrMenu();document.getElementById('identity-modal').style.display='flex'">👤 Cambiar usuario</button>
-      <button class="hdr-menu-item" style="color:var(--err)" onclick="toggleHdrMenu();showClearAllModal()">🗑️ Borrar todo el historial</button>
-    </div>
+  <button class="hdr-menu-item" onclick="resetPeriod();toggleHdrMenu()">↺ Resetear período</button>
+  <button class="hdr-menu-item" onclick="toggleHdrMenu();openSyncSheet()">☁️ Configurar sync</button>
+  <div style="height:1px;background:rgba(255,255,255,.07);margin:4px 6px"></div>
+  <button class="hdr-menu-item" onclick="toggleHdrMenu();document.getElementById('identity-modal').style.display='flex'">👤 Cambiar usuario</button>
+  <button class="hdr-menu-item" style="color:var(--err)" onclick="toggleHdrMenu();showClearAllModal()">🗑️ Borrar todo</button>
+</div>
 
 <!-- BOTTOM NAV BAR -->
 <nav class="bnav" id="bnav">
@@ -3196,103 +3441,270 @@ window.confirmPhoto = function(){
 // ══════════════════════════════════════
 
 // ════════════════════════════════════════════════════════════
-// 📦 STOCK DE ZOE (alimento + arena)
+// 📦 STOCK DE ZOE — Historial de compras + predicción de duración
 // ════════════════════════════════════════════════════════════
 const STOCK_ITEMS = [
-  {id:"food",  icon:"🍖", title:"Alimento",     defaultDays:30},
-  {id:"litter",icon:"🏖️", title:"Arena",        defaultDays:21},
+  {id:"food",   icon:"🍖", title:"Alimento", unit:"alimento"},
+  {id:"litter", icon:"🏖️", title:"Arena",    unit:"arena"},
 ];
 let _stockEditingId = null;
+let _stockEditingPurchaseIdx = null; // null = new, number = edit existing
+let _stockAction = null; // "new-purchase" | "finish" | "edit" | null
 
 function stockKey(id){ return "td26_stock_"+id; }
 
-function getStock(id){
+// Devuelve lista de compras: [{date, name, price, openDate?, finishedDate?}]
+function getStockList(id){
   const raw = dbCache[stockKey(id)] || localStorage.getItem(stockKey(id));
-  if(!raw) return null;
-  try { return JSON.parse(raw); } catch(e){ return null; }
+  if(!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    // Migración: si era objeto único {openDate, days}, convertir a array vacío
+    if(Array.isArray(parsed)) return parsed;
+    return [];
+  } catch(e){ return []; }
 }
 
-function saveStockData(id, openDate, days){
-  const obj = {openDate, days, saved:Date.now()};
-  const str = JSON.stringify(obj);
+function saveStockList(id, list){
+  const str = JSON.stringify(list);
   dbCache[stockKey(id)] = str;
   localStorage.setItem(stockKey(id), str);
   schedulePush();
   renderStockSection();
 }
 
-function showStockModal(id){
+// Calcula duración promedio en días de las compras terminadas
+function stockAvgDays(list){
+  const finished = list.filter(p => p.openDate && p.finishedDate);
+  if(!finished.length) return null;
+  const durations = finished.map(p => {
+    const o = new Date(p.openDate+"T00:00:00").getTime();
+    const f = new Date(p.finishedDate+"T00:00:00").getTime();
+    return Math.max(1, Math.round((f-o)/86400000));
+  });
+  const avg = durations.reduce((a,b)=>a+b,0) / durations.length;
+  return Math.round(avg);
+}
+
+// Encuentra la compra actualmente "en uso" (tiene openDate pero no finishedDate)
+function stockCurrentOpen(list){
+  return list.find(p => p.openDate && !p.finishedDate) || null;
+}
+
+// ─── Modal de nueva compra ────────────────────────────────
+function openStockAddModal(id){
   _stockEditingId = id;
+  _stockEditingPurchaseIdx = null;
+  _stockAction = "new-purchase";
   const item = STOCK_ITEMS.find(s=>s.id===id);
-  const existing = getStock(id);
-  $("stock-modal-title").textContent = item.icon + " " + item.title;
-  $("stock-date").value = existing ? existing.openDate : new Date().toISOString().slice(0,10);
-  $("stock-days").value = existing ? existing.days : item.defaultDays;
+  const today = new Date().toISOString().slice(0,10);
+  $("stock-modal-title").textContent = item.icon + " Nueva compra — " + item.title;
+  $("stock-date").value = today;
+  $("stock-name").value = "";
+  $("stock-price").value = "";
+  $("stock-opendate-row").style.display = "block";
+  $("stock-opendate").value = today;
+  $("stock-modal").style.display = "flex";
+}
+
+// ─── Modal para marcar una compra como terminada ──────────
+function openStockFinishModal(id, purchaseIdx){
+  _stockEditingId = id;
+  _stockEditingPurchaseIdx = purchaseIdx;
+  _stockAction = "finish";
+  const list = getStockList(id);
+  const p = list[purchaseIdx];
+  const item = STOCK_ITEMS.find(s=>s.id===id);
+  const today = new Date().toISOString().slice(0,10);
+  $("stock-modal-title").textContent = item.icon + " Marcar como terminado";
+  $("stock-date").value = p.finishedDate || today;
+  $("stock-name").value = p.name || "";
+  $("stock-price").value = p.price || "";
+  $("stock-opendate-row").style.display = "none";
   $("stock-modal").style.display = "flex";
 }
 
 function hideStockModal(){
   $("stock-modal").style.display = "none";
   _stockEditingId = null;
+  _stockEditingPurchaseIdx = null;
+  _stockAction = null;
 }
 
 function saveStock(){
   if(!_stockEditingId) return;
-  const date = $("stock-date").value;
-  const days = parseInt($("stock-days").value,10);
-  if(!date || !days || days < 1){
-    showToast("⚠️ Completa fecha y días");
+  const list = getStockList(_stockEditingId);
+
+  if(_stockAction === "new-purchase"){
+    const date      = $("stock-date").value;
+    const name      = ($("stock-name").value||"").trim();
+    const priceStr  = ($("stock-price").value||"").trim();
+    const openDate  = $("stock-opendate").value;
+    if(!date){ showToast("⚠️ Ingresa la fecha de compra"); return; }
+    const price = priceStr ? parseInt(priceStr.replace(/[^0-9]/g,""),10) : null;
+
+    // Si hay una "abierta" actualmente y estoy agregando una nueva compra,
+    // cerrar la anterior con la fecha de apertura de la nueva (asumimos que por eso compra otra)
+    const currentOpen = stockCurrentOpen(list);
+    if(currentOpen && openDate){
+      currentOpen.finishedDate = openDate;
+    }
+
+    list.push({
+      date, name, price,
+      openDate: openDate || null,
+      finishedDate: null
+    });
+    saveStockList(_stockEditingId, list);
+    hideStockModal();
+    showToast("✓ Compra registrada");
     return;
   }
-  saveStockData(_stockEditingId, date, days);
-  hideStockModal();
-  showToast("✓ Stock guardado");
+
+  if(_stockAction === "finish"){
+    const finishedDate = $("stock-date").value;
+    if(!finishedDate){ showToast("⚠️ Ingresa la fecha"); return; }
+    list[_stockEditingPurchaseIdx].finishedDate = finishedDate;
+    saveStockList(_stockEditingId, list);
+    hideStockModal();
+    showToast("✓ Marcado como terminado");
+    return;
+  }
 }
 
+// ─── Borrar una compra ──────────────────────────────────
+function deleteStockPurchase(id, idx){
+  if(!confirm("¿Eliminar esta compra del historial?")) return;
+  const list = getStockList(id);
+  list.splice(idx, 1);
+  saveStockList(id, list);
+  showToast("🗑️ Eliminada");
+}
+
+// ─── Formato moneda CLP ─────────────────────────────────
+function formatCLP(n){
+  if(n==null || isNaN(n)) return "—";
+  return "$" + Math.round(n).toLocaleString("es-CL");
+}
+function formatShortDate(s){
+  if(!s) return "—";
+  const d = new Date(s+"T00:00:00");
+  return d.toLocaleDateString("es-CL",{day:"2-digit",month:"short"});
+}
+
+// ─── Render principal ───────────────────────────────────
 function renderStockSection(){
   const grid = $("zoe-stock-grid");
   if(!grid) return;
   const now = new Date();
+
   grid.innerHTML = STOCK_ITEMS.map(item => {
-    const data = getStock(item.id);
-    let body, pct=0, statusCls="", statusTxt="";
-    if(!data){
-      body = `<div class="stock-empty">Sin datos</div>`;
-      statusCls = "stock-unknown";
-      statusTxt = "Registrar";
-    } else {
-      const openD = new Date(data.openDate + "T00:00:00");
-      const expiry = new Date(openD.getTime() + data.days*86400000);
-      const daysLeft = Math.ceil((expiry - now)/86400000);
-      pct = Math.max(0, Math.min(100, (daysLeft/data.days)*100));
-      const expiryStr = expiry.toLocaleDateString("es-CL",{day:"2-digit",month:"short"});
-      if(daysLeft <= 0){
-        statusCls = "stock-empty-alert";
-        statusTxt = "¡Vencido!";
-        body = `<div class="stock-expiry stock-expiry-red">Vencido el ${expiryStr}</div>`;
-      } else if(daysLeft <= 5){
-        statusCls = "stock-warning";
-        statusTxt = daysLeft + " día" + (daysLeft===1?"":"s");
-        body = `<div class="stock-expiry stock-expiry-warn">Renueva el ${expiryStr}</div>`;
+    const list = getStockList(item.id);
+    const current = stockCurrentOpen(list);
+    const avgDays = stockAvgDays(list);
+    const totalBought = list.length;
+    const totalSpent  = list.filter(p=>p.price).reduce((s,p)=>s+(p.price||0),0);
+
+    // Estado del actual (si hay)
+    let currentInfo = "";
+    let statusCls = "stock-unknown";
+    let statusTxt = "+ Agregar";
+
+    if(current && current.openDate){
+      const openD = new Date(current.openDate+"T00:00:00");
+      const daysUsed = Math.ceil((now - openD)/86400000);
+      if(avgDays){
+        const daysLeft = avgDays - daysUsed;
+        const expiry = new Date(openD.getTime() + avgDays*86400000);
+        const pct = Math.max(0, Math.min(100, (daysLeft/avgDays)*100));
+        if(daysLeft <= 0){
+          statusCls = "stock-empty-alert";
+          statusTxt = "Se acabó?";
+          currentInfo = `<div class="stock-current">
+            <div class="stock-current-title">${current.name || "En uso"}</div>
+            <div class="stock-expiry stock-expiry-red">Tal vez ya se acabó (${daysUsed} días)</div>
+            <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:0%"></div></div>
+          </div>`;
+        } else if(daysLeft <= 5){
+          statusCls = "stock-warning";
+          statusTxt = daysLeft+"d restan";
+          currentInfo = `<div class="stock-current">
+            <div class="stock-current-title">${current.name || "En uso"}</div>
+            <div class="stock-expiry stock-expiry-warn">≈ Renueva ${formatShortDate(expiry.toISOString().slice(0,10))} · lleva ${daysUsed} días</div>
+            <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${pct}%"></div></div>
+          </div>`;
+        } else {
+          statusCls = "stock-ok";
+          statusTxt = daysLeft+"d restan";
+          currentInfo = `<div class="stock-current">
+            <div class="stock-current-title">${current.name || "En uso"}</div>
+            <div class="stock-expiry">≈ Renueva ${formatShortDate(expiry.toISOString().slice(0,10))} · lleva ${daysUsed} días</div>
+            <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${pct}%"></div></div>
+          </div>`;
+        }
       } else {
+        // No hay promedio aún - primera compra
         statusCls = "stock-ok";
-        statusTxt = daysLeft + " días";
-        body = `<div class="stock-expiry">Renueva el ${expiryStr}</div>`;
+        statusTxt = daysUsed+"d abierto";
+        currentInfo = `<div class="stock-current">
+          <div class="stock-current-title">${current.name || "En uso"}</div>
+          <div class="stock-expiry">Lleva ${daysUsed} día${daysUsed===1?"":"s"} · sin promedio aún</div>
+        </div>`;
       }
     }
-    return `<div class="stock-card ${statusCls}" onclick="showStockModal('${item.id}')">
+
+    // Stats (promedio, total compras, gasto)
+    const statsRow = totalBought > 0 ? `<div class="stock-stats-row">
+      ${avgDays ? `<span class="stock-stat"><b>${avgDays}d</b> promedio</span>` : `<span class="stock-stat">—d promedio</span>`}
+      <span class="stock-stat"><b>${totalBought}</b> compra${totalBought===1?"":"s"}</span>
+      ${totalSpent ? `<span class="stock-stat"><b>${formatCLP(totalSpent)}</b> total</span>` : ""}
+    </div>` : "";
+
+    return `<div class="stock-card ${statusCls}">
       <div class="stock-card-top">
         <span class="stock-icon">${item.icon}</span>
         <span class="stock-title">${item.title}</span>
         <span class="stock-status">${statusTxt}</span>
       </div>
-      ${body}
-      ${data ? `<div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${pct}%"></div></div>` : ""}
+      ${currentInfo || `<div class="stock-empty">Sin compras registradas todavía</div>`}
+      ${statsRow}
+      <div class="stock-actions">
+        <button class="stock-btn stock-btn-primary" onclick="openStockAddModal('${item.id}')">
+          + Nueva compra
+        </button>
+        ${current ? `<button class="stock-btn" onclick="openStockFinishModal('${item.id}',${list.indexOf(current)})">Marcar terminado</button>` : ""}
+        ${list.length > 0 ? `<button class="stock-btn stock-btn-ghost" onclick="toggleStockHistory('${item.id}')">📋 Historial</button>` : ""}
+      </div>
+      <div class="stock-history hidden" id="stock-history-${item.id}">
+        ${list.length === 0 ? '<div class="stock-empty">Sin registros</div>' :
+          [...list].reverse().map((p, revIdx) => {
+            const origIdx = list.length - 1 - revIdx;
+            const durStr = (p.openDate && p.finishedDate) 
+              ? Math.round((new Date(p.finishedDate+"T00:00:00") - new Date(p.openDate+"T00:00:00"))/86400000) + "d"
+              : (p.openDate && !p.finishedDate ? "En uso" : "—");
+            return `<div class="stock-hist-item">
+              <div class="stock-hist-main">
+                <div class="stock-hist-name">${p.name || "(sin nombre)"}</div>
+                <div class="stock-hist-meta">
+                  <span>📅 ${formatShortDate(p.date)}</span>
+                  ${p.price ? `<span>💰 ${formatCLP(p.price)}</span>` : ""}
+                  <span>⏱ ${durStr}</span>
+                </div>
+                ${p.openDate ? `<div class="stock-hist-sub">Abierto ${formatShortDate(p.openDate)}${p.finishedDate?` → Terminó ${formatShortDate(p.finishedDate)}`:""}</div>` : ""}
+              </div>
+              <button class="stock-hist-del" onclick="deleteStockPurchase('${item.id}',${origIdx})" aria-label="Eliminar">✕</button>
+            </div>`;
+          }).join("")
+        }
+      </div>
     </div>`;
   }).join("");
 }
 
-
+function toggleStockHistory(id){
+  const h = $("stock-history-"+id);
+  if(h) h.classList.toggle("hidden");
+}
 // STARTUP
 // ══════════════════════════════════════
 
@@ -3840,7 +4252,6 @@ function initSync(){
     setSyncDot("","Activar sync");
   }
 }
-initSync();
 
 function clearAllData(){
   const keys=[];
@@ -3871,37 +4282,7 @@ function confirmClearAll(){
 }
 
 
-function initSync(){
-  if(hasSyncUrl()){
-    setSyncDot("syncing","Conectando…");
-    pullFromSync(true).then(ok=>{
-      if(ok) startPoll();
-      else setSyncDot("err","Sin conexión");
-    });
-  } else {
-    setSyncDot("","Activar sync");
-  }
-}
-initSync();
 
-function clearAllData(){
-  const keys=[];
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith("td26_"))keys.push(k);
-  }
-  keys.forEach(k=>localStorage.removeItem(k));
-  for(const k in dbCache)delete dbCache[k];
-  for(const k in photoCache)delete photoCache[k];
-  if(hasSyncUrl()){
-    fetch(`${_syncUrl}/${SYNC_PATH}.json`,{
-      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
-    }).then(()=>setSyncDot("ok","☁️ Limpio"))
-      .catch(()=>setSyncDot("err","Error Firebase"));
-  }
-  render();renderZoeModule();
-  showToast("🗑️ Historial borrado — ¡Empezamos!");
-}
 function showClearAllModal(){
   const m=$("clear-all-modal");if(m)m.style.display="flex";
 }
@@ -3913,24 +4294,6 @@ function confirmClearAll(){
 }
 
 
-function clearAllData(){
-  const keys=[];
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith("td26_"))keys.push(k);
-  }
-  keys.forEach(k=>localStorage.removeItem(k));
-  for(const k in dbCache)delete dbCache[k];
-  for(const k in photoCache)delete photoCache[k];
-  if(hasSyncUrl()){
-    fetch(`${_syncUrl}/${SYNC_PATH}.json`,{
-      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
-    }).then(()=>setSyncDot("ok","☁️ Limpio"))
-      .catch(()=>setSyncDot("err","Error Firebase"));
-  }
-  render();renderZoeModule();
-  showToast("🗑️ Historial borrado — ¡Empezamos!");
-}
 function showClearAllModal(){
   const m=$("clear-all-modal");if(m)m.style.display="flex";
 }
@@ -4015,37 +4378,30 @@ function updateTabProgress(){
 }
 
 
-function initSync(){
-  if(hasSyncUrl()){
-    setSyncDot("syncing","Conectando…");
-    pullFromSync(true).then(ok=>{
-      if(ok) startPoll();
-      else setSyncDot("err","Sin conexión");
-    });
-  } else {
-    setSyncDot("","Activar sync");
-  }
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
 }
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
 initSync();
 
-function clearAllData(){
-  const keys=[];
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith("td26_"))keys.push(k);
-  }
-  keys.forEach(k=>localStorage.removeItem(k));
-  for(const k in dbCache)delete dbCache[k];
-  for(const k in photoCache)delete photoCache[k];
-  if(hasSyncUrl()){
-    fetch(`${_syncUrl}/${SYNC_PATH}.json`,{
-      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
-    }).then(()=>setSyncDot("ok","☁️ Limpio"))
-      .catch(()=>setSyncDot("err","Error Firebase"));
-  }
-  render();renderZoeModule();
-  showToast("🗑️ Historial borrado — ¡Empezamos!");
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
 }
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
 function showClearAllModal(){
   const m=$("clear-all-modal");if(m)m.style.display="flex";
 }
@@ -4057,37 +4413,115 @@ function confirmClearAll(){
 }
 
 
-function initSync(){
-  if(hasSyncUrl()){
-    setSyncDot("syncing","Conectando…");
-    pullFromSync(true).then(ok=>{
-      if(ok) startPoll();
-      else setSyncDot("err","Sin conexión");
-    });
-  } else {
-    setSyncDot("","Activar sync");
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+function flashSync(){
+  const pill = $("sync-status-pill");
+  if(!pill) return;
+  const orig = pill.style.background;
+  pill.style.background = "rgba(61,255,163,.1)";
+  setTimeout(()=>{ pill.style.background = orig; }, 400);
+}
+
+// ── confirmSave: respaldo manual si auto-push falló ────────
+function confirmSave(){
+  const missing = [...sessionMarked].filter(k=>!photoCache[k]);
+  if(missing.length){
+    alert("📷 Falta foto en "+missing.length+" tarea(s). Toca 'Tomar foto' en cada una.");
+    return;
+  }
+  flash();
+  schedulePush();
+}
+
+// ── Init ──────────────────────────────────────────────────
+
+// ── Pull-to-refresh (swipe down) ──────────────────────────
+(function(){
+  let _ptrY0 = 0, _ptrActive = false;
+  const THRESHOLD = 80;
+  
+  document.addEventListener('touchstart', e => {
+    if(window.scrollY === 0) _ptrY0 = e.touches[0].clientY;
+  }, {passive:true});
+  
+  document.addEventListener('touchmove', e => {
+    if(!_ptrY0) return;
+    const dy = e.touches[0].clientY - _ptrY0;
+    if(dy > 20 && window.scrollY === 0){
+      _ptrActive = true;
+      const ind = document.getElementById('ptr-indicator');
+      if(ind) ind.classList.add('show');
+    }
+  }, {passive:true});
+  
+  document.addEventListener('touchend', () => {
+    if(_ptrActive && hasSyncUrl()){
+      setSyncDot('syncing','Actualizando…');
+      pullFromSync(true).then(ok => {
+        setSyncDot(ok?'ok':'err', ok?'☁️ Al día':'Sin conexión');
+      });
+    }
+    _ptrActive = false; _ptrY0 = 0;
+    const ind = document.getElementById('ptr-indicator');
+    if(ind) ind.classList.remove('show');
+  }, {passive:true});
+})();
+
+function updateTabProgress(){
+  const periodTabs = ["hoy","semana","mes","trimestre"];
+  for(const t of periodTabs){
+    const btn = $("tab-"+t);
+    if(!btn) continue;
+    const freq = {hoy:"diaria",semana:"semanal",mes:"mensual",trimestre:"trimestral"}[t];
+    const tasks = TASKS.filter(x=>x.freq===freq);
+    if(!tasks.length) continue;
+    const done = tasks.filter(x=>isTaskDone(x)).length;
+    const pct = Math.round(done/tasks.length*100);
+    let dot = btn.querySelector(".tab-prog");
+    if(!dot){ dot=document.createElement("span"); dot.className="tab-prog"; btn.appendChild(dot); }
+    if(dot && dot.style && dot.style.setProperty){
+      dot.style.setProperty("--pct", pct+"%");
+      dot.style.opacity = done>0 ? "1" : "0";
+      dot.title = done+"/"+tasks.length+" tareas";
+    }
   }
 }
+
+
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
 initSync();
 
-function clearAllData(){
-  const keys=[];
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith("td26_"))keys.push(k);
-  }
-  keys.forEach(k=>localStorage.removeItem(k));
-  for(const k in dbCache)delete dbCache[k];
-  for(const k in photoCache)delete photoCache[k];
-  if(hasSyncUrl()){
-    fetch(`${_syncUrl}/${SYNC_PATH}.json`,{
-      method:"PUT",headers:{"Content-Type":"application/json"},body:"null"
-    }).then(()=>setSyncDot("ok","☁️ Limpio"))
-      .catch(()=>setSyncDot("err","Error Firebase"));
-  }
-  render();renderZoeModule();
-  showToast("🗑️ Historial borrado — ¡Empezamos!");
-}
 function showClearAllModal(){
   const m=$("clear-all-modal");if(m)m.style.display="flex";
 }
@@ -4107,6 +4541,7 @@ function hideClearAllModal(){
 function confirmClearAll(){
   hideClearAllModal();clearAllData();
 }
+
 
 
 
