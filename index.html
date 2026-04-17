@@ -1552,6 +1552,195 @@ button:active { transform:scale(.94) }
   .chip-ic  { font-size: 15px; }
   .chip-lbl { font-size: 9px; }
 }
+
+/* ═══ EXTRA TASKS ═══ */
+.tc-extra {
+  border-left: 3px solid rgba(251,191,36,.5) !important;
+  background: linear-gradient(90deg, rgba(251,191,36,.03), var(--s2)) !important;
+}
+.tc-extra-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  padding: 2px 7px;
+  border-radius: 99px;
+  background: rgba(251,191,36,.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,.3);
+  text-transform: uppercase;
+}
+.tc-del {
+  background: rgba(248,113,113,.08);
+  border: 1px solid rgba(248,113,113,.2);
+  color: var(--err);
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  font-size: 12px; font-weight: 800;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  margin-top: 4px;
+}
+.tc-del:active { transform: scale(.9); }
+.sh-extra {
+  background: linear-gradient(90deg, rgba(251,191,36,.12), rgba(251,191,36,.02));
+  border-color: rgba(251,191,36,.2);
+  color: #fbbf24;
+}
+.add-extra-btn {
+  width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  margin-top: 14px;
+  background: rgba(251,191,36,.08);
+  border: 1px dashed rgba(251,191,36,.35);
+  border-radius: 14px;
+  color: #fbbf24;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .18s;
+}
+.add-extra-btn:hover { background: rgba(251,191,36,.14); }
+.add-extra-btn:active { transform: scale(.98); }
+.add-extra-ic {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(251,191,36,.25);
+  font-size: 16px; font-weight: 800;
+  line-height: 1;
+}
+
+/* Historical badges */
+.hist-tag-extra {
+  display: inline-block;
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .05em;
+  padding: 1px 6px; border-radius: 99px;
+  background: rgba(251,191,36,.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,.25);
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.hist-tag-zoe {
+  display: inline-block;
+  font-size: 11px;
+  padding: 0 4px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+/* ═══ CALENDAR DAY DETAIL ═══ */
+.cal-day { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.cal-day:active { transform: scale(.92); }
+.cal-day.empty { cursor: default; }
+.cal-day.empty:active { transform: none; }
+.cal-day-detail {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--s2);
+  border: 1px solid var(--b1);
+  border-radius: 16px;
+}
+.cal-day-detail-empty {
+  text-align: center;
+  padding: 30px 10px;
+  color: var(--t3);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+}
+.cdd-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--b0);
+}
+.cdd-date {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 900;
+  color: var(--t0);
+  letter-spacing: -.02em;
+}
+.cdd-summary {
+  display: flex; gap: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 600;
+  color: var(--t2);
+}
+.cdd-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--t3);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-style: italic;
+}
+.cdd-person {
+  padding: 12px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--b0);
+  border-left-width: 3px;
+  border-radius: 12px;
+}
+.cdd-person-hdr {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 800;
+  color: var(--t0);
+  margin-bottom: 10px;
+  letter-spacing: -.01em;
+}
+.cdd-subcat {
+  margin-bottom: 10px;
+}
+.cdd-subcat:last-child {
+  margin-bottom: 0;
+}
+.cdd-sub-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+.cdd-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.04);
+  border-radius: 10px;
+}
+.cdd-icon {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: #0a0a12;
+  flex-shrink: 0;
+}
+.cdd-taskicon {
+  font-size: 17px;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.cdd-info { flex: 1; min-width: 0; }
+.cdd-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px; font-weight: 700;
+  color: var(--t0);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+.cdd-meta {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--t2);
+}
 </style>
 </head>
 <body>
@@ -1699,6 +1888,67 @@ button:active { transform:scale(.94) }
   </div>
 </div>
 
+<!-- EXTRA TASK MODAL -->
+<div id="extra-modal" style="display:none;position:fixed;inset:0;z-index:9997;
+  background:rgba(6,6,10,.9);backdrop-filter:blur(20px);
+  align-items:flex-end;justify-content:center;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;">
+  <div style="width:100%;max-width:480px;background:#111119;
+    border:1px solid rgba(255,255,255,.1);border-top:2px solid rgba(251,191,36,.4);
+    border-radius:28px 28px 0 0;
+    padding:24px 22px calc(env(safe-area-inset-bottom,0px) + 28px);
+    max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:30px;margin-bottom:6px">📌</div>
+      <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:900;color:#f4f4fa">Nueva tarea extra</div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">✏️ Título</label>
+      <input type="text" id="extra-title" placeholder="Ej: Comprar detergente" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div>
+        <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">👤 Persona</label>
+        <select id="extra-person" style="width:100%;padding:12px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box;color-scheme:dark">
+          <option value="Daniel">🟢 Daniel</option>
+          <option value="Nicolas">🟣 Nicolás</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">🔁 Frecuencia</label>
+        <select id="extra-freq" style="width:100%;padding:12px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box;color-scheme:dark">
+          <option value="diaria">Diaria</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="trimestral">Trimestral</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:22px">
+      <div>
+        <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">🎨 Icono</label>
+        <input type="text" id="extra-icon" maxlength="2" placeholder="📌" style="width:100%;padding:12px 8px;border-radius:12px;font-family:'Inter',sans-serif;font-size:18px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box;text-align:center"/>
+      </div>
+      <div>
+        <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">★ Puntos</label>
+        <input type="number" id="extra-pts" min="1" max="100" placeholder="1" style="width:100%;padding:12px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/>
+      </div>
+      <div>
+        <label style="display:block;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">⏱ Min</label>
+        <input type="number" id="extra-time" min="1" max="240" placeholder="5" style="width:100%;padding:12px 10px;border-radius:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button onclick="hideExtraModal()" style="flex:1;padding:14px;border-radius:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(244,244,250,.6);cursor:pointer;min-height:44px;">Cancelar</button>
+      <button onclick="saveExtra()" style="flex:1;padding:14px;border-radius:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;background:rgba(251,191,36,.18);border:1px solid rgba(251,191,36,.4);color:#fbbf24;cursor:pointer;min-height:44px;">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- STOCK EDIT MODAL -->
 <div id="stock-modal" style="display:none;position:fixed;inset:0;z-index:9997;
   background:rgba(6,6,10,.9);backdrop-filter:blur(20px);
@@ -1810,38 +2060,26 @@ button:active { transform:scale(.94) }
 </div>
 
 <!-- IDENTITY MODAL — quién eres -->
-<div id="identity-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(6,6,10,.97);backdrop-filter:blur(24px);align-items:center;justify-content:center;flex-direction:column;padding:24px;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-  <div style="width:100%;max-width:380px;">
-    <div style="font-size:42px;text-align:center;margin-bottom:20px">🏠</div>
-    <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:900;
-      color:#f4f4fa;text-align:center;margin-bottom:8px;letter-spacing:-.03em">
-      Tareas Depto
+<div id="identity-modal" style="display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(6,6,10,.97);backdrop-filter:blur(24px);
+  align-items:center;justify-content:center;flex-direction:column;
+  padding:24px;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="max-width:440px;width:100%;text-align:center;">
+    <div style="font-size:46px;margin-bottom:14px">👋</div>
+    <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:900;color:#f4f4fa;margin-bottom:8px;letter-spacing:-.02em">¿Quién eres?</div>
+    <div style="font-family:'Inter',sans-serif;font-size:14px;color:rgba(244,244,250,.55);margin-bottom:32px;line-height:1.5">
+      Identifícate para recibir notificaciones de tus tareas.
     </div>
-    <div style="font-family:'Inter',sans-serif;font-size:15px;font-weight:400;
-      color:rgba(244,244,250,.45);text-align:center;margin-bottom:36px;line-height:1.5">
-      ¿Quién está usando esta app en este celular?
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <button onclick="chooseUser('Daniel')" style="
-        width:100%;padding:18px;border-radius:18px;
-        background:rgba(61,255,163,.12);border:1.5px solid rgba(61,255,163,.3);
-        font-family:'Inter',sans-serif;font-size:16px;font-weight:700;
-        color:var(--d);cursor:pointer;transition:all .15s;
-        display:flex;align-items:center;justify-content:center;gap:10px;">
-        <span style="font-size:20px">🟢</span> Soy Daniel
+    <div style="display:grid;gap:12px;">
+      <button onclick="chooseUser('Daniel')" style="padding:18px 20px;border-radius:18px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:#f4f4fa;background:linear-gradient(135deg,rgba(61,255,163,.18),rgba(61,255,163,.06));border:1.5px solid rgba(61,255,163,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;">
+        <span style="font-size:22px">🟢</span> Soy Daniel
       </button>
-      <button onclick="chooseUser('Nicolas')" style="
-        width:100%;padding:18px;border-radius:18px;
-        background:rgba(200,127,255,.12);border:1.5px solid rgba(200,127,255,.3);
-        font-family:'Inter',sans-serif;font-size:16px;font-weight:700;
-        color:var(--n);cursor:pointer;transition:all .15s;
-        display:flex;align-items:center;justify-content:center;gap:10px;">
-        <span style="font-size:20px">🔵</span> Soy Nicolás
+      <button onclick="chooseUser('Nicolas')" style="padding:18px 20px;border-radius:18px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;color:#f4f4fa;background:linear-gradient(135deg,rgba(200,127,255,.18),rgba(200,127,255,.06));border:1.5px solid rgba(200,127,255,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;">
+        <span style="font-size:22px">🟣</span> Soy Nicolás
       </button>
     </div>
-    <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:400;
-      color:rgba(244,244,250,.2);text-align:center;margin-top:20px;line-height:1.6">
-      Esta elección se guarda en este celular.<br>Solo se pregunta una vez.
+    <div style="font-family:'Inter',sans-serif;font-size:11px;color:rgba(244,244,250,.35);margin-top:20px;line-height:1.4">
+      Puedes cambiar después en el menú ☰ de la cabecera.<br>Solo se pregunta una vez.
     </div>
   </div>
 </div>
@@ -1859,9 +2097,7 @@ button:active { transform:scale(.94) }
     <div style="font-family:'Inter',sans-serif;font-size:13px;color:#8888aa;text-align:center;margin-bottom:24px;line-height:1.5">¿Estás seguro? Se eliminarán todas las marcas de tareas completadas y no podrán recuperarse.</div>
     <div style="display:flex;gap:10px;">
       <button onclick="hideClearAllModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:#20202e;border:1px solid rgba(255,255,255,.08);color:#aaaacc;cursor:pointer;min-height:44px;">Cancelar</button>
-      <button onclick="confirmClearAll()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:800;
-        background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);
-        color:#ff6b6b;cursor:pointer;min-height:44px;">Sí, borrar todo</button>
+      <button onclick="confirmClearAll()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:800;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.4);color:#ff6b6b;cursor:pointer;min-height:44px;">Sí, borrar todo</button>
     </div>
   </div>
 </div>
@@ -1884,7 +2120,7 @@ button:active { transform:scale(.94) }
   </div>
 </div>
 
-<!-- HEADER MENU (moved outside .hdr to escape backdrop-filter stacking context) -->
+<!-- HEADER MENU -->
 <div class="hdr-menu hidden" id="hdr-menu">
   <button class="hdr-menu-item" onclick="resetPeriod();toggleHdrMenu()">↺ Resetear período</button>
   <button class="hdr-menu-item" onclick="toggleHdrMenu();openSyncSheet()">☁️ Configurar sync</button>
@@ -2416,6 +2652,12 @@ let _prevDD=-1,_prevND=-1;
 function updateScores(){
   const tasks=getTabTasks();
   let dD=0,dT=0,dP=0,dTP=0,nD=0,nT=0,nP=0,nTP=0;
+  // Incluir extras del período actual
+  const extras = extrasForCurrentTab();
+  for(const e of extras){
+    if(e.person === "Daniel"){ dT++; dTP+=e.pts; if(e.done){ dD++; dP+=e.pts; } }
+    else                     { nT++; nTP+=e.pts; if(e.done){ nD++; nP+=e.pts; } }
+  }
   for(const t of tasks){
     const done=isTaskDone(t);
     const ep=effectivePerson(t);
@@ -2891,68 +3133,102 @@ return `<div class="hor-wrap">
 // ══════════════════════════════════════
 function histView(){
   // ══════════════════════════════════════════════════════════
-  // Recopilar entries: hechas + no cumplidas + Zoe
+  // 1) Recolectar entries: regulares + extras + Zoe
   // ══════════════════════════════════════════════════════════
-  const entries=[];
-  // Tareas completadas
-  for(const[k,stamp] of Object.entries(dbCache)){
-    if(!k.startsWith("td26_")||k.startsWith("td26_zoe_")||!stamp||typeof stamp!=="string")continue;
-    const inner=k.replace("td26_","");
-    let taskId=null,period=null;
-    for(const t of TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
-    if(!taskId)continue;
-    const task=taskById(taskId);
+  const entries = [];
+
+  // a) Tareas regulares HECHAS
+  for(const [k, stamp] of Object.entries(dbCache)){
+    if(!k.startsWith("td26_") || k.startsWith("td26_zoe_") ||
+       k.startsWith("td26_stock_") || k === EXTRAS_KEY ||
+       !stamp || typeof stamp !== "string") continue;
+    const inner = k.replace("td26_","");
+    let taskId=null, period=null;
+    for(const t of TASKS){
+      if(inner.startsWith(t.id+"_")){
+        taskId = t.id;
+        period = inner.slice(t.id.length+1);
+        break;
+      }
+    }
+    if(!taskId) continue;
+    const task = taskById(taskId);
     if(period < APP_START_DATE) continue;
-    entries.push({task,period,stamp,key:k,missed:false,isZoe:false});
+    entries.push({task, period, stamp, key:k, missed:false, isZoe:false, isExtra:false});
   }
-  // Tareas no cumplidas
-  const freqs=["diaria","semanal","mensual","trimestral"];
+
+  // b) Tareas regulares NO CUMPLIDAS
+  const freqs = ["diaria","semanal","mensual","trimestral"];
   for(const t of TASKS){
-    if(!freqs.includes(t.freq))continue;
-    for(const pk of pastPeriodKeys(t.freq,LOOK_BACK[t.freq])){
+    if(!freqs.includes(t.freq)) continue;
+    for(const pk of pastPeriodKeys(t.freq, LOOK_BACK[t.freq])){
       if(pk < APP_START_DATE) continue;
-      const k=sKey(t.id,pk);
-      if(!dbCache[k]&&!dbCache[k.replace(/[.#$\[\]]/g,"_")]){
-        entries.push({task:t,period:pk,stamp:null,key:k,missed:true,isZoe:false});
+      const k = sKey(t.id, pk);
+      if(!dbCache[k] && !dbCache[k.replace(/[.#$\[\]]/g,"_")]){
+        entries.push({task:t, period:pk, stamp:null, key:k, missed:true, isZoe:false, isExtra:false});
       }
     }
   }
-  // Zoe tasks
-  for(const[k,stamp] of Object.entries(dbCache)){
-    if(!k.startsWith("td26_zoe_")||!stamp||typeof stamp!=="string")continue;
-    const inner=k.replace("td26_zoe_","");
-    let taskId=null,period=null;
-    for(const t of ZOE_TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
-    if(!taskId)continue;
-    const task={...zoeById(taskId),person:"Zoe"};
+
+  // c) Tareas EXTRAS (hechas + no hechas)
+  const extras = getExtras();
+  for(const e of extras){
+    if(e.period < APP_START_DATE) continue;
+    // Fake task object compatible con renderEntry
+    const fakeTask = {
+      id: e.id, icon: e.icon, title: e.title,
+      freq: e.freq, person: e.person,
+      pts: e.pts, time: e.time
+    };
+    entries.push({
+      task: fakeTask,
+      period: e.period,
+      stamp: e.stamp,
+      key: e.id,
+      missed: !e.done,
+      isZoe: false,
+      isExtra: true
+    });
+  }
+
+  // d) Tareas ZOE
+  for(const [k, stamp] of Object.entries(dbCache)){
+    if(!k.startsWith("td26_zoe_") || !stamp || typeof stamp !== "string") continue;
+    const inner = k.replace("td26_zoe_","");
+    let taskId=null, period=null;
+    for(const t of ZOE_TASKS){
+      if(inner.startsWith(t.id+"_")){
+        taskId = t.id;
+        period = inner.slice(t.id.length+1);
+        break;
+      }
+    }
+    if(!taskId) continue;
+    const task = {...zoeById(taskId), person:"Zoe"};
     if(period < APP_START_DATE) continue;
-    entries.push({task,period,stamp,key:k,missed:false,isZoe:true});
+    entries.push({task, period, stamp, key:k, missed:false, isZoe:true, isExtra:false});
   }
 
   if(!entries.length) return `<div class="hist-empty">Sin historial todavía.<br>Marca tu primera tarea ✅</div>`;
 
   // ══════════════════════════════════════════════════════════
-  // Función: clave de ordenamiento por fecha (más reciente primero)
+  // 2) Helpers
   // ══════════════════════════════════════════════════════════
   const sortKey = (e) => {
-    // Prefer stamp for done tasks, period for missed
     if(e.stamp) return "2_" + e.period + "_" + e.stamp;
     return "1_" + e.period;
   };
-  // Sort DESC (newest first)
   entries.sort((a,b) => sortKey(b).localeCompare(sortKey(a)));
 
-  // ══════════════════════════════════════════════════════════
-  // Función: persona efectiva del entry
-  // ══════════════════════════════════════════════════════════
   const getPerson = (e) => {
     if(e.isZoe) return "Zoe";
+    if(e.isExtra) return e.task.person;
     const ep = effectivePerson(e.task);
     return ep === "shared" ? "Ambos" : ep;
   };
 
   // ══════════════════════════════════════════════════════════
-  // Barra de filtros
+  // 3) Barra de filtros
   // ══════════════════════════════════════════════════════════
   let html = `<div class="hist-filter">
     <button class="hf-btn ${histFilter==="todo"?"on":""}" onclick="setHistFilter('todo')">Todos</button>
@@ -2962,25 +3238,26 @@ function histView(){
   </div>`;
 
   // ══════════════════════════════════════════════════════════
-  // Helper para renderizar un entry individual
+  // 4) Render de una entry
   // ══════════════════════════════════════════════════════════
   const renderEntry = (e) => {
     const person = getPerson(e);
     const isDan = person === "Daniel";
     const isNic = person === "Nicolas";
     const isAmbos = person === "Ambos";
+    const isZoe = person === "Zoe";
     const pc = isDan ? "var(--d)" : (isNic ? "var(--n)" : (isAmbos ? "#fbbf24" : "#f9a8d4"));
     const personLabel = isNic ? "Nicolás" : person;
-
-    // Fecha legible
-    let dateStr = e.stamp || periodKeyLabel(e.task.freq, e.period);
+    const dateStr = e.stamp || periodKeyLabel(e.task.freq, e.period);
+    const extraBadge = e.isExtra ? `<span class="hist-tag-extra">EXTRA</span>` : "";
+    const zoeBadge = e.isZoe ? `<span class="hist-tag-zoe">🐱</span>` : "";
 
     if(e.missed){
       return `<div class="hist-item hi-miss">
         <div class="hist-status-pill status-missed">✕</div>
         <span class="hist-icon">${e.task.icon}</span>
         <div class="hist-info">
-          <div class="hist-title" style="color:rgba(240,240,248,.55)">${e.task.title}</div>
+          <div class="hist-title" style="color:rgba(240,240,248,.55)">${e.task.title} ${extraBadge}${zoeBadge}</div>
           <div class="hist-meta">
             <span style="color:${pc};font-weight:700">${personLabel}</span>
             <span>·</span>
@@ -2995,7 +3272,7 @@ function histView(){
       <div class="hist-status-pill status-done" style="background:${pc}">✓</div>
       <span class="hist-icon">${e.task.icon}</span>
       <div class="hist-info">
-        <div class="hist-title">${e.task.title}</div>
+        <div class="hist-title">${e.task.title} ${extraBadge}${zoeBadge}</div>
         <div class="hist-meta">
           <span style="color:${pc};font-weight:700">${personLabel}</span>
           <span>·</span>
@@ -3008,73 +3285,11 @@ function histView(){
   };
 
   // ══════════════════════════════════════════════════════════
-  // Render según filtro
+  // 5) Render sección persona con sub-categorías
   // ══════════════════════════════════════════════════════════
-  if(histFilter === "missed"){
-    const miss = entries.filter(e => e.missed);
-    if(!miss.length){
-      html += `<div class="hist-empty-sub">🎉 ¡Ninguna tarea sin cumplir!</div>`;
-    } else {
-      html += `<div class="hist-person-header hist-miss-header">
-        <div class="hist-person-title">⚠️ No cumplidas</div>
-        <div class="hist-person-count">${miss.length}</div>
-      </div>`;
-      html += `<div class="hist-entries">${miss.map(renderEntry).join("")}</div>`;
-    }
-    return html;
-  }
-
-  if(histFilter === "daniel" || histFilter === "nicolas"){
-    const name = histFilter === "daniel" ? "Daniel" : "Nicolas";
-    const displayName = name === "Nicolas" ? "Nicolás" : name;
-    const color = name === "Daniel" ? "var(--d)" : "var(--n)";
-    const personEntries = entries.filter(e => {
-      const p = getPerson(e);
-      return p === name || p === "Ambos" || (name === "Nicolas" && p === "Zoe");
-    });
-    const doneE   = personEntries.filter(e => !e.missed);
-    const missedE = personEntries.filter(e => e.missed);
-    const totalPts = doneE.reduce((s,e)=>s+e.task.pts,0);
-
-    html += `<div class="hist-person-header" style="border-color:${color}33">
-      <div class="hist-person-title"><span style="color:${color}">●</span> ${displayName}</div>
-      <div class="hist-person-stats">
-        <span>✅ ${doneE.length}</span>
-        <span>⚠️ ${missedE.length}</span>
-        <span style="color:${color};font-weight:700">★ ${totalPts}</span>
-      </div>
-    </div>`;
-    if(!personEntries.length){
-      html += `<div class="hist-empty-sub">Sin actividad</div>`;
-      return html;
-    }
-    if(doneE.length){
-      html += `<div class="hist-subcat">
-        <div class="hist-subcat-hdr hist-subcat-done">
-          <span class="hist-subcat-icon" style="background:${color}">✓</span>
-          <span class="hist-subcat-title">Cumplidas</span>
-          <span class="hist-subcat-count">${doneE.length}</span>
-        </div>
-        <div class="hist-entries">${doneE.map(renderEntry).join("")}</div>
-      </div>`;
-    }
-    if(missedE.length){
-      html += `<div class="hist-subcat">
-        <div class="hist-subcat-hdr hist-subcat-missed">
-          <span class="hist-subcat-icon" style="background:rgba(248,113,113,.2);color:var(--err)">✕</span>
-          <span class="hist-subcat-title">No cumplidas</span>
-          <span class="hist-subcat-count">${missedE.length}</span>
-        </div>
-        <div class="hist-entries">${missedE.map(renderEntry).join("")}</div>
-      </div>`;
-    }
-    return html;
-  }
-
-  // ─── Filter "todo": secciones separadas con subcategorías ───
-  const renderPersonSection = (name, color, entries) => {
-    const doneE = entries.filter(e=>!e.missed);
-    const missedE = entries.filter(e=>e.missed);
+  const renderPersonSection = (name, color, items) => {
+    const doneE = items.filter(e=>!e.missed);
+    const missedE = items.filter(e=>e.missed);
     const pts = doneE.reduce((s,e)=>s+e.task.pts,0);
     const displayName = name === "Nicolas" ? "Nicolás" : name;
     let out = `<div class="hist-person-header" style="border-color:${color}33">
@@ -3085,11 +3300,10 @@ function histView(){
         <span style="color:${color};font-weight:700">★ ${pts}</span>
       </div>
     </div>`;
-    if(!entries.length){
+    if(!items.length){
       out += `<div class="hist-empty-sub">Sin actividad de ${displayName}</div>`;
       return out;
     }
-    // ── Subcategoría: ✅ Cumplidas ──
     if(doneE.length){
       out += `<div class="hist-subcat">
         <div class="hist-subcat-hdr hist-subcat-done">
@@ -3100,7 +3314,6 @@ function histView(){
         <div class="hist-entries">${doneE.map(renderEntry).join("")}</div>
       </div>`;
     }
-    // ── Subcategoría: ⚠️ No cumplidas ──
     if(missedE.length){
       out += `<div class="hist-subcat">
         <div class="hist-subcat-hdr hist-subcat-missed">
@@ -3114,6 +3327,35 @@ function histView(){
     return out;
   };
 
+  // ══════════════════════════════════════════════════════════
+  // 6) Render según filtro
+  // ══════════════════════════════════════════════════════════
+  if(histFilter === "missed"){
+    const miss = entries.filter(e => e.missed);
+    if(!miss.length){
+      html += `<div class="hist-empty-sub">🎉 ¡Ninguna tarea sin cumplir!</div>`;
+    } else {
+      const danMiss = miss.filter(e => { const p = getPerson(e); return p === "Daniel" || p === "Ambos"; });
+      const nicMiss = miss.filter(e => { const p = getPerson(e); return p === "Nicolas" || p === "Ambos" || p === "Zoe"; });
+      html += renderPersonSection("Daniel", "var(--d)", danMiss);
+      html += `<div style="height:20px"></div>`;
+      html += renderPersonSection("Nicolas", "var(--n)", nicMiss);
+    }
+    return html;
+  }
+
+  if(histFilter === "daniel" || histFilter === "nicolas"){
+    const name = histFilter === "daniel" ? "Daniel" : "Nicolas";
+    const color = name === "Daniel" ? "var(--d)" : "var(--n)";
+    const personEntries = entries.filter(e => {
+      const p = getPerson(e);
+      return p === name || p === "Ambos" || (name === "Nicolas" && p === "Zoe");
+    });
+    html += renderPersonSection(name, color, personEntries);
+    return html;
+  }
+
+  // ─── Filter "todo": Daniel y Nicolás con subcategorías ───
   const danEntries = entries.filter(e => {
     const p = getPerson(e);
     return p === "Daniel" || p === "Ambos";
@@ -3164,6 +3406,28 @@ function render(){
   const order=["diaria","semanal","mensual","trimestral"];
   let html=getMissedBanner();
   for(const f of order)if(byFreq[f])html+=sectionHTML(byFreq[f],SC[f]);
+
+  // ── Tareas extras del período actual ──
+  const extras = extrasForCurrentTab();
+  if(extras.length){
+    const doneC = extras.filter(e=>e.done).length;
+    html += `<div class="sec">
+      <div class="sec-hdr sh-extra">
+        <span class="sec-title">📌 EXTRAS</span>
+        <span class="sec-pgs">${doneC}/${extras.length}</span>
+      </div>
+      <div class="tgrid">${extras.map(extraCardHTML).join("")}</div>
+    </div>`;
+  }
+
+  // ── Botón agregar tarea extra ──
+  if(activeTab==="hoy" || activeTab==="semana" || activeTab==="mes" || activeTab==="trimestre"){
+    html += `<button class="add-extra-btn" onclick="openExtraModal()">
+      <span class="add-extra-ic">+</span>
+      <span>Agregar tarea extra</span>
+    </button>`;
+  }
+
   el.innerHTML=html||`<div class="empty-state"><div class="empty-state-icon">🎉</div><div class="empty-state-title">¡Todo listo!</div><div>No hay tareas para este período.</div></div>`;
 }
 function setTab(t){
@@ -3439,6 +3703,152 @@ window.confirmPhoto = function(){
 };
 
 // ══════════════════════════════════════
+
+
+// ════════════════════════════════════════════════════════════
+// 📋 TAREAS EXTRAS — Agregadas dinámicamente por los usuarios
+// ════════════════════════════════════════════════════════════
+const EXTRAS_KEY = "td26_extras";
+const EXTRA_ICONS = ["📌","⭐","🔧","💡","📋","🧺","🪣","🍳","🧼","🪟","🌱","🛏️","🪴","📞","🛍️"];
+
+function getExtras(){
+  const raw = dbCache[EXTRAS_KEY] || localStorage.getItem(EXTRAS_KEY);
+  if(!raw) return [];
+  try { return JSON.parse(raw) || []; } catch(e){ return []; }
+}
+function saveExtras(list){
+  const str = JSON.stringify(list);
+  dbCache[EXTRAS_KEY] = str;
+  localStorage.setItem(EXTRAS_KEY, str);
+  schedulePush();
+}
+
+// Genera id único
+function newExtraId(){
+  return "x" + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+}
+
+// Devuelve extras del período actual según tab activa
+function extrasForCurrentTab(){
+  const extras = getExtras();
+  const d = NOW;
+  const todayKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const weekK = weekKey(d);
+  const monthK = monthKey(d);
+  const quarterK = quarterKey(d);
+  return extras.filter(e => {
+    if(activeTab === "hoy") return e.freq === "diaria" && e.period === todayKey;
+    if(activeTab === "semana") return e.freq === "semanal" && e.period === weekK;
+    if(activeTab === "mes") return e.freq === "mensual" && e.period === monthK;
+    if(activeTab === "trimestre") return e.freq === "trimestral" && e.period === quarterK;
+    return false;
+  });
+}
+
+// ─── Modal para crear tarea extra ────────────────────────
+function openExtraModal(){
+  $("extra-title").value = "";
+  $("extra-person").value = getCurrentUser() || "Daniel";
+  $("extra-pts").value = "1";
+  $("extra-time").value = "5";
+  $("extra-icon").value = "📌";
+  // Set freq based on current tab
+  let defaultFreq = "diaria";
+  if(activeTab === "semana") defaultFreq = "semanal";
+  else if(activeTab === "mes") defaultFreq = "mensual";
+  else if(activeTab === "trimestre") defaultFreq = "trimestral";
+  $("extra-freq").value = defaultFreq;
+  $("extra-modal").style.display = "flex";
+  setTimeout(()=>$("extra-title").focus(), 100);
+}
+function hideExtraModal(){
+  $("extra-modal").style.display = "none";
+}
+
+function saveExtra(){
+  const title = ($("extra-title").value||"").trim();
+  const person = $("extra-person").value;
+  const freq = $("extra-freq").value;
+  const icon = $("extra-icon").value || "📌";
+  const pts = parseInt($("extra-pts").value,10) || 1;
+  const time = parseInt($("extra-time").value,10) || 5;
+  if(!title){ showToast("⚠️ Escribe un título"); return; }
+
+  const d = NOW;
+  let period;
+  if(freq === "diaria")      period = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  else if(freq === "semanal") period = weekKey(d);
+  else if(freq === "mensual") period = monthKey(d);
+  else                         period = quarterKey(d);
+
+  const extras = getExtras();
+  extras.push({
+    id: newExtraId(),
+    title, person, freq, icon, pts, time, period,
+    isExtra: true,
+    createdAt: Date.now(),
+    done: false,
+    stamp: null
+  });
+  saveExtras(extras);
+  hideExtraModal();
+  showToast("✓ Tarea agregada");
+  render();
+}
+
+function toggleExtra(id){
+  const extras = getExtras();
+  const ex = extras.find(e=>e.id===id);
+  if(!ex) return;
+  if(ex.done){
+    ex.done = false;
+    ex.stamp = null;
+  } else {
+    ex.done = true;
+    const d = NOW;
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+    ex.stamp = `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${hh}:${mm}`;
+  }
+  saveExtras(extras);
+  render();
+  flashSync();
+}
+
+function deleteExtra(id){
+  if(!confirm("¿Eliminar esta tarea extra?")) return;
+  const extras = getExtras().filter(e=>e.id!==id);
+  saveExtras(extras);
+  showToast("🗑️ Eliminada");
+  render();
+}
+
+// Render card para una tarea extra (reutiliza estilo de tc)
+function extraCardHTML(e){
+  const done = e.done;
+  const isDan = e.person === "Daniel";
+  const ckCls = done ? (isDan?"ck-d":"ck-n") : "";
+  return `<div class="tc tc-extra${done?" done":""}" data-extra-id="${e.id}">
+    <div class="tc-top">
+      <div class="tc-pdot ${isDan?"tc-pdot-d":"tc-pdot-n"}"></div>
+      <span class="tc-plbl ${isDan?"tc-plbl-d":"tc-plbl-n"}">${isDan?"Daniel":"Nicolás"}</span>
+      <span class="tc-extra-badge">EXTRA</span>
+      <span class="tc-pts">${e.pts} pts · ${e.time} min</span>
+    </div>
+    <div class="tc-main">
+      <span class="tc-icon">${e.icon}</span>
+      <div class="tc-content">
+        <div class="tc-title${done?" done":""}">${e.title}</div>
+        ${done && e.stamp ? `<div class="tc-chips"><span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">✓ Verificado · ${e.stamp}</span></div>` : `<div class="tc-chips"><span class="v-pend">Pendiente</span></div>`}
+      </div>
+      <div class="tc-right">
+        <button class="tc-chk ${ckCls}" onclick="toggleExtra('${e.id}')">${done?tickV:""}</button>
+        <button class="tc-del" onclick="deleteExtra('${e.id}')" title="Eliminar" aria-label="Eliminar">✕</button>
+      </div>
+    </div>
+  </div>`;
+}
+
 
 // ════════════════════════════════════════════════════════════
 // 📦 STOCK DE ZOE — Historial de compras + predicción de duración
@@ -3890,7 +4300,7 @@ function calendarioView(){
     else if(a.dan>0) cls+=" c-dan";
     else if(a.nic>0) cls+=" c-nic";
     if(isToday) cls+=" is-today";
-    days+=`<div class="${cls}">${d}</div>`;
+    days+=`<div class="${cls}" onclick="showCalDay('${ds}')">${d}</div>`;
   }
 
   return `<div class="cal-wrap">
@@ -3929,8 +4339,249 @@ function calendarioView(){
         <div class="cal-legend-item"><div class="cal-legend-dot" style="background:linear-gradient(135deg,#0ecf97 50%,#9d8ffc 50%)"></div>Ambos</div>
       </div>
     </div>
+
+    <!-- Day detail (shows when a day is clicked) -->
+    <div id="cal-day-detail" class="cal-day-detail">
+      <div class="cal-day-detail-empty">
+        <div style="font-size:32px;margin-bottom:6px">👆</div>
+        <div>Toca un día para ver las tareas</div>
+      </div>
+    </div>
   </div>`;
 }
+
+// ══════════════════════════════════════════════════════════════
+// Calendar — day detail
+// ══════════════════════════════════════════════════════════════
+
+// Construye la lista de tareas que CORRESPONDEN a una fecha (regulares + extras)
+// Separa hechas, pendientes, y no aplicables
+function tasksForDate(dateStr){
+  const [y,m,dd] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m-1, dd);
+  const dow = dt.getDay(); // 0=Dom 1=Lun...
+  const weekK = weekKey(dt);
+  const monthK = monthKey(dt);
+  const quarterK = quarterKey(dt);
+  const extras = getExtras();
+
+  const result = { done:[], missed:[], pending:[] };
+
+  // ── Tareas diarias ──
+  for(const t of TASKS.filter(t=>t.freq==="diaria")){
+    // Only add if it applies to this person today (no dueDay restriction on daily)
+    const k = sKey(t.id, dateStr);
+    const stamp = dbCache[k];
+    if(stamp){
+      result.done.push({task:t, key:k, stamp, period:dateStr, missed:false, isExtra:false, isZoe:false});
+    } else {
+      // Past day → missed; today → pending; future → skip
+      const today = new Date(); today.setHours(0,0,0,0);
+      if(dt < today){
+        result.missed.push({task:t, key:k, stamp:null, period:dateStr, missed:true, isExtra:false, isZoe:false});
+      } else if(dt.getTime() === today.getTime()){
+        result.pending.push({task:t, key:k, stamp:null, period:dateStr, missed:false, isExtra:false, isZoe:false});
+      }
+    }
+  }
+
+  // ── Semanales (solo si es lunes, o mostrar en todo el rango) ──
+  // Mostramos en cualquier día de la semana, pero en dueDay si aplica
+  for(const t of TASKS.filter(t=>t.freq==="semanal")){
+    if(t.dueDay !== undefined && t.dueDay !== dow) continue; // fixed day tasks only on that day
+    const k = sKey(t.id, weekK);
+    const stamp = dbCache[k];
+    if(stamp){
+      // Solo mostrar como "hecha ese día" si el stamp coincide aprox con la fecha
+      // Simplificación: muestra si el período de la tarea es esta semana
+      result.done.push({task:t, key:k, stamp, period:weekK, missed:false, isExtra:false, isZoe:false});
+    } else {
+      // Solo pendientes si es hoy o dueDay
+      const today = new Date(); today.setHours(0,0,0,0);
+      if(t.dueDay !== undefined){
+        // Fixed day task
+        if(dt.getTime() < today.getTime()){
+          result.missed.push({task:t, key:k, stamp:null, period:weekK, missed:true, isExtra:false, isZoe:false});
+        } else if(dt.getTime() === today.getTime()){
+          result.pending.push({task:t, key:k, stamp:null, period:weekK, missed:false, isExtra:false, isZoe:false});
+        }
+      }
+    }
+  }
+
+  // ── Mensuales: mostrar si se hicieron ese día específico ──
+  for(const t of TASKS.filter(t=>t.freq==="mensual")){
+    const k = sKey(t.id, monthK);
+    const stamp = dbCache[k];
+    if(stamp){
+      result.done.push({task:t, key:k, stamp, period:monthK, missed:false, isExtra:false, isZoe:false});
+    }
+  }
+
+  // ── Trimestrales ──
+  for(const t of TASKS.filter(t=>t.freq==="trimestral")){
+    const k = sKey(t.id, quarterK);
+    const stamp = dbCache[k];
+    if(stamp){
+      result.done.push({task:t, key:k, stamp, period:quarterK, missed:false, isExtra:false, isZoe:false});
+    }
+  }
+
+  // ── Zoe tasks ──
+  for(const [k, stamp] of Object.entries(dbCache)){
+    if(!k.startsWith("td26_zoe_") || !stamp || typeof stamp !== "string") continue;
+    const inner = k.replace("td26_zoe_","");
+    for(const zt of ZOE_TASKS){
+      if(inner.startsWith(zt.id+"_")){
+        const period = inner.slice(zt.id.length+1);
+        // Solo incluir si el período es esta fecha / semana / mes
+        let applies = false;
+        if(zt.freq === "diaria" && period === dateStr) applies = true;
+        else if(zt.freq === "semanal" && period === weekK) applies = true;
+        else if(zt.freq === "mensual" && period === monthK) applies = true;
+        else if(zt.freq === "trimestral" && period === quarterK) applies = true;
+        if(applies){
+          const task = {...zt, person:"Zoe"};
+          result.done.push({task, key:k, stamp, period, missed:false, isExtra:false, isZoe:true});
+        }
+        break;
+      }
+    }
+  }
+
+  // ── Extras ──
+  for(const e of extras){
+    let applies = false;
+    if(e.freq === "diaria" && e.period === dateStr) applies = true;
+    else if(e.freq === "semanal" && e.period === weekK) applies = true;
+    else if(e.freq === "mensual" && e.period === monthK) applies = true;
+    else if(e.freq === "trimestral" && e.period === quarterK) applies = true;
+    if(!applies) continue;
+    const fakeTask = {
+      id:e.id, icon:e.icon, title:e.title,
+      freq:e.freq, person:e.person, pts:e.pts, time:e.time
+    };
+    const entry = {task:fakeTask, key:e.id, stamp:e.stamp, period:e.period, missed:!e.done, isExtra:true, isZoe:false};
+    if(e.done) result.done.push(entry);
+    else {
+      const today = new Date(); today.setHours(0,0,0,0);
+      if(dt < today) result.missed.push(entry);
+      else if(dt.getTime() === today.getTime()) result.pending.push(entry);
+    }
+  }
+
+  return result;
+}
+
+// Formatea una fecha ISO como "Viernes 17 de Abril"
+function prettyDate(dateStr){
+  const [y,m,dd] = dateStr.split("-").map(Number);
+  const dt = new Date(y, m-1, dd);
+  return `${DAYS[dt.getDay()]} ${dd} de ${MONTHS[m-1]}`;
+}
+
+// Muestra detalle del día
+function showCalDay(dateStr){
+  const target = $("cal-day-detail");
+  if(!target) return;
+  const { done, missed, pending } = tasksForDate(dateStr);
+
+  // Separa por persona
+  const byPerson = (entries, person) => entries.filter(e => {
+    if(e.isZoe) return person === "Nicolas"; // Zoe a cargo de todos
+    const p = e.task.person;
+    if(p === "shared") return true;
+    if(p === "rotate") return effectivePerson(e.task) === person;
+    return p === person;
+  });
+
+  const renderItem = (e, cls) => {
+    const p = e.isZoe ? "Zoe" : (e.task.person === "shared" ? "Ambos" : e.task.person);
+    const isDan = p === "Daniel";
+    const isNic = p === "Nicolas";
+    const isZoeT = e.isZoe;
+    const color = isDan ? "var(--d)" : (isNic ? "var(--n)" : (isZoeT ? "#f9a8d4" : "#fbbf24"));
+    const pLabel = isNic ? "Nicolás" : p;
+    const timeStr = e.stamp || "";
+    const extraBadge = e.isExtra ? `<span class="hist-tag-extra">EXTRA</span>` : "";
+    const zoeBadge = isZoeT ? `<span class="hist-tag-zoe">🐱</span>` : "";
+    const icon = cls === "cdd-done" ? "✓" : (cls === "cdd-missed" ? "✕" : "○");
+    const iconBg = cls === "cdd-done" ? `background:${color}` : (cls === "cdd-missed" ? "background:rgba(248,113,113,.2);color:var(--err)" : "background:rgba(255,255,255,.08);color:var(--t2)");
+    return `<div class="cdd-item ${cls}">
+      <div class="cdd-icon" style="${iconBg}">${icon}</div>
+      <span class="cdd-taskicon">${e.task.icon}</span>
+      <div class="cdd-info">
+        <div class="cdd-title">${e.task.title} ${extraBadge}${zoeBadge}</div>
+        <div class="cdd-meta">
+          <span style="color:${color};font-weight:700">${pLabel}</span>
+          ${timeStr ? `<span>·</span><span>${timeStr}</span>` : ""}
+          <span>·</span><span>★ ${e.task.pts} pts</span>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  // Group everything
+  const danDone    = byPerson(done, "Daniel");
+  const danMissed  = byPerson(missed, "Daniel");
+  const danPend    = byPerson(pending, "Daniel");
+  const nicDone    = byPerson(done, "Nicolas");
+  const nicMissed  = byPerson(missed, "Nicolas");
+  const nicPend    = byPerson(pending, "Nicolas");
+
+  const totalDone = done.length;
+  const totalMissed = missed.length;
+  const totalPending = pending.length;
+
+  let content = `<div class="cdd-header">
+    <div class="cdd-date">${prettyDate(dateStr)}</div>
+    <div class="cdd-summary">
+      <span>✅ ${totalDone}</span>
+      <span>⚠️ ${totalMissed}</span>
+      <span>⏳ ${totalPending}</span>
+    </div>
+  </div>`;
+
+  if(!done.length && !missed.length && !pending.length){
+    content += `<div class="cdd-empty">Sin tareas asignadas ni actividad este día</div>`;
+  } else {
+    const renderPersonBlock = (name, color, doneList, missedList, pendList) => {
+      if(!doneList.length && !missedList.length && !pendList.length) return "";
+      const displayName = name === "Nicolas" ? "Nicolás" : name;
+      let out = `<div class="cdd-person" style="border-color:${color}33">
+        <div class="cdd-person-hdr">
+          <span style="color:${color}">●</span> ${displayName}
+        </div>`;
+      if(doneList.length){
+        out += `<div class="cdd-subcat">
+          <div class="cdd-sub-title" style="color:${color}">✓ Cumplidas (${doneList.length})</div>
+          ${doneList.map(e => renderItem(e, "cdd-done")).join("")}
+        </div>`;
+      }
+      if(missedList.length){
+        out += `<div class="cdd-subcat">
+          <div class="cdd-sub-title" style="color:var(--err)">✕ No cumplidas (${missedList.length})</div>
+          ${missedList.map(e => renderItem(e, "cdd-missed")).join("")}
+        </div>`;
+      }
+      if(pendList.length){
+        out += `<div class="cdd-subcat">
+          <div class="cdd-sub-title" style="color:var(--t2)">○ Pendientes (${pendList.length})</div>
+          ${pendList.map(e => renderItem(e, "cdd-pending")).join("")}
+        </div>`;
+      }
+      out += `</div>`;
+      return out;
+    };
+
+    content += renderPersonBlock("Daniel", "var(--d)", danDone, danMissed, danPend);
+    content += renderPersonBlock("Nicolas", "var(--n)", nicDone, nicMissed, nicPend);
+  }
+
+  target.innerHTML = content;
+  target.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
 
 
 // ══════════════════════════════════════════════════════════════
@@ -4541,6 +5192,245 @@ function hideClearAllModal(){
 function confirmClearAll(){
   hideClearAllModal();clearAllData();
 }
+
+function flashSync(){
+  const pill = $("sync-status-pill");
+  if(!pill) return;
+  const orig = pill.style.background;
+  pill.style.background = "rgba(61,255,163,.1)";
+  setTimeout(()=>{ pill.style.background = orig; }, 400);
+}
+
+// ── confirmSave: respaldo manual si auto-push falló ────────
+function confirmSave(){
+  const missing = [...sessionMarked].filter(k=>!photoCache[k]);
+  if(missing.length){
+    alert("📷 Falta foto en "+missing.length+" tarea(s). Toca 'Tomar foto' en cada una.");
+    return;
+  }
+  flash();
+  schedulePush();
+}
+
+// ── Init ──────────────────────────────────────────────────
+
+// ── Pull-to-refresh (swipe down) ──────────────────────────
+(function(){
+  let _ptrY0 = 0, _ptrActive = false;
+  const THRESHOLD = 80;
+  
+  document.addEventListener('touchstart', e => {
+    if(window.scrollY === 0) _ptrY0 = e.touches[0].clientY;
+  }, {passive:true});
+  
+  document.addEventListener('touchmove', e => {
+    if(!_ptrY0) return;
+    const dy = e.touches[0].clientY - _ptrY0;
+    if(dy > 20 && window.scrollY === 0){
+      _ptrActive = true;
+      const ind = document.getElementById('ptr-indicator');
+      if(ind) ind.classList.add('show');
+    }
+  }, {passive:true});
+  
+  document.addEventListener('touchend', () => {
+    if(_ptrActive && hasSyncUrl()){
+      setSyncDot('syncing','Actualizando…');
+      pullFromSync(true).then(ok => {
+        setSyncDot(ok?'ok':'err', ok?'☁️ Al día':'Sin conexión');
+      });
+    }
+    _ptrActive = false; _ptrY0 = 0;
+    const ind = document.getElementById('ptr-indicator');
+    if(ind) ind.classList.remove('show');
+  }, {passive:true});
+})();
+
+function updateTabProgress(){
+  const periodTabs = ["hoy","semana","mes","trimestre"];
+  for(const t of periodTabs){
+    const btn = $("tab-"+t);
+    if(!btn) continue;
+    const freq = {hoy:"diaria",semana:"semanal",mes:"mensual",trimestre:"trimestral"}[t];
+    const tasks = TASKS.filter(x=>x.freq===freq);
+    if(!tasks.length) continue;
+    const done = tasks.filter(x=>isTaskDone(x)).length;
+    const pct = Math.round(done/tasks.length*100);
+    let dot = btn.querySelector(".tab-prog");
+    if(!dot){ dot=document.createElement("span"); dot.className="tab-prog"; btn.appendChild(dot); }
+    if(dot && dot.style && dot.style.setProperty){
+      dot.style.setProperty("--pct", pct+"%");
+      dot.style.opacity = done>0 ? "1" : "0";
+      dot.title = done+"/"+tasks.length+" tareas";
+    }
+  }
+}
+
+
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
+initSync();
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+function flashSync(){
+  const pill = $("sync-status-pill");
+  if(!pill) return;
+  const orig = pill.style.background;
+  pill.style.background = "rgba(61,255,163,.1)";
+  setTimeout(()=>{ pill.style.background = orig; }, 400);
+}
+
+// ── confirmSave: respaldo manual si auto-push falló ────────
+function confirmSave(){
+  const missing = [...sessionMarked].filter(k=>!photoCache[k]);
+  if(missing.length){
+    alert("📷 Falta foto en "+missing.length+" tarea(s). Toca 'Tomar foto' en cada una.");
+    return;
+  }
+  flash();
+  schedulePush();
+}
+
+// ── Init ──────────────────────────────────────────────────
+
+// ── Pull-to-refresh (swipe down) ──────────────────────────
+(function(){
+  let _ptrY0 = 0, _ptrActive = false;
+  const THRESHOLD = 80;
+  
+  document.addEventListener('touchstart', e => {
+    if(window.scrollY === 0) _ptrY0 = e.touches[0].clientY;
+  }, {passive:true});
+  
+  document.addEventListener('touchmove', e => {
+    if(!_ptrY0) return;
+    const dy = e.touches[0].clientY - _ptrY0;
+    if(dy > 20 && window.scrollY === 0){
+      _ptrActive = true;
+      const ind = document.getElementById('ptr-indicator');
+      if(ind) ind.classList.add('show');
+    }
+  }, {passive:true});
+  
+  document.addEventListener('touchend', () => {
+    if(_ptrActive && hasSyncUrl()){
+      setSyncDot('syncing','Actualizando…');
+      pullFromSync(true).then(ok => {
+        setSyncDot(ok?'ok':'err', ok?'☁️ Al día':'Sin conexión');
+      });
+    }
+    _ptrActive = false; _ptrY0 = 0;
+    const ind = document.getElementById('ptr-indicator');
+    if(ind) ind.classList.remove('show');
+  }, {passive:true});
+})();
+
+function updateTabProgress(){
+  const periodTabs = ["hoy","semana","mes","trimestre"];
+  for(const t of periodTabs){
+    const btn = $("tab-"+t);
+    if(!btn) continue;
+    const freq = {hoy:"diaria",semana:"semanal",mes:"mensual",trimestre:"trimestral"}[t];
+    const tasks = TASKS.filter(x=>x.freq===freq);
+    if(!tasks.length) continue;
+    const done = tasks.filter(x=>isTaskDone(x)).length;
+    const pct = Math.round(done/tasks.length*100);
+    let dot = btn.querySelector(".tab-prog");
+    if(!dot){ dot=document.createElement("span"); dot.className="tab-prog"; btn.appendChild(dot); }
+    if(dot && dot.style && dot.style.setProperty){
+      dot.style.setProperty("--pct", pct+"%");
+      dot.style.opacity = done>0 ? "1" : "0";
+      dot.title = done+"/"+tasks.length+" tareas";
+    }
+  }
+}
+
+
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+
+initSync();
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
+function showClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="flex";
+}
+function hideClearAllModal(){
+  const m=$("clear-all-modal");if(m)m.style.display="none";
+}
+function confirmClearAll(){
+  hideClearAllModal();clearAllData();
+}
+
 
 
 
