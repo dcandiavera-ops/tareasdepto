@@ -882,6 +882,28 @@ button{font-family:'DM Sans',sans-serif;user-select:none;-webkit-user-select:non
 @supports(padding:max(0px)){.app{padding-top:max(16px,env(safe-area-inset-top));}.bnav{padding-bottom:max(12px,env(safe-area-inset-bottom));}}
 @supports(-webkit-touch-callout:none){body{background-attachment:scroll}.bnav-shell,.hdr,.tc,.pc{backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}}
 
+
+
+/* ═══ OPTIMIZACIÓN MÓVIL iOS/ANDROID + VERIFICACIÓN FOTO ═══ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;}
+body{overscroll-behavior-y:none;}
+button,input,select,textarea{font:inherit;}
+button{touch-action:manipulation;}
+.tc,.ztc,.stock-card,.hist-item,.cdd-item,.sd-task{contain:layout paint;}
+.tc,.ztc{content-visibility:auto;contain-intrinsic-size:118px;}
+.tc-chk,.ztc-chk,.stock-btn,.pill-btn,.chip,.hf-btn,.cal-day{-webkit-user-select:none;user-select:none;}
+.tc-chk:not(.ck-d):not(.ck-n)::after,.ztc-chk:not(.done-zoe)::after{content:"📷";color:var(--t2);font-size:18px;line-height:1;}
+.tc-chk.ck-d::after,.tc-chk.ck-n::after,.ztc-chk.done-zoe::after{content:"";}
+.cam-overlay{isolation:isolate;overscroll-behavior:contain;}
+.cam-video,.cam-preview{transform:translateZ(0);}
+@media (hover:none) and (pointer:coarse){
+  body{background-attachment:scroll;}
+  .app{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 180px);}
+  .hdr,.pb,.tc,.zoe-banner,.zoe-content,.stock-card,.gym-day,.cal-grid-card,.cal-day-detail,.sd-hero,.sd-section{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);}
+  .tc-chk,.ztc-chk,.cam-close,.cam-flip,.cam-retake,.cam-confirm,.stock-btn,.hf-btn{min-width:44px;min-height:44px;}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important;}}
+
 </style>
 </head>
 <body>
@@ -1461,7 +1483,6 @@ function cardHTML(t){
   const isDan=isShared?true:(_ep==="Daniel");
   const k=tKey(t);
   const photo=photoCache[k]||localStorage.getItem("td26_photo_"+k);
-  const needsPhoto=false;
   const ckCls=done?(isDan?"ck-d":"ck-n"):"";
   const locked=!canUserModify(t);
 
@@ -1473,7 +1494,7 @@ function cardHTML(t){
       verifyContent=`<span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">${tickV} Verificado · ${stamp}</span>`;
     }
   } else {
-    verifyContent=`<span class="v-pend">Pendiente</span>`;
+    verifyContent=`<span class="v-pend">Pendiente · toca ✓ y saca foto</span>`;
   }
 
   const stepsHTML=t.steps?`<div class="tc-steps-toggle" onclick="openCards['${t.id}']=!openCards['${t.id}'];render()">
@@ -1633,148 +1654,121 @@ function toggleTask(id){
         render();schedulePush();
       });
     } else {
-      // Mark as done WITHOUT photo requirement (photo is optional)
-      const stamp=makeStamp();
-      dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
-      sessionMarked.add(k);
-      render();schedulePush();flashSync();
-      showToast("✓ Tarea marcada");
+      openCamera(id);
     }
   } catch(e) {
     console.error("toggleTask error:",e);
-    showToast("⚠️ Error al marcar");
+    showToast("⚠️ Error al abrir verificación");
   }
 }
 
 // ═══ CAMERA ═══
+function getExtraById(id){return getExtras().find(e=>e.id===id)||null;}
+function extraPhotoKey(id){const ex=getExtraById(id);return ex?"td26_extra_"+id+"_"+ex.period:"td26_extra_"+id;}
+function openNativePhotoPicker(){
+  stopStream();
+  const overlay=$("cam-overlay");if(overlay)overlay.classList.add("hidden");
+  const fi=$("cam-file");
+  if(!fi){showToast("⚠️ No se encontró selector de foto");return;}
+  fi.value="";fi.accept="image/*";fi.removeAttribute("capture");fi.setAttribute("capture","environment");
+  setTimeout(()=>{try{fi.click();}catch(e){showToast("⚠️ Permite el acceso a cámara");}},80);
+}
+function setupCameraLabels(taskId){
+  let label="—",name="—";
+  if(taskId&&taskId.startsWith("__zoe__")){
+    const zid=taskId.replace("__zoe__","");const zt=zoeById(zid);
+    label="🐱 Zoe · "+(zt?zt.title:"Tarea");name="🐱 "+(zt?zt.title:"Tarea");
+  } else if(taskId&&taskId.startsWith("__extra__")){
+    const xid=taskId.replace("__extra__","");const ex=getExtraById(xid);
+    label="📌 Extra · "+(ex?ex.title:"Tarea extra");name=(ex?(ex.icon||"📌"):"📌")+" "+(ex?ex.title:"Tarea extra");
+  } else {
+    const t=taskById(taskId);label=t?t.icon+" "+t.title:"Tarea";name=label;
+  }
+  $("cam-task-label").textContent=label;$("cam-task-name").textContent=name;
+}
 async function openCamera(taskId){
   camTaskId=taskId;capturedDataUrl=null;
   sessionStorage.setItem("pendingCamTask",taskId);
-  sessionStorage.setItem("pendingCamType","task");
-  const t=taskById(taskId);
-  $("cam-task-label").textContent=t.icon+" "+t.title;
-  $("cam-task-name").textContent=t.icon+" "+t.title;
+  sessionStorage.setItem("pendingCamType",taskId&&taskId.startsWith("__zoe__")?"zoe":(taskId&&taskId.startsWith("__extra__")?"extra":"task"));
+  setupCameraLabels(taskId);
   const prev=$("cam-preview");prev.classList.remove("show");prev.src="";
   $("cam-confirm").classList.remove("show");$("cam-retake").classList.remove("show");
   $("cam-shutter").style.display="";$("cam-flip").style.display="";
   $("cam-overlay").classList.remove("hidden");
   const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  if(isIOS){
-    $("cam-overlay").classList.add("hidden");
-    const fi=$("cam-file");
-    if(fi){fi.value="";fi.accept="image/*";fi.removeAttribute("capture");fi.setAttribute("capture","environment");setTimeout(()=>{fi.click();},80);}
-  } else {
-    await startStream();
-  }
+  if(isIOS){openNativePhotoPicker();return;}
+  await startStream();
 }
-
-async function openCameraZoe(taskId){
-  zoeCamTaskId=taskId;camTaskId="__zoe__"+taskId;capturedDataUrl=null;
-  sessionStorage.setItem("pendingCamTask","__zoe__"+taskId);
-  sessionStorage.setItem("pendingCamType","zoe");
-  const t=zoeById(taskId);
-  $("cam-task-label").textContent="🐱 Zoe · "+t.title;
-  $("cam-task-name").textContent="🐱 "+t.title;
-  const prev=$("cam-preview");prev.classList.remove("show");prev.src="";
-  $("cam-confirm").classList.remove("show");$("cam-retake").classList.remove("show");
-  $("cam-shutter").style.display="";$("cam-flip").style.display="";
-  $("cam-overlay").classList.remove("hidden");
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-  if(isIOS){
-    $("cam-overlay").classList.add("hidden");
-    const fi=$("cam-file");
-    if(fi){fi.value="";fi.accept="image/*";fi.removeAttribute("capture");fi.setAttribute("capture","environment");setTimeout(()=>{fi.click();},80);}
-  } else {
-    await startStream();
-  }
-}
-
+async function openCameraZoe(taskId){zoeCamTaskId=taskId;await openCamera("__zoe__"+taskId);}
 async function startStream(){
-  stopStream();
-  const vid=$("cam-video");
+  stopStream();const vid=$("cam-video");
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){openNativePhotoPicker();return;}
   try{
-    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:camFacingMode},audio:false});
-    vid.srcObject=camStream;vid.style.display="";
-    $("cam-flip").style.display="";$("cam-shutter").style.display="";
-    $("cam-overlay").classList.remove("hidden");
+    const constraints={video:{facingMode:{ideal:camFacingMode},width:{ideal:1280},height:{ideal:720}},audio:false};
+    camStream=await navigator.mediaDevices.getUserMedia(constraints);
+    vid.srcObject=camStream;vid.style.display="";$("cam-flip").style.display="";$("cam-shutter").style.display="";$("cam-overlay").classList.remove("hidden");
     try{await vid.play();}catch(pe){}
-    if(!vid.videoWidth){await new Promise(res=>{vid.onloadedmetadata=res;setTimeout(res,2000);});}
+    if(!vid.videoWidth){await new Promise(res=>{vid.onloadedmetadata=res;setTimeout(res,1800);});}
   }catch(e){
-    vid.style.display="none";$("cam-flip").style.display="none";
-    const fi=$("cam-file");if(fi){fi.click();}
+    console.warn("Camera stream fallback:",e);vid.style.display="none";$("cam-flip").style.display="none";openNativePhotoPicker();
   }
 }
 function stopStream(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
-function closeCamera(){stopStream();$("cam-overlay").classList.add("hidden");}
+function closeCamera(){stopStream();$("cam-overlay").classList.add("hidden");capturedDataUrl=null;}
 function flipCamera(){camFacingMode=camFacingMode==="environment"?"user":"environment";startStream();}
-
 function capturePhoto(){
-  const vid=$("cam-video");
-  if(!vid.videoWidth||!vid.videoHeight){setTimeout(capturePhoto,300);return;}
-  const canvas=document.createElement("canvas");
-  const scale=Math.min(1,640/vid.videoWidth);
+  const vid=$("cam-video");if(!vid.videoWidth||!vid.videoHeight){setTimeout(capturePhoto,300);return;}
+  const canvas=document.createElement("canvas");const scale=Math.min(1,720/Math.max(vid.videoWidth,vid.videoHeight));
   canvas.width=Math.round(vid.videoWidth*scale);canvas.height=Math.round(vid.videoHeight*scale);
   canvas.getContext("2d").drawImage(vid,0,0,canvas.width,canvas.height);
-  capturedDataUrl=canvas.toDataURL("image/jpeg",0.5);
-  showPreview(capturedDataUrl);
+  capturedDataUrl=canvas.toDataURL("image/jpeg",0.5);showPreview(capturedDataUrl);
 }
 function showPreview(dataUrl){
-  stopStream();$("cam-video").style.display="none";
-  const prev=$("cam-preview");prev.src=dataUrl;prev.classList.add("show");
-  $("cam-shutter").style.display="none";
-  $("cam-retake").classList.add("show");$("cam-confirm").classList.add("show");
+  stopStream();$("cam-video").style.display="none";const prev=$("cam-preview");prev.src=dataUrl;prev.classList.add("show");
+  $("cam-shutter").style.display="none";$("cam-retake").classList.add("show");$("cam-confirm").classList.add("show");
 }
 function retakePhoto(){
   capturedDataUrl=null;$("cam-preview").classList.remove("show");$("cam-preview").src="";
-  $("cam-confirm").classList.remove("show");$("cam-retake").classList.remove("show");
-  $("cam-shutter").style.display="";startStream();
+  $("cam-confirm").classList.remove("show");$("cam-retake").classList.remove("show");$("cam-shutter").style.display="";startStream();
 }
-function confirmPhoto(){if(capturedDataUrl)autoConfirmPhoto(camTaskId,capturedDataUrl);}
-
+function confirmPhoto(){if(!capturedDataUrl){showToast("📷 Debes tomar una foto para verificar");return;}autoConfirmPhoto(camTaskId,capturedDataUrl);}
+function storeLocalPhoto(k,dataUrl){
+  if(!k||!dataUrl)return;photoCache[k]=dataUrl;
+  try{localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e){pruneOldPhotos();try{localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e2){console.warn("No se pudo guardar foto local",e2);}}
+}
 function autoConfirmPhoto(tid,dataUrl){
-  let k;
-  if(tid&&tid.startsWith("__zoe__")){
-    const zid=tid.replace("__zoe__","");
-    const zt=zoeById(zid);k="td26_zoe_"+zid+"_"+periodKey(zt.freq,NOW);
+  if(!tid||!dataUrl){showToast("📷 Foto requerida");return;}
+  const stamp=makeStamp();let k=null;
+  if(tid.startsWith("__zoe__")){
+    const zid=tid.replace("__zoe__","");const zt=zoeById(zid);if(!zt)return;
+    k="td26_zoe_"+zid+"_"+periodKey(zt.freq,NOW);dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
+  } else if(tid.startsWith("__extra__")){
+    const xid=tid.replace("__extra__","");const extras=getExtras();const ex=extras.find(e=>e.id===xid);if(!ex)return;
+    ex.done=true;ex.stamp=stamp;saveExtras(extras);k="td26_extra_"+xid+"_"+ex.period;
   } else {
-    const t=taskById(tid);if(!t)return;
-    k=sKey(tid,periodKey(t.freq,NOW));
+    const t=taskById(tid);if(!t)return;k=sKey(tid,periodKey(t.freq,NOW));dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
   }
-  const stamp=makeStamp();
-  dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
-  try{photoCache[k]=dataUrl;localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e){pruneOldPhotos();try{localStorage.setItem("td26_photo_"+k,dataUrl);}catch(e2){}}
-  sessionMarked.add(k);
-  closeCamera();render();
-  if(typeof renderZoeModule==="function")renderZoeModule();
-  schedulePush();flashSync();
-  showToast("✓ Tarea marcada");
+  storeLocalPhoto(k,dataUrl);sessionMarked.add(k);closeCamera();render();
+  if(typeof renderZoeModule==="function")renderZoeModule();schedulePush();flashSync();showToast("✓ Tarea verificada con foto");
   sessionStorage.removeItem("pendingCamTask");sessionStorage.removeItem("pendingCamType");
 }
-
 function handleFilePhoto(e){
-  const file=e.target.files[0];if(!file){e.target.value="";return;}
+  const file=e.target.files&&e.target.files[0];
+  if(!file){e.target.value="";showToast("📷 Verificación cancelada");return;}
   if(!camTaskId)camTaskId=sessionStorage.getItem("pendingCamTask")||null;
   if(!camTaskId){e.target.value="";return;}
-  const savedTaskId=camTaskId;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const img=new Image();img.onload=()=>{
-      const canvas=document.createElement("canvas");const scale=Math.min(1,480/img.width);
-      canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);
-      canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-      const dataUrl=canvas.toDataURL("image/jpeg",0.38);
-      autoConfirmPhoto(savedTaskId,dataUrl);
-    };img.src=ev.target.result;
-  };reader.readAsDataURL(file);e.target.value="";
+  const savedTaskId=camTaskId;const reader=new FileReader();
+  reader.onload=ev=>{const img=new Image();img.onload=()=>{
+    const canvas=document.createElement("canvas");const maxSide=760;const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+    canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+    canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+    const dataUrl=canvas.toDataURL("image/jpeg",0.46);autoConfirmPhoto(savedTaskId,dataUrl);
+  };img.onerror=()=>showToast("⚠️ No se pudo leer la foto");img.src=ev.target.result;};
+  reader.onerror=()=>showToast("⚠️ Error al leer la foto");reader.readAsDataURL(file);e.target.value="";
 }
-
 function pruneOldPhotos(){
-  const photoKeys=[];
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);if(k&&k.startsWith("td26_photo_"))photoKeys.push(k);
-  }
-  photoKeys.sort();
-  while(photoKeys.length>20){const old=photoKeys.shift();localStorage.removeItem(old);delete photoCache[old.replace("td26_photo_","")];}
+  const photoKeys=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("td26_photo_"))photoKeys.push(k);}
+  photoKeys.sort();while(photoKeys.length>28){const old=photoKeys.shift();localStorage.removeItem(old);delete photoCache[old.replace("td26_photo_","")];}
 }
 function openLightbox(src){$("lightbox-img").src=src;$("lightbox").classList.remove("hidden");}
 function closeLightbox(){$("lightbox").classList.add("hidden");}
@@ -1796,7 +1790,6 @@ function zoeCardHTML(t,showFreq){
   const done=isZoeDone(t.id);
   const stamp=getZoeStamp(t.id);
   const ckCls=done?"done-zoe":"";
-  const needsPhoto=false;
   return `<div class="ztc${done?" done-zoe":""}">
     <div class="ztc-top">
       <span class="ztc-icon">${t.icon}</span>
@@ -1804,7 +1797,7 @@ function zoeCardHTML(t,showFreq){
       <button class="ztc-chk ${ckCls}" onclick="toggleZoe('${t.id}')">${done?tickV:""}</button>
     </div>
     <div class="ztc-meta">
-      ${done&&stamp?`✓ ${stamp}`:"Pendiente"} · ${t.pts} pts · ${t.time} min
+      ${done&&stamp?`✓ Verificado · ${stamp}`:"Pendiente · requiere foto"} · ${t.pts} pts · ${t.time} min
     </div>
   </div>`;
 }
@@ -1813,23 +1806,16 @@ function toggleZoe(id){
   try {
     const k=zoeKey(id);const wasDone=!!dbCache[k];
     if(wasDone){
-      const stampBak=dbCache[k];
+      const stampBak=dbCache[k];const photoBak=photoCache[k]||localStorage.getItem("td26_photo_"+k);
       deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);
       renderZoeModule();schedulePush();
       showToast("↩ Zoe desmarcada",function(){
         dbCache[k]=stampBak;localStorage.setItem(k,stampBak);delete _tombstones[k];
+        if(photoBak){photoCache[k]=photoBak;try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){}}
         renderZoeModule();schedulePush();
       });
-    } else {
-      const stamp=makeStamp();
-      dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
-      renderZoeModule();schedulePush();flashSync();
-      showToast("✓ Zoe marcada");
-    }
-  } catch(e){
-    console.error("toggleZoe error:",e);
-    showToast("⚠️ Error");
-  }
+    } else {openCameraZoe(id);}
+  } catch(e){console.error("toggleZoe error:",e);showToast("⚠️ Error al abrir cámara");}
 }
 
 function renderZoeModule(){
@@ -1894,8 +1880,18 @@ function toggleExtra(id){
   const extras=getExtras();const ex=extras.find(e=>e.id===id);if(!ex)return;
   const user=getCurrentUser();
   if(user&&ex.person&&ex.person!==user){showToast("🔒 Esta tarea es de "+(ex.person==="Nicolas"?"Nicolás":ex.person));return;}
-  if(ex.done){ex.done=false;ex.stamp=null;}else{ex.done=true;ex.stamp=makeStamp();}
-  saveExtras(extras);render();flashSync();
+  const pk="td26_extra_"+id+"_"+ex.period;
+  if(ex.done){
+    const stampBak=ex.stamp;const photoBak=photoCache[pk]||localStorage.getItem("td26_photo_"+pk);
+    ex.done=false;ex.stamp=null;delete photoCache[pk];localStorage.removeItem("td26_photo_"+pk);
+    saveExtras(extras);render();flashSync();
+    showToast("↩ Extra desmarcada",function(){
+      const xs=getExtras();const xb=xs.find(e=>e.id===id);if(!xb)return;
+      xb.done=true;xb.stamp=stampBak;saveExtras(xs);
+      if(photoBak){photoCache[pk]=photoBak;try{localStorage.setItem("td26_photo_"+pk,photoBak);}catch(e){}}
+      render();flashSync();
+    });
+  }else{openCamera("__extra__"+id);}
 }
 function deleteExtra(id){
   const ex=getExtras().find(e=>e.id===id);const user=getCurrentUser();
@@ -1917,7 +1913,7 @@ function extraCardHTML(e){
       <span class="tc-icon">${e.icon}</span>
       <div class="tc-content">
         <div class="tc-title${done?" done":""}">${e.title}</div>
-        ${done&&e.stamp?`<div class="tc-chips"><span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">✓ ${e.stamp}</span></div>`:`<div class="tc-chips"><span class="v-pend">Pendiente</span></div>`}
+        ${(()=>{const pk="td26_extra_"+e.id+"_"+e.period;const photo=photoCache[pk]||localStorage.getItem("td26_photo_"+pk);return done&&e.stamp?`<div class="tc-chips"><span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">✓ Verificado · ${e.stamp}</span>${photo?`<img class="v-img" src="${photo}" onclick="openLightbox(\'${photo}\')" title="Ver foto"/>`:""}</div>`:`<div class="tc-chips"><span class="v-pend">Pendiente · requiere foto</span></div>`;})()}
       </div>
       <div class="tc-right">
         <button class="tc-chk ${ckCls}${locked?" tc-chk-locked":""}" onclick="toggleExtra('${e.id}')">${done?tickV:""}</button>
