@@ -904,6 +904,22 @@ button{touch-action:manipulation;}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important;}}
 
+
+/* ═══ SENIOR UI/UX PASS — PROPORCIONES, LEGIBILIDAD Y MÓVIL ═══ */
+:root{--tap:48px;--card-radius:24px;--gap:10px;}
+.app{max-width:560px;padding-left:clamp(12px,3.6vw,18px);padding-right:clamp(12px,3.6vw,18px);}
+.hdr{margin-bottom:16px}.hdr-top{gap:14px}.hdr-actions{align-items:flex-start}.sync-status-pill{height:42px;padding-inline:12px}.hdr-menu-btn{height:42px;width:42px;border-radius:14px}
+.p-row{grid-template-columns:1fr 1fr;gap:12px}.pc{min-height:148px}.pc-row1{gap:8px}.pc-tag{white-space:nowrap}.pc-sub{line-height:1.3;min-height:26px}
+.pb{align-items:flex-start;gap:10px}.pb-badge{align-self:center}.tgrid{gap:10px}.tc{border-radius:var(--card-radius)!important;padding:15px!important;overflow:visible}.tc-top{display:flex;align-items:center;gap:8px;min-height:24px;flex-wrap:wrap;padding-left:0;margin-bottom:10px}.tc-pts{margin-left:auto;font-size:10.5px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.05)}
+.tc-main{display:grid;grid-template-columns:28px minmax(0,1fr) 54px;gap:12px;align-items:start}.tc-icon{width:28px;text-align:center;margin-top:1px}.tc-content{min-width:0}.tc-title{font-size:15px;line-height:1.32}.tc-chips{line-height:1.35;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.tc-right{min-width:54px;display:flex;align-items:flex-start;justify-content:flex-end}.tc-chk{width:52px!important;height:52px!important;border-radius:18px!important}.tc-chk.ck-shared{background:#fbbf24;border-color:#fbbf24;color:#17110a}.tc-shared-card{background:radial-gradient(circle at 90% 0%,rgba(251,191,36,.12),transparent 34%),linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.025)),rgba(18,18,30,.74)!important}
+.v-img{width:46px;height:46px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}.v-pend{display:inline-flex;align-items:center;gap:6px}.v-pend::before{content:"📷"}.sec-hdr{display:flex;gap:10px}.sec-pgs{text-align:right;line-height:1.25}
+.list-intro{padding:16px;margin:6px 0 16px;border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));border:1px solid var(--edge-soft);box-shadow:var(--shadow-md)}.list-intro-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.03em}.list-intro-sub{margin-top:6px;font-size:12px;line-height:1.45;color:var(--t2)}.list-section{margin-bottom:22px}.task-matrix{display:flex;flex-direction:column;gap:8px}.task-row-card{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px;border-radius:18px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)}.task-row-shared{border-color:rgba(251,191,36,.18);background:linear-gradient(135deg,rgba(251,191,36,.055),rgba(255,255,255,.025))}.task-row-icon{font-size:20px;text-align:center}.task-row-title{font-size:13px;font-weight:800;line-height:1.25}.task-row-note{font-size:10.5px;color:var(--t3);margin-top:3px}.task-row-person{font-size:11px;font-weight:900;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.055);white-space:nowrap}.task-row-meta{grid-column:2/4;display:flex;gap:10px;font-size:11px;color:var(--t2)}.task-row-meta b{color:var(--t0)}
+.hist-filter{grid-template-columns:repeat(4,1fr)!important}.hist-person-stats{flex-wrap:wrap;justify-content:flex-end}.hist-item{padding:10px 11px}.hist-meta{line-height:1.35}.sd-shared-tag{font-size:9px;text-transform:uppercase;letter-spacing:.04em}
+.bnav{padding-left:clamp(10px,3vw,18px);padding-right:clamp(10px,3vw,18px)}.bnav-shell{max-width:560px}.pill-btn,.chip{min-height:var(--tap)}.cam-overlay{z-index:10020}.cam-topbar,.cam-info,.cam-actions{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}.cam-actions{gap:12px}.cam-confirm,.cam-retake{min-width:118px}
+@media(max-width:430px){.app{padding-bottom:calc(198px + env(safe-area-inset-bottom,0px))}.hdr-title{font-size:clamp(32px,10vw,40px)}.p-row{gap:10px}.pc{min-height:142px;padding:16px 13px!important}.pc-score{font-size:40px}.tc{padding:14px!important}.tc-main{grid-template-columns:26px minmax(0,1fr) 52px;gap:10px}.tc-title{font-size:14.4px}.tc-chk{width:50px!important;height:50px!important}.hist-filter{grid-template-columns:1fr 1fr!important}.task-row-card{grid-template-columns:28px minmax(0,1fr);}.task-row-person{grid-column:2/3;width:max-content}.task-row-meta{grid-column:2/3}.sec-pgs{font-size:10px}.sync-status-txt{display:none}.sync-status-pill{width:42px;justify-content:center;padding:0}.sync-dot{margin:0}}
+@media(max-width:360px){.p-row{grid-template-columns:1fr}.pc{min-height:auto}.tc-main{grid-template-columns:24px minmax(0,1fr) 48px}.tc-chk{width:48px!important;height:48px!important}.pill-lbl{font-size:11px}.chip-lbl{font-size:8.5px}.cam-confirm,.cam-retake{min-width:96px;padding-inline:14px}}
+@media(prefers-reduced-motion:no-preference){.tc,.pc,.pill-btn,.chip,.task-row-card{will-change:transform}.tc:hover,.task-row-card:hover{transform:translateY(-1px)}}
+
 </style>
 </head>
 <body>
@@ -1279,6 +1295,36 @@ function periodKey(freq,d){
 function sKey(id,period){ return `td26_${id}_${period}`; }
 function tKey(t){ return sKey(t.id, periodKey(t.freq, NOW)); }
 
+// ═══ SHARED TASK OWNERSHIP ═══
+// La tarea compartida se completa una sola vez, pero los puntos van solo
+// al usuario que la verificó con foto.
+function sharedActorKey(id,period){ return `td26_actor_${id}_${period}`; }
+function getSharedActorById(id,period){
+  const k=sharedActorKey(id,period);
+  return dbCache[k]||localStorage.getItem(k)||null;
+}
+function setSharedActorById(id,period,person){
+  if(!id||!period||!person)return;
+  const k=sharedActorKey(id,period);
+  dbCache[k]=person;localStorage.setItem(k,person);delete _tombstones[k];
+}
+function clearSharedActorById(id,period){ deleteKey(sharedActorKey(id,period)); }
+function displayPersonName(person){
+  if(person==="Nicolas")return "Nicolás";
+  if(person==="Daniel")return "Daniel";
+  if(person==="shared"||person==="Compartida")return "Compartida";
+  if(person==="Ambos")return "Ambos";
+  return person||"—";
+}
+function personColor(person){
+  if(person==="Daniel")return "var(--d)";
+  if(person==="Nicolas")return "var(--n)";
+  if(person==="Ambos"||person==="shared"||person==="Compartida")return "#fbbf24";
+  return "#f9a8d4";
+}
+function fmtPts(n){ return Number.isInteger(n)?String(n):Number(n).toFixed(1).replace(/\.0$/,""); }
+
+
 // ═══ ROTATION ═══
 function rotatingPerson(task, d){
   const weekNum = getISOWeekNumber(d || NOW);
@@ -1478,20 +1524,28 @@ function cardHTML(t){
   const done=isTaskDone(t);
   const stamp=getStamp(t);
   const isOpen=!!openCards[t.id];
-  const _ep=effectivePerson(t);
-  const isShared=_ep==="shared";
-  const isDan=isShared?true:(_ep==="Daniel");
+  const period=periodKey(t.freq,NOW);
+  const ep=effectivePerson(t);
+  const isShared=ep==="shared";
+  const actor=isShared?getSharedActorById(t.id,period):ep;
+  const visualPerson=actor||(isShared?"shared":ep);
+  const isDan=visualPerson==="Daniel";
+  const isNic=visualPerson==="Nicolas";
   const k=tKey(t);
   const photo=photoCache[k]||localStorage.getItem("td26_photo_"+k);
-  const ckCls=done?(isDan?"ck-d":"ck-n"):"";
+  const ckCls=done?(isDan?"ck-d":(isNic?"ck-n":"ck-shared")):"";
   const locked=!canUserModify(t);
+  const personLabel=isShared?(actor?`Hecha por ${displayPersonName(actor)}`:"Compartida"):(displayPersonName(ep)+(t.person==="rotate"?" · rota":""));
+  const personCls=isShared&&!actor?"tc-plbl-shared":(isDan?"tc-plbl-d":(isNic?"tc-plbl-n":"tc-plbl-shared"));
+  const dotCls=isShared&&!actor?"tc-pdot-shared":(isDan?"tc-pdot-d":(isNic?"tc-pdot-n":"tc-pdot-shared"));
 
   let verifyContent;
   if(done){
+    const by=actor?` · ${displayPersonName(actor)}`:"";
     if(photo){
-      verifyContent=`<span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">${tickV} Verificado · ${stamp}</span><img class="v-img" src="${photo}" onclick="openLightbox('${photo}')" title="Ver foto"/>`;
+      verifyContent=`<span class="v-ok ${isDan?"v-ok-d":(isNic?"v-ok-n":"")}">${tickV} Verificado${by} · ${stamp}</span><img class="v-img" src="${photo}" onclick="openLightbox('${photo}')" title="Ver foto"/>`;
     } else {
-      verifyContent=`<span class="v-ok ${isDan?"v-ok-d":"v-ok-n"}">${tickV} Verificado · ${stamp}</span>`;
+      verifyContent=`<span class="v-ok ${isDan?"v-ok-d":(isNic?"v-ok-n":"")}">${tickV} Verificado${by} · ${stamp}</span>`;
     }
   } else {
     verifyContent=`<span class="v-pend">Pendiente · toca ✓ y saca foto</span>`;
@@ -1501,10 +1555,10 @@ function cardHTML(t){
     Instrucciones <span class="tc-steps-count">${t.steps.length}</span> ${isOpen?"▲":"▼"}
   </div>${isOpen?`<ul class="tc-steps">${t.steps.map(s=>`<li>${s}</li>`).join("")}</ul>`:""}`:"";;
 
-  return `<div class="tc${done?" done":""}">
+  return `<div class="tc${done?" done":""}${isShared?" tc-shared-card":""}">
     <div class="tc-top">
-      <div class="tc-pdot ${isShared?"tc-pdot-shared":(isDan?"tc-pdot-d":"tc-pdot-n")}"></div>
-      <span class="tc-plbl ${isShared?"tc-plbl-shared":(isDan?"tc-plbl-d":"tc-plbl-n")}">${isShared?"Ambos":(isDan?"Daniel":"Nicolás")}${t.person==="rotate"?" <span style='font-size:9px;opacity:.6'>· rota</span>":""}</span>
+      <div class="tc-pdot ${dotCls}"></div>
+      <span class="tc-plbl ${personCls}">${personLabel}</span>
       ${t.dueDay!==undefined?dueDayBadge(t.dueDay,done):""}
       <span class="tc-pts">${t.pts} pts · ${t.time} min</span>
     </div>
@@ -1513,16 +1567,14 @@ function cardHTML(t){
       <div class="tc-content">
         <div class="tc-title${done?" done":""}">${t.title}</div>
         <div class="tc-chips">${verifyContent}</div>
-        
         ${stepsHTML}
       </div>
       <div class="tc-right">
-        <button class="tc-chk ${ckCls}${locked?" tc-chk-locked":""}" onclick="toggleTask('${t.id}')" aria-label="${done?'Desmarcar':'Marcar como hecha'}" title="${done?'Desmarcar tarea':'Marcar como hecha'}">${done?tick:""}</button>
+        <button class="tc-chk ${ckCls}${locked?" tc-chk-locked":""}" onclick="toggleTask('${t.id}')" aria-label="${done?'Desmarcar':'Verificar con foto'}" title="${done?'Desmarcar tarea':'Verificar con foto'}">${done?tick:""}</button>
       </div>
     </div>
   </div>`;
 }
-
 function sectionHTML(tasks,sc){
   if(!tasks.length) return "";
   const doneC=tasks.filter(t=>isTaskDone(t)).length;
@@ -1540,35 +1592,27 @@ function sectionHTML(tasks,sc){
 function updateScores(){
   const tasks=getTabTasks();
   let dD=0,dT=0,dP=0,dTP=0,nD=0,nT=0,nP=0,nTP=0;
-  // Include extras
+  const addPossible=(person,pts)=>{if(person==="Daniel"){dT++;dTP+=pts;}else if(person==="Nicolas"){nT++;nTP+=pts;}};
+  const addDone=(person,pts)=>{if(person==="Daniel"){dD++;dP+=pts;}else if(person==="Nicolas"){nD++;nP+=pts;}};
   const extras=typeof extrasForCurrentTab==="function"?extrasForCurrentTab():[];
-  for(const e of extras){
-    if(e.person==="Daniel"){dT++;dTP+=e.pts;if(e.done){dD++;dP+=e.pts;}}
-    else{nT++;nTP+=e.pts;if(e.done){nD++;nP+=e.pts;}}
-  }
+  for(const e of extras){addPossible(e.person,e.pts);if(e.done)addDone(e.person,e.pts);}
   for(const t of tasks){
-    const done=isTaskDone(t);
-    const ep=effectivePerson(t);
+    const done=isTaskDone(t);const period=periodKey(t.freq,NOW);const ep=effectivePerson(t);
     if(ep==="shared"){
-      dT++;nT++;dTP+=t.pts/2;nTP+=t.pts/2;
-      if(done){dD++;nD++;dP+=t.pts/2;nP+=t.pts/2;}
-    } else if(ep==="Daniel"){
-      dT++;dTP+=t.pts;if(done){dD++;dP+=t.pts;}
-    } else {
-      nT++;nTP+=t.pts;if(done){nD++;nP+=t.pts;}
-    }
+      const actor=getSharedActorById(t.id,period);
+      if(done&&actor){addPossible(actor,t.pts);addDone(actor,t.pts);}
+      else if(done&&!actor){dT++;nT++;dTP+=t.pts;nTP+=t.pts;}
+      else{dT++;nT++;dTP+=t.pts;nTP+=t.pts;}
+    }else{addPossible(ep,t.pts);if(done)addDone(ep,t.pts);}
   }
-  $("dan-score").textContent=dP;$("nic-score").textContent=nP;
-  $("dan-sub").textContent=`${dD}/${dT} tareas · ${dTP} pts totales`;
-  $("nic-sub").textContent=`${nD}/${nT} tareas · ${nTP} pts totales`;
-  // Liquid bars
-  const danPct=dT?Math.round(dD/dT*100):0;
-  const nicPct=nT?Math.round(nD/nT*100):0;
+  $("dan-score").textContent=fmtPts(dP);$("nic-score").textContent=fmtPts(nP);
+  $("dan-sub").textContent=`${dD}/${dT} tareas · ${fmtPts(dTP)} pts disp.`;
+  $("nic-sub").textContent=`${nD}/${nT} tareas · ${fmtPts(nTP)} pts disp.`;
+  const danPct=dT?Math.round(dD/dT*100):0;const nicPct=nT?Math.round(nD/nT*100):0;
   $("dan-bar").innerHTML=`<div style="width:${danPct}%;height:100%;border-radius:99px;background:var(--d);transition:width .4s"></div><span style="position:absolute;right:4px;top:-1px;font-size:10px;font-weight:700;color:var(--d)">${danPct}%</span>`;
   $("nic-bar").innerHTML=`<div style="width:${nicPct}%;height:100%;border-radius:99px;background:var(--n);transition:width .4s"></div><span style="position:absolute;right:4px;top:-1px;font-size:10px;font-weight:700;color:var(--n)">${nicPct}%</span>`;
   $("dan-bar").style.position="relative";$("nic-bar").style.position="relative";
 }
-
 function renderBanner(){
   const el=$("pb");
   if(activeTab==="lista"||activeTab==="historial"||activeTab==="horario"||activeTab==="calendario"){el.style.display="none";return;}
@@ -1641,28 +1685,30 @@ function toggleTask(id){
     const t=taskById(id);
     if(!t){ console.error("Task not found:",id); return; }
     if(!canUserModify(t)){ showPermissionDenied(t); return; }
-    const k=sKey(id,periodKey(t.freq,NOW));
-    const wasDone=!!dbCache[k];
+    const period=periodKey(t.freq,NOW);const k=sKey(id,period);const wasDone=!!dbCache[k];
     if(wasDone){
-      const stampBak=dbCache[k];
+      const stampBak=dbCache[k];const actorBak=t.person==="shared"?getSharedActorById(id,period):null;
       const photoBak=photoCache[k]||localStorage.getItem("td26_photo_"+k);
-      deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);
+      deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);if(t.person==="shared")clearSharedActorById(id,period);
       render();schedulePush();
       showToast("↩ Tarea desmarcada",function(){
         dbCache[k]=stampBak;localStorage.setItem(k,stampBak);delete _tombstones[k];
+        if(actorBak)setSharedActorById(id,period,actorBak);
         if(photoBak){photoCache[k]=photoBak;try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){}}
         render();schedulePush();
       });
-    } else {
+    }else{
+      if(t.person==="shared"&&!getCurrentUser()){
+        const m=$("identity-modal");if(m)m.style.display="flex";
+        showToast("👤 Elige Daniel o Nicolás antes de verificar una tarea compartida");return;
+      }
       openCamera(id);
     }
-  } catch(e) {
-    console.error("toggleTask error:",e);
-    showToast("⚠️ Error al abrir verificación");
-  }
+  } catch(e) {console.error("toggleTask error:",e);showToast("⚠️ Error al abrir verificación");}
 }
 
-// ═══ CAMERA ═══
+
+// ═══ CAMERA ═══// ═══ CAMERA ═══
 function getExtraById(id){return getExtras().find(e=>e.id===id)||null;}
 function extraPhotoKey(id){const ex=getExtraById(id);return ex?"td26_extra_"+id+"_"+ex.period:"td26_extra_"+id;}
 function openNativePhotoPicker(){
@@ -1746,7 +1792,10 @@ function autoConfirmPhoto(tid,dataUrl){
     const xid=tid.replace("__extra__","");const extras=getExtras();const ex=extras.find(e=>e.id===xid);if(!ex)return;
     ex.done=true;ex.stamp=stamp;saveExtras(extras);k="td26_extra_"+xid+"_"+ex.period;
   } else {
-    const t=taskById(tid);if(!t)return;k=sKey(tid,periodKey(t.freq,NOW));dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
+    const t=taskById(tid);if(!t)return;const period=periodKey(t.freq,NOW);
+    if(t.person==="shared"&&!getCurrentUser()){showToast("👤 Elige usuario antes de verificar");const m=$("identity-modal");if(m)m.style.display="flex";return;}
+    k=sKey(tid,period);dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
+    if(t.person==="shared")setSharedActorById(tid,period,getCurrentUser());
   }
   storeLocalPhoto(k,dataUrl);sessionMarked.add(k);closeCamera();render();
   if(typeof renderZoeModule==="function")renderZoeModule();schedulePush();flashSync();showToast("✓ Tarea verificada con foto");
@@ -1927,122 +1976,39 @@ function extraCardHTML(e){
 function showScoreDetail(person){
   const tasks=getTabTasks();
   const extras=typeof extrasForCurrentTab==="function"?extrasForCurrentTab():[];
-  const donePts=[],pendPts=[];
+  const donePts=[],pendPts=[],availableShared=[];
   for(const t of tasks){
-    const ep=effectivePerson(t);
-    const belongs=(ep===person)||(ep==="shared");
-    if(!belongs)continue;
-    const done=isTaskDone(t);
-    const stamp=done?getStamp(t):null;
-    const item={icon:t.icon,title:t.title,pts:ep==="shared"?t.pts/2:t.pts,time:t.time,stamp,isShared:ep==="shared"};
-    if(done)donePts.push(item);else pendPts.push(item);
+    const period=periodKey(t.freq,NOW);const ep=effectivePerson(t);const done=isTaskDone(t);const actor=ep==="shared"?getSharedActorById(t.id,period):ep;const stamp=done?getStamp(t):null;
+    if(ep==="shared"){
+      if(done){if(actor===person)donePts.push({icon:t.icon,title:t.title,pts:t.pts,time:t.time,stamp,isShared:true});}
+      else availableShared.push({icon:t.icon,title:t.title,pts:t.pts,time:t.time,available:true,isShared:true});
+      continue;
+    }
+    if(ep!==person)continue;const item={icon:t.icon,title:t.title,pts:t.pts,time:t.time,stamp};if(done)donePts.push(item);else pendPts.push(item);
   }
-  for(const e of extras){
-    if(e.person!==person)continue;
-    const item={icon:e.icon,title:e.title,pts:e.pts,time:e.time,stamp:e.stamp,isExtra:true};
-    if(e.done)donePts.push(item);else pendPts.push(item);
-  }
-
-  const totalDone=donePts.reduce((s,t)=>s+t.pts,0);
-  const totalPend=pendPts.reduce((s,t)=>s+t.pts,0);
-  const totalPossible=totalDone+totalPend;
-  const pct=totalPossible?Math.round(totalDone/totalPossible*100):0;
-  const color=person==="Daniel"?"var(--d)":"var(--n)";
-  const displayName=person==="Nicolas"?"Nicolás":person;
-  const tag=person==="Daniel"?"🟢 DAN":"🟣 NICO";
-  const tabLabels={hoy:"Hoy",semana:"Esta semana",mes:"Este mes",trimestre:"Este trimestre",lista:"Lista",historial:"Historial",horario:"Horario",calendario:"Calendario"};
-  const period=tabLabels[activeTab]||"Período";
-
-  const fmtPts=n=>(n===Math.floor(n)?n:n.toFixed(1));
-
-  const renderTask=(t,done)=>{
-    const extraB=t.isExtra?`<span class="hist-tag-extra">EXTRA</span>`:"";
-    const sharedB=t.isShared?`<span class="sd-shared-tag">½</span>`:"";
-    return `<div class="sd-task ${done?"sd-done":"sd-pend"}">
-      <span class="sd-icon">${t.icon}</span>
-      <div class="sd-info">
-        <div class="sd-title">${t.title} ${extraB}${sharedB}</div>
-        ${t.stamp?`<div class="sd-stamp">✓ ${t.stamp}</div>`:`<div class="sd-stamp sd-pend-text">Pendiente · ${t.time} min</div>`}
-      </div>
-      <div class="sd-pts" style="color:${color}">+${fmtPts(t.pts)}</div>
-    </div>`;
-  };
-
-  // ─── HEADER (dashboard-style) ─────────────────────────
-  let content = `<div class="sd-head-pill">
-    <div class="sd-head-left">
-      <div class="sd-person-row"><span class="sd-person-dot" style="background:${color}"></span><span class="sd-person-name">${displayName}</span></div>
-      <div class="sd-period-tag">${period.toUpperCase()}</div>
-    </div>
-    <button class="sd-close" onclick="hideScoreDetail()" aria-label="Cerrar">✕</button>
-  </div>
-
-  <div class="sd-hero">
-    <div class="sd-hero-num" style="color:${color}">${fmtPts(totalDone)}<span class="sd-hero-slash">/</span><span class="sd-hero-total">${fmtPts(totalPossible)}</span></div>
-    <div class="sd-hero-lbl">PUNTOS GANADOS</div>
-    <div class="sd-hero-bar"><div class="sd-hero-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-  </div>
-
-  <div class="sd-stats">
-    <div class="sd-stat-card">
-      <div class="sd-stat-num" style="color:${color}">${donePts.length}</div>
-      <div class="sd-stat-lbl">Cumplidas</div>
-    </div>
-    <div class="sd-stat-card">
-      <div class="sd-stat-num" style="color:var(--t1)">${pendPts.length}</div>
-      <div class="sd-stat-lbl">Pendientes</div>
-    </div>
-    <div class="sd-stat-card">
-      <div class="sd-stat-num" style="color:#fbbf24">${pct}<span style="font-size:16px">%</span></div>
-      <div class="sd-stat-lbl">Progreso</div>
-    </div>
-  </div>`;
-
-  // ─── SECTIONS ─────────────────────────
-  if(donePts.length){
-    content += `<div class="sd-section">
-      <div class="sd-sec-hdr">
-        <span class="sd-sec-badge" style="background:${color}">✓</span>
-        <span class="sd-sec-title">CUMPLIDAS · ${donePts.length}</span>
-        <span class="sd-sec-pts" style="color:${color}">+${fmtPts(totalDone)}</span>
-      </div>
-      ${donePts.sort((a,b)=>(b.stamp||"").localeCompare(a.stamp||"")).map(t=>renderTask(t,true)).join("")}
-    </div>`;
-  }
-
-  if(pendPts.length){
-    content += `<div class="sd-section">
-      <div class="sd-sec-hdr">
-        <span class="sd-sec-badge" style="background:rgba(255,255,255,.1);color:var(--t1)">○</span>
-        <span class="sd-sec-title">PENDIENTES · ${pendPts.length}</span>
-        <span class="sd-sec-pts" style="color:var(--t2)">+${fmtPts(totalPend)}</span>
-      </div>
-      ${pendPts.map(t=>renderTask(t,false)).join("")}
-    </div>`;
-  }
-
-  if(!donePts.length && !pendPts.length){
-    content += `<div class="sd-empty">
-      <div style="font-size:48px;margin-bottom:10px;opacity:.4">🎯</div>
-      <div>Sin tareas asignadas para este período</div>
-    </div>`;
-  }
-
-  $("score-detail-body").innerHTML = content;
-  $("score-detail-modal").style.display = "flex";
+  for(const e of extras){if(e.person!==person)continue;const item={icon:e.icon,title:e.title,pts:e.pts,time:e.time,stamp:e.stamp,isExtra:true};if(e.done)donePts.push(item);else pendPts.push(item);}
+  const totalDone=donePts.reduce((s,t)=>s+t.pts,0);const assignedPend=pendPts.reduce((s,t)=>s+t.pts,0);const sharedAvailable=availableShared.reduce((s,t)=>s+t.pts,0);const totalPossible=totalDone+assignedPend+sharedAvailable;const pct=totalPossible?Math.round(totalDone/totalPossible*100):0;
+  const color=person==="Daniel"?"var(--d)":"var(--n)";const displayName=displayPersonName(person);const tabLabels={hoy:"Hoy",semana:"Esta semana",mes:"Este mes",trimestre:"Este trimestre",lista:"Lista",historial:"Historial",horario:"Horario",calendario:"Calendario"};const period=tabLabels[activeTab]||"Período";
+  const renderTask=(t,done)=>{const extraB=t.isExtra?`<span class="hist-tag-extra">EXTRA</span>`:"";const sharedB=t.isShared?`<span class="sd-shared-tag">${t.available?"libre":"compartida"}</span>`:"";return `<div class="sd-task ${done?"sd-done":"sd-pend"}"><span class="sd-icon">${t.icon}</span><div class="sd-info"><div class="sd-title">${t.title} ${extraB}${sharedB}</div>${t.stamp?`<div class="sd-stamp">✓ ${t.stamp}</div>`:`<div class="sd-stamp sd-pend-text">${t.available?"Disponible para quien la verifique":"Pendiente"} · ${t.time} min</div>`}</div><div class="sd-pts" style="color:${done?color:'var(--t3)'}">${done?'+':''}${fmtPts(t.pts)}</div></div>`;};
+  let content=`<div class="sd-head-pill"><div class="sd-head-left"><div class="sd-person-row"><span class="sd-person-dot" style="background:${color}"></span><span class="sd-person-name">${displayName}</span></div><div class="sd-period-tag">${period.toUpperCase()}</div></div><button class="sd-close" onclick="hideScoreDetail()" aria-label="Cerrar">✕</button></div><div class="sd-hero"><div class="sd-hero-num" style="color:${color}">${fmtPts(totalDone)}<span class="sd-hero-slash">/</span><span class="sd-hero-total">${fmtPts(totalPossible)}</span></div><div class="sd-hero-lbl">PUNTOS GANADOS</div><div class="sd-hero-bar"><div class="sd-hero-bar-fill" style="width:${pct}%;background:${color}"></div></div></div><div class="sd-stats"><div class="sd-stat-card"><div class="sd-stat-num" style="color:${color}">${donePts.length}</div><div class="sd-stat-lbl">Hechas</div></div><div class="sd-stat-card"><div class="sd-stat-num" style="color:var(--t1)">${pendPts.length}</div><div class="sd-stat-lbl">Propias pendientes</div></div><div class="sd-stat-card"><div class="sd-stat-num" style="color:#fbbf24">${availableShared.length}</div><div class="sd-stat-lbl">Compartidas libres</div></div></div>`;
+  if(donePts.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:${color}">✓</span><span class="sd-sec-title">TAREAS HECHAS</span><span class="sd-sec-pts" style="color:${color}">+${fmtPts(totalDone)}</span></div>${donePts.map(t=>renderTask(t,true)).join("")}</div>`;
+  if(pendPts.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:rgba(255,255,255,.10);color:var(--t2)">○</span><span class="sd-sec-title">TAREAS PROPIAS PENDIENTES</span><span class="sd-sec-pts" style="color:var(--t2)">${fmtPts(assignedPend)}</span></div>${pendPts.map(t=>renderTask(t,false)).join("")}</div>`;
+  if(availableShared.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:#fbbf24">↔</span><span class="sd-sec-title">COMPARTIDAS DISPONIBLES</span><span class="sd-sec-pts" style="color:#fbbf24">${fmtPts(sharedAvailable)}</span></div>${availableShared.map(t=>renderTask(t,false)).join("")}</div>`;
+  if(!donePts.length&&!pendPts.length&&!availableShared.length)content+=`<div class="sd-empty">Sin tareas para este período.</div>`;
+  $("score-detail-body").innerHTML=content;$("score-detail-modal").style.display="flex";
 }
-
 function hideScoreDetail(){const m=$("score-detail-modal");if(m)m.style.display="none";}
 
 // ═══ HISTORIAL ═══
 function histView(){
   const entries=[];
   for(const[k,stamp] of Object.entries(dbCache)){
-    if(!k.startsWith("td26_")||k.startsWith("td26_zoe_")||k.startsWith("td26_stock_")||k===EXTRAS_KEY||!stamp||typeof stamp!=="string")continue;
+    if(!k.startsWith("td26_")||k.startsWith("td26_actor_")||k.startsWith("td26_zoe_")||k.startsWith("td26_stock_")||k===EXTRAS_KEY||!stamp||typeof stamp!=="string")continue;
     const inner=k.replace("td26_","");let taskId=null,period=null;
     for(const t of TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
     if(!taskId)continue;const task=taskById(taskId);if(period<APP_START_DATE)continue;
-    entries.push({task,period,stamp,key:k,missed:false,isZoe:false,isExtra:false});
+    const actor=task.person==="shared"?getSharedActorById(task.id,period):effectivePersonAt(task,period);
+    entries.push({task,period,stamp,key:k,actor,missed:false,isZoe:false,isExtra:false});
   }
   const freqs=["diaria","semanal","mensual","trimestral"];
   for(const t of TASKS){
@@ -2069,7 +2035,7 @@ function histView(){
   if(!entries.length)return `<div class="hist-empty">Sin historial todavía.<br>Marca tu primera tarea ✅</div>`;
   const sortK=e=>(e.stamp?"2_"+e.period+"_"+e.stamp:"1_"+e.period);
   entries.sort((a,b)=>sortK(b).localeCompare(sortK(a)));
-  const getPerson=e=>{if(e.isZoe)return zoeOwnerForPeriod(e.period,e.task.freq);if(e.isExtra)return e.task.person;const ep=effectivePersonAt(e.task,e.period);return ep==="shared"?"Ambos":ep;};
+  const getPerson=e=>{if(e.actor)return e.actor;if(e.isZoe)return zoeOwnerForPeriod(e.period,e.task.freq);if(e.isExtra)return e.task.person;const ep=effectivePersonAt(e.task,e.period);return ep==="shared"?"Ambos":ep;};
   let html=`<div class="hist-filter">
     <button class="hf-btn ${histFilter==="todo"?"on":""}" onclick="setHistFilter('todo')">Todos</button>
     <button class="hf-btn ${histFilter==="daniel"?"on":""}" onclick="setHistFilter('daniel')"><span style="color:var(--d)">●</span> Daniel</button>
@@ -2098,20 +2064,20 @@ function histView(){
     const miss=entries.filter(e=>e.missed);
     if(!miss.length){html+=`<div class="hist-empty-sub">🎉 ¡Todo cumplido!</div>`;}
     else{
-      html+=renderPersonSection("Daniel","var(--d)",miss.filter(e=>{const p=getPerson(e);return p==="Daniel"||p==="Ambos";}));
+      html+=renderPersonSection("Daniel","var(--d)",miss.filter(e=>{const p=getPerson(e);return p==="Daniel"||(!e.stamp&&p==="Ambos");}));
       html+=`<div style="height:20px"></div>`;
-      html+=renderPersonSection("Nicolas","var(--n)",miss.filter(e=>{const p=getPerson(e);return p==="Nicolas"||p==="Ambos";}));
+      html+=renderPersonSection("Nicolas","var(--n)",miss.filter(e=>{const p=getPerson(e);return p==="Nicolas"||(!e.stamp&&p==="Ambos");}));
     }
     return html;
   }
   if(histFilter==="daniel"||histFilter==="nicolas"){
     const name=histFilter==="daniel"?"Daniel":"Nicolas";const color=name==="Daniel"?"var(--d)":"var(--n)";
-    html+=renderPersonSection(name,color,entries.filter(e=>{const p=getPerson(e);return p===name||p==="Ambos";}));
+    html+=renderPersonSection(name,color,entries.filter(e=>{const p=getPerson(e);return p===name||(!e.stamp&&p==="Ambos");}));
     return html;
   }
-  html+=renderPersonSection("Daniel","var(--d)",entries.filter(e=>{const p=getPerson(e);return p==="Daniel"||p==="Ambos";}));
+  html+=renderPersonSection("Daniel","var(--d)",entries.filter(e=>{const p=getPerson(e);return p==="Daniel"||(!e.stamp&&p==="Ambos");}));
   html+=`<div style="height:20px"></div>`;
-  html+=renderPersonSection("Nicolas","var(--n)",entries.filter(e=>{const p=getPerson(e);return p==="Nicolas"||p==="Ambos";}));
+  html+=renderPersonSection("Nicolas","var(--n)",entries.filter(e=>{const p=getPerson(e);return p==="Nicolas"||(!e.stamp&&p==="Ambos");}));
   return html;
 }
 function setHistFilter(f){histFilter=f;render();}
@@ -2119,31 +2085,20 @@ function setHistFilter(f){histFilter=f;render();}
 // ═══ LISTA VIEW ═══
 function listView(){
   const order=["diaria","semanal","mensual","trimestral"];
-  let html="";
+  let html=`<div class="list-intro"><div class="list-intro-title">Distribución de tareas</div><div class="list-intro-sub">Las tareas compartidas no reparten puntos: quien verifica con foto se lleva el puntaje completo. Daniel mantiene siempre “Regar las plantas”.</div></div>`;
   for(const freq of order){
     const tasks=TASKS.filter(t=>t.freq===freq);if(!tasks.length)continue;
-    let danPts=0,nicPts=0;
-    tasks.forEach(t=>{const ep=effectivePerson(t);if(ep==="Daniel")danPts+=t.pts;else if(ep==="Nicolas")nicPts+=t.pts;else if(ep==="shared"){danPts+=t.pts/2;nicPts+=t.pts/2;}else if(ep==="rotate"){danPts+=t.pts/2;nicPts+=t.pts/2;}});
-    html+=`<div style="margin-bottom:24px"><div class="sec-hdr ${SC[freq].shCls}"><span class="sec-title">${SC[freq].label.toUpperCase()}</span><span class="sec-pgs">🟢 Dan ${danPts} pts · 🔵 Nico ${nicPts} pts</span></div>`;
-    html+=`<div style="font-size:10px;color:var(--t3);padding:6px 10px 4px;display:grid;grid-template-columns:auto 1fr 70px 50px 40px;gap:6px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--b0);margin-bottom:4px"><span></span><span>Tarea</span><span>Quién</span><span>Min</span><span>Pts</span></div>`;
-    for(const t of tasks){
-      const ep=effectivePerson(t);const isDan=ep==="Daniel"||ep==="shared";const pc=isDan?"var(--d)":"var(--n)";
-      const pLabel=ep==="shared"?"Ambos":(ep==="Nicolas"?"Nicolás":ep);
-      const note=t.person==="rotate"?"turno rotativo":(t.dueDay!==undefined?`Cada ${["dom","lun","mar","mié","jue","vie","sáb"][t.dueDay]}`:"");
-      html+=`<div style="display:grid;grid-template-columns:auto 1fr 70px 50px 40px;gap:6px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--b0)">
-        <span style="font-size:16px">${t.icon}</span>
-        <span style="font-size:12px;font-weight:600">${t.title}${note?`<br><span style="font-size:9px;color:var(--t3)">${note}</span>`:""}</span>
-        <span style="font-size:11px;font-weight:700;color:${pc}">${pLabel}</span>
-        <span style="font-size:11px;color:var(--t2);text-align:center">${t.time}</span>
-        <span style="font-size:12px;font-weight:800;color:${pc};text-align:center">${t.pts}</span>
-      </div>`;
-    }
-    html+=`</div>`;
+    let danPts=0,nicPts=0,sharedPts=0;
+    tasks.forEach(t=>{const ep=effectivePerson(t);if(ep==="Daniel")danPts+=t.pts;else if(ep==="Nicolas")nicPts+=t.pts;else if(ep==="shared")sharedPts+=t.pts;});
+    html+=`<div class="list-section"><div class="sec-hdr ${SC[freq].shCls}"><span class="sec-title">${SC[freq].label.toUpperCase()}</span><span class="sec-pgs">Dan ${fmtPts(danPts)} · Nico ${fmtPts(nicPts)} · Libres ${fmtPts(sharedPts)}</span></div><div class="task-matrix">`;
+    for(const t of tasks){const ep=effectivePerson(t);const isShared=ep==="shared";const color=personColor(ep);const pLabel=isShared?"Compartida":displayPersonName(ep);const note=t.id==="d2"?"Fija de Daniel":(t.person==="rotate"?"Rotación automática":(t.dueDay!==undefined?`Cada ${["dom","lun","mar","mié","jue","vie","sáb"][t.dueDay]}`:(isShared?"La toma quien la verifique":"")));html+=`<div class="task-row-card ${isShared?'task-row-shared':''}"><div class="task-row-icon">${t.icon}</div><div class="task-row-main"><div class="task-row-title">${t.title}</div>${note?`<div class="task-row-note">${note}</div>`:""}</div><div class="task-row-person" style="color:${color}">${pLabel}</div><div class="task-row-meta"><span>${t.time} min</span><b>${t.pts} pts</b></div></div>`;}
+    html+=`</div></div>`;
   }
   return html;
 }
 
-// ═══ HORARIO / COCINA VIEW ═══
+
+// ═══ HORARIO / COCINA VIEW ═══// ═══ HORARIO / COCINA VIEW ═══
 function horarioView(){
   const gymSchedule=[
     {day:"Lunes",dan:"07:00-08:00",nic:"08:00-09:00"},
@@ -2176,7 +2131,7 @@ function horarioView(){
 function buildActivityMap(){
   const map={};
   for(const[k,v] of Object.entries(dbCache)){
-    if(!k.startsWith("td26_")||k.includes("_photo_")||k.startsWith("td26_stock_")||k===EXTRAS_KEY)continue;
+    if(!k.startsWith("td26_")||k.startsWith("td26_actor_")||k.includes("_photo_")||k.startsWith("td26_stock_")||k===EXTRAS_KEY)continue;
     if(!v||typeof v!=="string")continue;
     const m=v.match(/(\d{1,2})\s+(\w{3})\s+(\d{1,2}):(\d{2})/);
     if(!m)continue;
@@ -2201,8 +2156,9 @@ function buildActivityMap(){
     }
     if(task){
       const ep=isZoeKey?zoeOwnerForPeriod(period,task.freq):effectivePersonAt(task,period);
-      if(ep==="Daniel"||ep==="shared")map[ds].dan++;
-      if(ep==="Nicolas"||ep==="shared")map[ds].nic++;
+      const actor=ep==="shared"?getSharedActorById(task.id,period):ep;
+      if(actor==="Daniel")map[ds].dan++;
+      if(actor==="Nicolas")map[ds].nic++;
     }
   }
   return map;
@@ -2261,19 +2217,19 @@ function showCalDay(dateStr){
   const done=[],missed=[],pending=[];
   // Daily tasks
   for(const t of TASKS.filter(x=>x.freq==="diaria")){
-    const k=sKey(t.id,dateStr);const stamp=dbCache[k];
-    if(stamp)done.push({task:t,stamp});else if(dt<today)missed.push({task:t});else if(dt.getTime()===today.getTime())pending.push({task:t});
+    const k=sKey(t.id,dateStr);const stamp=dbCache[k];const ep=effectivePersonAt(t,dateStr);const actor=ep==="shared"?getSharedActorById(t.id,dateStr):ep;
+    if(stamp)done.push({task:t,stamp,actor});else if(dt<today)missed.push({task:t,actor:null});else if(dt.getTime()===today.getTime())pending.push({task:t,actor:null});
   }
   // Weekly (dueDay tasks only on their day, rotate tasks on any day)
   for(const t of TASKS.filter(x=>x.freq==="semanal")){
     if(t.dueDay!==undefined&&t.dueDay!==dow)continue;
-    const k=sKey(t.id,wK);const stamp=dbCache[k];
-    if(stamp)done.push({task:t,stamp});
-    else if(t.dueDay!==undefined){if(dt<today)missed.push({task:t});else if(dt.getTime()===today.getTime())pending.push({task:t});}
+    const k=sKey(t.id,wK);const stamp=dbCache[k];const ep=effectivePersonAt(t,wK);const actor=ep==="shared"?getSharedActorById(t.id,wK):ep;
+    if(stamp)done.push({task:t,stamp,actor});
+    else if(t.dueDay!==undefined){if(dt<today)missed.push({task:t,actor:null});else if(dt.getTime()===today.getTime())pending.push({task:t,actor:null});}
   }
   // Monthly/Quarterly (show if done in that period)
-  for(const t of TASKS.filter(x=>x.freq==="mensual")){const k=sKey(t.id,mK);const stamp=dbCache[k];if(stamp)done.push({task:t,stamp});}
-  for(const t of TASKS.filter(x=>x.freq==="trimestral")){const k=sKey(t.id,qK);const stamp=dbCache[k];if(stamp)done.push({task:t,stamp});}
+  for(const t of TASKS.filter(x=>x.freq==="mensual")){const k=sKey(t.id,mK);const stamp=dbCache[k];const ep=effectivePersonAt(t,mK);const actor=ep==="shared"?getSharedActorById(t.id,mK):ep;if(stamp)done.push({task:t,stamp,actor});}
+  for(const t of TASKS.filter(x=>x.freq==="trimestral")){const k=sKey(t.id,qK);const stamp=dbCache[k];const ep=effectivePersonAt(t,qK);const actor=ep==="shared"?getSharedActorById(t.id,qK):ep;if(stamp)done.push({task:t,stamp,actor});}
   // Zoe
   for(const zt of ZOE_TASKS){
     const pk=periodKey(zt.freq,dt);const k="td26_zoe_"+zt.id+"_"+pk;
@@ -2294,6 +2250,7 @@ function showCalDay(dateStr){
   const getDayEntryPerson=e=>{
     if(e.isZoe)return zoeOwnerForPeriod(periodKey(e.task.freq,dt),e.task.freq);
     if(!e.task.freq)return e.task.person||"";
+    if(e.actor)return e.actor;
     if(e.task.person==="shared")return "Ambos";
     if(e.task.person==="rotate")return effectivePersonAt(e.task,periodKey(e.task.freq,dt));
     return e.task.person;
@@ -2549,11 +2506,9 @@ function confirmReset(){hideResetModal();resetPeriod();}
 
 function resetPeriod(){
   const tasks=getTabTasks();let c=0;
-  for(const t of tasks){const k=tKey(t);if(dbCache[k]){deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);c++;}}
-  render();if(typeof renderZoeModule==="function")renderZoeModule();schedulePush();
-  showToast(`↩ ${c} tarea${c===1?"":"s"} reseteada${c===1?"":"s"}`);
+  for(const t of tasks){const period=periodKey(t.freq,NOW);const k=sKey(t.id,period);if(dbCache[k]){deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);if(t.person==="shared")clearSharedActorById(t.id,period);c++;}}
+  render();if(typeof renderZoeModule==="function")renderZoeModule();schedulePush();showToast(`↩ ${c} tarea${c===1?"":"s"} reseteada${c===1?"":"s"}`);
 }
-
 function clearAllData(){
   const keys=[];
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("td26_"))keys.push(k);}
