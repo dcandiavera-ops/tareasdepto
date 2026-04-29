@@ -626,6 +626,32 @@ body{
 .stock-hist-sub{font-size:10px;color:var(--t3);margin-top:2px}
 .stock-hist-del{width:26px;height:26px;border-radius:50%;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);color:var(--err);cursor:pointer;flex-shrink:0;font-size:11px;font-weight:800;-webkit-tap-highlight-color:transparent}
 
+
+/* ═══ PIPETA ANTIPULGAS ZOE ═══ */
+.zoe-pipette-section{margin-top:16px;padding:16px 14px;background:linear-gradient(135deg,rgba(249,168,212,.07),rgba(61,255,163,.025));border:1px solid rgba(249,168,212,.16);border-radius:18px}
+.zoe-pipette-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.zoe-pipette-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(249,168,212,.9)}
+.zoe-pipette-sub{font-size:11px;color:var(--t3);line-height:1.35;margin-top:4px}
+.pipette-add-btn{min-height:40px;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:800;background:rgba(249,168,212,.15);border:1px solid rgba(249,168,212,.32);color:#f9a8d4;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.pipette-add-btn:active{transform:scale(.96)}
+.pipette-last-card{padding:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.065);border-radius:14px;margin-bottom:10px}
+.pipette-last-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.pipette-last-icon{font-size:20px;line-height:1}
+.pipette-last-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:900;color:var(--t0);flex:1;min-width:0}
+.pipette-last-price{font-size:12px;font-weight:800;color:var(--d);white-space:nowrap}
+.pipette-meta-row{display:flex;gap:7px;flex-wrap:wrap;font-size:11px;color:var(--t2);line-height:1.35}
+.pipette-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:99px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.07)}
+.pipette-empty{padding:14px 12px;border:1px dashed rgba(249,168,212,.22);border-radius:14px;color:var(--t3);font-size:12px;text-align:center;background:rgba(255,255,255,.02)}
+.pipette-history{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--b0)}
+.pipette-history-label{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-top:2px;margin-bottom:6px}
+.pipette-item{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055);border-radius:12px}
+.pipette-item-main{flex:1;min-width:0}
+.pipette-item-title{font-size:12px;font-weight:800;color:var(--t0);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pipette-item-meta{display:flex;gap:7px;flex-wrap:wrap;font-size:10.5px;color:var(--t2)}
+.pipette-item-notes{font-size:10.5px;color:var(--t3);margin-top:3px;line-height:1.35}
+.pipette-del{width:28px;height:28px;border-radius:50%;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.22);color:var(--err);cursor:pointer;flex-shrink:0;font-size:11px;font-weight:900;-webkit-tap-highlight-color:transparent}
+@media(max-width:380px){.zoe-pipette-head{flex-direction:column}.pipette-add-btn{width:100%}.pipette-last-top{align-items:flex-start}.pipette-last-price{margin-top:2px}}
+
 /* ═══ HORARIO / COCINA ═══ */
 .gym-section{margin:20px 0 24px}
 .gym-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:900;margin-bottom:4px}
@@ -1034,6 +1060,17 @@ button{touch-action:manipulation;}
         <div class="zoe-stock-title">📦 Stock de Zoe</div>
         <div class="zoe-stock-grid" id="zoe-stock-grid"></div>
       </div>
+      <div class="zoe-pipette-section" id="zoe-pipette-section">
+        <div class="zoe-pipette-head">
+          <div>
+            <div class="zoe-pipette-title">🛡️ Pipeta antipulgas</div>
+            <div class="zoe-pipette-sub">Registro local/sync de aplicaciones realizadas a Zoe.</div>
+          </div>
+          <button class="pipette-add-btn" onclick="openPipetteModal()">+ Registrar</button>
+        </div>
+        <div id="zoe-pipette-log"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1151,6 +1188,22 @@ button{touch-action:manipulation;}
     <div style="display:flex;gap:10px">
       <button onclick="hideStockModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(244,244,250,.6);cursor:pointer;min-height:44px">Cancelar</button>
       <button onclick="saveStock()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:rgba(249,168,212,.18);border:1px solid rgba(249,168,212,.4);color:#f9a8d4;cursor:pointer;min-height:44px">Guardar</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- PIPETA MODAL -->
+<div id="pipette-modal" style="display:none;position:fixed;inset:0;z-index:9997;background:rgba(6,6,10,.9);backdrop-filter:blur(20px);align-items:flex-end;justify-content:center;overflow-y:auto;">
+  <div style="width:100%;max-width:480px;background:#111119;border:1px solid rgba(255,255,255,.1);border-top:2px solid rgba(249,168,212,.45);border-radius:28px 28px 0 0;padding:24px 22px calc(env(safe-area-inset-bottom,0px)+28px);max-height:85vh;overflow-y:auto;">
+    <div style="text-align:center;margin-bottom:20px"><div style="font-size:32px;margin-bottom:6px">🛡️</div><div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:900;color:#f4f4fa">Registrar pipeta antipulgas</div><div style="font-size:12px;color:rgba(244,244,250,.45);margin-top:5px">Fecha, marca y precio de la aplicación realizada a Zoe.</div></div>
+    <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">📅 Fecha de aplicación</label><input type="date" id="pipette-date" style="width:100%;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box;color-scheme:dark"/></div>
+    <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">🏷️ Marca / nombre</label><input type="text" id="pipette-brand" placeholder="Ej: Broadline, Bravecto, Frontline" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/></div>
+    <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">💰 Precio (CLP)</label><input type="number" id="pipette-price" placeholder="Ej: 15990" inputmode="numeric" style="width:100%;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/></div>
+    <div style="margin-bottom:22px"><label style="display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,244,250,.4);margin-bottom:6px">📝 Nota opcional</label><input type="text" id="pipette-notes" placeholder="Ej: aplicada después del baño" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f4f4fa;box-sizing:border-box"/></div>
+    <div style="display:flex;gap:10px">
+      <button onclick="hidePipetteModal()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(244,244,250,.6);cursor:pointer;min-height:44px">Cancelar</button>
+      <button onclick="savePipetteRecord()" style="flex:1;padding:14px;border-radius:14px;font-size:14px;font-weight:700;background:rgba(249,168,212,.18);border:1px solid rgba(249,168,212,.4);color:#f9a8d4;cursor:pointer;min-height:44px">Guardar</button>
     </div>
   </div>
 </div>
@@ -2473,6 +2526,75 @@ function renderStockSection(){
   }).join("");
 }
 
+
+// ═══ PIPETA ANTIPULGAS ZOE ═══
+const PIPETTE_KEY="td26_zoe_pipette_records";
+function getPipetteList(){
+  const raw=dbCache[PIPETTE_KEY]||localStorage.getItem(PIPETTE_KEY);
+  if(!raw)return[];
+  try{const p=JSON.parse(raw);return Array.isArray(p)?p:[];}catch(e){return[];}
+}
+function savePipetteList(list){
+  const str=JSON.stringify(list);
+  dbCache[PIPETTE_KEY]=str;
+  localStorage.setItem(PIPETTE_KEY,str);
+  schedulePush();
+  renderPipetteSection();
+}
+function openPipetteModal(){
+  const today=fmtDate(getNow());
+  $("pipette-date").value=today;
+  $("pipette-brand").value="";
+  $("pipette-price").value="";
+  $("pipette-notes").value="";
+  $("pipette-modal").style.display="flex";
+  setTimeout(()=>{$("pipette-brand")?.focus?.();},80);
+}
+function hidePipetteModal(){
+  const modal=$("pipette-modal");
+  if(modal)modal.style.display="none";
+}
+function savePipetteRecord(){
+  const date=$("pipette-date").value;
+  const brand=($("pipette-brand").value||"").trim();
+  const priceStr=($("pipette-price").value||"").trim();
+  const notes=($("pipette-notes").value||"").trim();
+  if(!date){showToast("⚠️ Ingresa fecha");return;}
+  if(!brand){showToast("⚠️ Ingresa marca");return;}
+  const price=priceStr?parseInt(priceStr.replace(/[^0-9]/g,""),10):null;
+  const list=getPipetteList();
+  list.push({id:"pp_"+Date.now(),date,brand,price:isNaN(price)?null:price,notes,createdAt:getNow().toISOString()});
+  savePipetteList(list);
+  hidePipetteModal();
+  showToast("✓ Pipeta registrada");
+}
+function deletePipetteRecord(id){
+  if(!confirm("¿Eliminar registro de pipeta?"))return;
+  const list=getPipetteList().filter(r=>r.id!==id);
+  savePipetteList(list);
+  showToast("🗑️ Registro eliminado");
+}
+function renderPipetteSection(){
+  const box=$("zoe-pipette-log");
+  if(!box)return;
+  const list=getPipetteList().slice().sort((a,b)=>{
+    const ad=(a.date||"")+"T23:59:59";
+    const bd=(b.date||"")+"T23:59:59";
+    const byDate=new Date(bd)-new Date(ad);
+    if(byDate!==0)return byDate;
+    return new Date(b.createdAt||0)-new Date(a.createdAt||0);
+  });
+  if(!list.length){
+    box.innerHTML='<div class="pipette-empty">Aún no hay pipetas registradas para Zoe.</div>';
+    return;
+  }
+  const last=list[0];
+  const total=list.reduce((s,r)=>s+(Number(r.price)||0),0);
+  const lastCard=`<div class="pipette-last-card"><div class="pipette-last-top"><span class="pipette-last-icon">🛡️</span><div class="pipette-last-title">${escapeHTML(last.brand||"Pipeta")}</div><div class="pipette-last-price">${last.price?formatCLP(last.price):"—"}</div></div><div class="pipette-meta-row"><span class="pipette-pill">📅 Aplicada ${formatShortDate(last.date)}</span><span class="pipette-pill">📋 ${list.length} registro${list.length===1?"":"s"}</span>${total?`<span class="pipette-pill">💰 Total ${formatCLP(total)}</span>`:""}</div>${last.notes?`<div class="pipette-item-notes">${escapeHTML(last.notes)}</div>`:""}</div>`;
+  const history=list.map(r=>`<div class="pipette-item"><div class="pipette-item-main"><div class="pipette-item-title">${escapeHTML(r.brand||"Pipeta")}</div><div class="pipette-item-meta"><span>📅 ${formatShortDate(r.date)}</span>${r.price?`<span>💰 ${formatCLP(r.price)}</span>`:""}</div>${r.notes?`<div class="pipette-item-notes">${escapeHTML(r.notes)}</div>`:""}</div><button class="pipette-del" onclick="deletePipetteRecord('${r.id}')">✕</button></div>`).join("");
+  box.innerHTML=lastCard+`<div class="pipette-history"><div class="pipette-history-label">Historial de aplicaciones</div>${history}</div>`;
+}
+
 // ═══ SYNC ═══
 const HARDCODED_SYNC_URL="https://tareas-depto-base-de-datos-default-rtdb.firebaseio.com";
 const SYNC_PATH="tareas_depto_2026";
@@ -2515,7 +2637,7 @@ async function pullFromSync(isInit){
         if(v===null){if(dbCache[k]){delete dbCache[k];localStorage.removeItem(k);changed=true;}continue;}
         if(dbCache[k]!==v){dbCache[k]=v;localStorage.setItem(k,v);changed=true;}
       }
-      if(changed){render();if(typeof renderZoeModule==="function")renderZoeModule();if(typeof renderStockSection==="function")renderStockSection();}
+      if(changed){render();if(typeof renderZoeModule==="function")renderZoeModule();if(typeof renderStockSection==="function")renderStockSection();if(typeof renderPipetteSection==="function")renderPipetteSection();}
     }
     setSyncDot("ok","☁️ Al día");return true;
   }catch(e){console.error("Pull error:",e);setSyncDot("err","Sin conexión");return false;}
@@ -2652,7 +2774,7 @@ window.addEventListener("focus",()=>{if(hasSyncUrl())pullFromSync(false);});
 // ════════════════════════════════════════════════════════════
 // STARTUP
 // ════════════════════════════════════════════════════════════
-loadLocalStorage();loadPhotos();render();renderZoeModule();renderStockSection();updateTabProgress();
+loadLocalStorage();loadPhotos();render();renderZoeModule();renderStockSection();renderPipetteSection();updateTabProgress();
 (()=>{const b=$("bnav-"+activeTab);if(b)b.classList.add("on");updateBnavPips();})();
 initIdentity();
 const _rm=$("reset-modal");if(_rm)_rm.style.display="none";
