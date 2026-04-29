@@ -702,6 +702,7 @@ body{
 .pipette-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 14px max(env(safe-area-inset-bottom,0px),10px);background:rgba(14,14,22,.97);border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
 .pipette-action-btn{min-height:48px;border-radius:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;border:1px solid rgba(255,255,255,.1)}
 .pipette-action-btn:active{transform:scale(.98)}
+.pipette-action-btn:disabled{opacity:.55;cursor:wait;transform:none}
 .pipette-btn-cancel{background:rgba(255,255,255,.055);color:rgba(244,244,250,.64)}
 .pipette-btn-save{background:linear-gradient(135deg,rgba(249,168,212,.25),rgba(200,127,255,.18));border-color:rgba(249,168,212,.42);color:#f9a8d4;box-shadow:0 8px 22px rgba(249,168,212,.08)}
 @supports(height:100svh){.pipette-modal-card{max-height:calc(100svh - max(env(safe-area-inset-top,0px),10px) - max(env(safe-area-inset-bottom,0px),10px));}}
@@ -1253,7 +1254,7 @@ button{touch-action:manipulation;}
 
 <!-- PIPETA MODAL -->
 <div id="pipette-modal" onclick="if(event.target===this)hidePipetteModal()">
-  <div class="pipette-modal-card" role="dialog" aria-modal="true" aria-labelledby="pipette-modal-title">
+  <div class="pipette-modal-card" role="dialog" aria-modal="true" aria-labelledby="pipette-modal-title" onclick="event.stopPropagation()">
     <div class="pipette-modal-handle"></div>
     <div class="pipette-modal-head">
       <div class="pipette-modal-icon">🛡️</div>
@@ -1261,31 +1262,31 @@ button{touch-action:manipulation;}
       <div class="pipette-modal-sub">Fecha, marca y precio de la aplicación realizada a Zoe.</div>
     </div>
 
-    <div class="pipette-form">
+    <form id="pipette-form" class="pipette-form" onsubmit="return savePipetteRecord(event)" novalidate>
       <div class="pipette-field">
         <label class="pipette-field-label" for="pipette-date">📅 Fecha de aplicación</label>
-        <input class="pipette-input" type="date" id="pipette-date"/>
+        <input class="pipette-input" type="date" id="pipette-date" required/>
       </div>
 
       <div class="pipette-field">
         <label class="pipette-field-label" for="pipette-brand">🏷️ Marca / nombre</label>
-        <input class="pipette-input" type="text" id="pipette-brand" placeholder="Ej: Broadline, Bravecto, Frontline" autocomplete="off" autocapitalize="words"/>
+        <input class="pipette-input" type="text" id="pipette-brand" placeholder="Ej: Broadline, Bravecto, Frontline" autocomplete="off" autocapitalize="words" required/>
       </div>
 
       <div class="pipette-field">
         <label class="pipette-field-label" for="pipette-price">💰 Precio (CLP)</label>
-        <input class="pipette-input" type="number" id="pipette-price" placeholder="Ej: 15990" inputmode="numeric" pattern="[0-9]*"/>
+        <input class="pipette-input" type="tel" id="pipette-price" placeholder="Ej: 15990" inputmode="numeric" pattern="[0-9]*" autocomplete="off"/>
       </div>
 
       <div class="pipette-field">
         <label class="pipette-field-label" for="pipette-notes">📝 Nota opcional</label>
         <input class="pipette-input" type="text" id="pipette-notes" placeholder="Ej: aplicada después del baño" autocomplete="off"/>
       </div>
-    </div>
+    </form>
 
     <div class="pipette-actions">
-      <button class="pipette-action-btn pipette-btn-cancel" onclick="hidePipetteModal()">Cancelar</button>
-      <button class="pipette-action-btn pipette-btn-save" onclick="savePipetteRecord()">Guardar</button>
+      <button type="button" class="pipette-action-btn pipette-btn-cancel" onclick="hidePipetteModal()">Cancelar</button>
+      <button type="submit" form="pipette-form" id="pipette-save-btn" class="pipette-action-btn pipette-btn-save">Guardar</button>
     </div>
   </div>
 </div>
@@ -2625,32 +2626,64 @@ function savePipetteList(list){
 }
 function openPipetteModal(){
   const today=fmtDate(getNow());
-  $("pipette-date").value=today;
-  $("pipette-brand").value="";
-  $("pipette-price").value="";
-  $("pipette-notes").value="";
+  const modal=$("pipette-modal");
+  const form=$("pipette-form");
+  if(form&&typeof form.reset==="function")form.reset();
+  const dateEl=$("pipette-date"), brandEl=$("pipette-brand"), priceEl=$("pipette-price"), notesEl=$("pipette-notes"), saveBtn=$("pipette-save-btn");
+  if(dateEl)dateEl.value=today;
+  if(brandEl)brandEl.value="";
+  if(priceEl)priceEl.value="";
+  if(notesEl)notesEl.value="";
+  if(saveBtn){saveBtn.disabled=false;saveBtn.textContent="Guardar";}
   document.body.style.overflow="hidden";
-  $("pipette-modal").style.display="flex";
+  if(modal)modal.style.display="flex";
 }
 function hidePipetteModal(){
   const modal=$("pipette-modal");
+  const saveBtn=$("pipette-save-btn");
+  if(saveBtn){saveBtn.disabled=false;saveBtn.textContent="Guardar";}
   if(modal)modal.style.display="none";
   document.body.style.overflow="";
 }
-function savePipetteRecord(){
-  const date=$("pipette-date").value;
-  const brand=($("pipette-brand").value||"").trim();
-  const priceStr=($("pipette-price").value||"").trim();
-  const notes=($("pipette-notes").value||"").trim();
-  if(!date){showToast("⚠️ Ingresa fecha");return;}
-  if(!brand){showToast("⚠️ Ingresa marca");return;}
-  const price=priceStr?parseInt(priceStr.replace(/[^0-9]/g,""),10):null;
-  const list=getPipetteList();
-  list.push({id:"pp_"+Date.now(),date,brand,price:isNaN(price)?null:price,notes,createdAt:getNow().toISOString()});
-  savePipetteList(list);
-  hidePipetteModal();
-  showToast("✓ Pipeta registrada");
+function savePipetteRecord(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  try{
+    if(document.activeElement&&typeof document.activeElement.blur==="function")document.activeElement.blur();
+    const dateEl=$("pipette-date"), brandEl=$("pipette-brand"), priceEl=$("pipette-price"), notesEl=$("pipette-notes"), saveBtn=$("pipette-save-btn");
+    const date=dateEl?(dateEl.value||"").trim():"";
+    const brand=brandEl?(brandEl.value||"").trim():"";
+    const priceStr=priceEl?(priceEl.value||"").trim():"";
+    const notes=notesEl?(notesEl.value||"").trim():"";
+    if(!date){showToast("⚠️ Ingresa fecha");if(dateEl)dateEl.focus();return false;}
+    if(!brand){showToast("⚠️ Ingresa marca");if(brandEl)brandEl.focus();return false;}
+    if(saveBtn){saveBtn.disabled=true;saveBtn.textContent="Guardando…";}
+    const cleanedPrice=priceStr.replace(/[^0-9]/g,"");
+    const price=cleanedPrice?parseInt(cleanedPrice,10):null;
+    const list=getPipetteList();
+    const now=getNow();
+    list.push({
+      id:"pp_"+now.getTime()+"_"+Math.random().toString(36).slice(2,7),
+      date,
+      brand,
+      price:Number.isFinite(price)?price:null,
+      notes,
+      createdAt:now.toISOString(),
+      updatedAt:now.toISOString()
+    });
+    savePipetteList(list);
+    hidePipetteModal();
+    showToast("✓ Pipeta registrada");
+    return false;
+  }catch(err){
+    console.error("Error guardando pipeta:",err);
+    const saveBtn=$("pipette-save-btn");
+    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent="Guardar";}
+    showToast("⚠️ No se pudo guardar. Intenta nuevamente");
+    return false;
+  }
 }
+window.savePipetteRecord=savePipetteRecord;
+document.addEventListener("DOMContentLoaded",()=>{const btn=$("pipette-save-btn");if(btn){btn.addEventListener("click",e=>{const form=$("pipette-form");if(form&&typeof form.requestSubmit==="function"){return;}savePipetteRecord(e);});}});
 function deletePipetteRecord(id){
   if(!confirm("¿Eliminar registro de pipeta?"))return;
   const list=getPipetteList().filter(r=>r.id!==id);
