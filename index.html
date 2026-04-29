@@ -920,6 +920,19 @@ button{touch-action:manipulation;}
 @media(max-width:360px){.p-row{grid-template-columns:1fr}.pc{min-height:auto}.tc-main{grid-template-columns:24px minmax(0,1fr) 48px}.tc-chk{width:48px!important;height:48px!important}.pill-lbl{font-size:11px}.chip-lbl{font-size:8.5px}.cam-confirm,.cam-retake{min-width:96px;padding-inline:14px}}
 @media(prefers-reduced-motion:no-preference){.tc,.pc,.pill-btn,.chip,.task-row-card{will-change:transform}.tc:hover,.task-row-card:hover{transform:translateY(-1px)}}
 
+
+/* Historial bitácora: realizadas primero, no realizadas después */
+.hist-global-head{background:linear-gradient(135deg,rgba(61,255,163,.07),rgba(200,127,255,.07));border-radius:24px!important}
+.hist-block{margin-top:14px;margin-bottom:18px}
+.hist-block .hist-subcat-hdr{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.055);border-radius:16px;padding:10px 12px;margin-bottom:8px}
+.hist-tag-extra{letter-spacing:.06em;text-transform:uppercase}
+
+
+/* FIX HISTORIAL: fecha/hora real de verificación */
+.hist-meta span{white-space:normal}
+.hist-item .hist-meta{gap:5px 6px}
+@media(max-width:430px){.hist-meta{font-size:10.5px}.hist-title{font-size:12.5px}}
+
 </style>
 </head>
 <body>
@@ -1198,7 +1211,7 @@ const LOOK_BACK = { diaria:14, semanal:8, mensual:6, trimestral:4 };
 // TASKS DEFINITION
 // ════════════════════════════════════════════════════════════
 const TASKS = [
-  // ═══ DIARIAS — compartidas/fijas ═══
+  // ═══ DIARIAS — tareas/fijas ═══
   {id:"d1",icon:"🛋️",title:"Ordenar futón, frazada y cojines",freq:"diaria",person:"shared",time:5,pts:1,
    steps:["Dobla la frazada y déjala sobre el futón.","Acomoda los cojines en su lugar.","Fíjate que no haya cosas tiradas encima."]},
   {id:"d2",icon:"🌿",title:"Regar las plantas",freq:"diaria",person:"Daniel",time:5,pts:1,
@@ -1296,7 +1309,7 @@ function sKey(id,period){ return `td26_${id}_${period}`; }
 function tKey(t){ return sKey(t.id, periodKey(t.freq, NOW)); }
 
 // ═══ SHARED TASK OWNERSHIP ═══
-// La tarea compartida se completa una sola vez, pero los puntos van solo
+// La tarea tarea se completa una sola vez, pero los puntos van solo
 // al usuario que la verificó con foto.
 function sharedActorKey(id,period){ return `td26_actor_${id}_${period}`; }
 function getSharedActorById(id,period){
@@ -1312,14 +1325,13 @@ function clearSharedActorById(id,period){ deleteKey(sharedActorKey(id,period)); 
 function displayPersonName(person){
   if(person==="Nicolas")return "Nicolás";
   if(person==="Daniel")return "Daniel";
-  if(person==="shared"||person==="Compartida")return "Compartida";
-  if(person==="Ambos")return "Ambos";
+  if(person==="shared"||person==="Disponible"||person==="Ambos")return "Disponible";
   return person||"—";
 }
 function personColor(person){
   if(person==="Daniel")return "var(--d)";
   if(person==="Nicolas")return "var(--n)";
-  if(person==="Ambos"||person==="shared"||person==="Compartida")return "#fbbf24";
+  if(person==="Ambos"||person==="shared"||person==="Disponible"||person==="Disponible")return "#fbbf24";
   return "#f9a8d4";
 }
 function fmtPts(n){ return Number.isInteger(n)?String(n):Number(n).toFixed(1).replace(/\.0$/,""); }
@@ -1439,10 +1451,50 @@ function deleteKey(k){
   _tombstones[k]=Date.now();
 }
 function makeStamp(){
-  const d=NOW;
+  const d=getNow();
   const hh=String(d.getHours()).padStart(2,"0");
   const mm=String(d.getMinutes()).padStart(2,"0");
   return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${hh}:${mm}`;
+}
+function completedAtKey(k){return "td26_time_"+k;}
+function setCompletedAt(k,iso){if(!k)return;const v=iso||getNow().toISOString();dbCache[completedAtKey(k)]=v;localStorage.setItem(completedAtKey(k),v);delete _tombstones[completedAtKey(k)];}
+function getCompletedAt(k){return dbCache[completedAtKey(k)]||localStorage.getItem(completedAtKey(k))||null;}
+function clearCompletedAt(k){deleteKey(completedAtKey(k));}
+function periodStartMs(freq,key){const d=dateFromPeriodKey(freq,key);return d&&d.getTime?d.getTime():0;}
+function appStartMs(){return Date.parse(APP_START_DATE+"T00:00:00");}
+function periodIsInRange(freq,key){return periodStartMs(freq,key)>=appStartMs();}
+function stampToMs(stamp){
+  if(!stamp||typeof stamp!=="string")return 0;
+  const parts=stamp.trim().split(/\s+/);
+  if(parts.length<4)return 0;
+  const day=Number(parts[1]);
+  const monTxt=(parts[2]||"").toLowerCase().slice(0,3);
+  const hm=(parts[3]||"00:00").split(":").map(Number);
+  const months=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  const m=months.indexOf(monTxt);
+  if(!day||m<0)return 0;
+  const y=(NOW&&NOW.getFullYear)?NOW.getFullYear():(new Date()).getFullYear();
+  const d=new Date(y,m,day,hm[0]||0,hm[1]||0,0,0);
+  return d.getTime();
+}
+function verifiedAtMs(e){
+  if(e&&e.completedAt){const ms=Date.parse(e.completedAt);if(!isNaN(ms))return ms;}
+  if(e&&e.key){const iso=getCompletedAt(e.key);const ms=Date.parse(iso);if(!isNaN(ms))return ms;}
+  if(e&&e.stamp){const ms=stampToMs(e.stamp);if(ms)return ms;}
+  return periodStartMs(e&&e.task&&e.task.freq,e&&e.period);
+}
+function entryDoneMs(e){return verifiedAtMs(e);}
+function formatVerifiedAt(e){
+  const ms=verifiedAtMs(e);
+  if(ms){
+    const d=new Date(ms);
+    const dd=String(d.getDate()).padStart(2,"0");
+    const mon=MONTHS[d.getMonth()];
+    const hh=String(d.getHours()).padStart(2,"0");
+    const mm=String(d.getMinutes()).padStart(2,"0");
+    return `${DAYS[d.getDay()]} ${dd} ${mon} ${d.getFullYear()} · ${hh}:${mm}`;
+  }
+  return e&&e.stamp?e.stamp:"—";
 }
 
 // ═══ PERIOD KEY LABELS ═══
@@ -1535,7 +1587,7 @@ function cardHTML(t){
   const photo=photoCache[k]||localStorage.getItem("td26_photo_"+k);
   const ckCls=done?(isDan?"ck-d":(isNic?"ck-n":"ck-shared")):"";
   const locked=!canUserModify(t);
-  const personLabel=isShared?(actor?`Hecha por ${displayPersonName(actor)}`:"Compartida"):(displayPersonName(ep)+(t.person==="rotate"?" · rota":""));
+  const personLabel=isShared?(actor?`Hecha por ${displayPersonName(actor)}`:"Disponible"):(displayPersonName(ep)+(t.person==="rotate"?" · rota":""));
   const personCls=isShared&&!actor?"tc-plbl-shared":(isDan?"tc-plbl-d":(isNic?"tc-plbl-n":"tc-plbl-shared"));
   const dotCls=isShared&&!actor?"tc-pdot-shared":(isDan?"tc-pdot-d":(isNic?"tc-pdot-n":"tc-pdot-shared"));
 
@@ -1689,10 +1741,12 @@ function toggleTask(id){
     if(wasDone){
       const stampBak=dbCache[k];const actorBak=t.person==="shared"?getSharedActorById(id,period):null;
       const photoBak=photoCache[k]||localStorage.getItem("td26_photo_"+k);
-      deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);if(t.person==="shared")clearSharedActorById(id,period);
+      const timeBak=getCompletedAt(k);
+      deleteKey(k);clearCompletedAt(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);if(t.person==="shared")clearSharedActorById(id,period);
       render();schedulePush();
       showToast("↩ Tarea desmarcada",function(){
         dbCache[k]=stampBak;localStorage.setItem(k,stampBak);delete _tombstones[k];
+        if(timeBak)setCompletedAt(k,timeBak);
         if(actorBak)setSharedActorById(id,period,actorBak);
         if(photoBak){photoCache[k]=photoBak;try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){}}
         render();schedulePush();
@@ -1700,7 +1754,7 @@ function toggleTask(id){
     }else{
       if(t.person==="shared"&&!getCurrentUser()){
         const m=$("identity-modal");if(m)m.style.display="flex";
-        showToast("👤 Elige Daniel o Nicolás antes de verificar una tarea compartida");return;
+        showToast("👤 Elige Daniel o Nicolás antes de verificar esta tarea");return;
       }
       openCamera(id);
     }
@@ -1784,17 +1838,17 @@ function storeLocalPhoto(k,dataUrl){
 }
 function autoConfirmPhoto(tid,dataUrl){
   if(!tid||!dataUrl){showToast("📷 Foto requerida");return;}
-  const stamp=makeStamp();let k=null;
+  const stamp=makeStamp();const completedAt=getNow().toISOString();let k=null;
   if(tid.startsWith("__zoe__")){
     const zid=tid.replace("__zoe__","");const zt=zoeById(zid);if(!zt)return;
-    k="td26_zoe_"+zid+"_"+periodKey(zt.freq,NOW);dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
+    k="td26_zoe_"+zid+"_"+periodKey(zt.freq,NOW);dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];setCompletedAt(k,completedAt);
   } else if(tid.startsWith("__extra__")){
     const xid=tid.replace("__extra__","");const extras=getExtras();const ex=extras.find(e=>e.id===xid);if(!ex)return;
-    ex.done=true;ex.stamp=stamp;saveExtras(extras);k="td26_extra_"+xid+"_"+ex.period;
+    ex.done=true;ex.stamp=stamp;ex.completedAt=completedAt;saveExtras(extras);k="td26_extra_"+xid+"_"+ex.period;
   } else {
     const t=taskById(tid);if(!t)return;const period=periodKey(t.freq,NOW);
     if(t.person==="shared"&&!getCurrentUser()){showToast("👤 Elige usuario antes de verificar");const m=$("identity-modal");if(m)m.style.display="flex";return;}
-    k=sKey(tid,period);dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];
+    k=sKey(tid,period);dbCache[k]=stamp;localStorage.setItem(k,stamp);delete _tombstones[k];setCompletedAt(k,completedAt);
     if(t.person==="shared")setSharedActorById(tid,period,getCurrentUser());
   }
   storeLocalPhoto(k,dataUrl);sessionMarked.add(k);closeCamera();render();
@@ -1856,10 +1910,12 @@ function toggleZoe(id){
     const k=zoeKey(id);const wasDone=!!dbCache[k];
     if(wasDone){
       const stampBak=dbCache[k];const photoBak=photoCache[k]||localStorage.getItem("td26_photo_"+k);
-      deleteKey(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);
+      const timeBak=getCompletedAt(k);
+      deleteKey(k);clearCompletedAt(k);delete photoCache[k];localStorage.removeItem("td26_photo_"+k);
       renderZoeModule();schedulePush();
       showToast("↩ Zoe desmarcada",function(){
         dbCache[k]=stampBak;localStorage.setItem(k,stampBak);delete _tombstones[k];
+        if(timeBak)setCompletedAt(k,timeBak);
         if(photoBak){photoCache[k]=photoBak;try{localStorage.setItem("td26_photo_"+k,photoBak);}catch(e){}}
         renderZoeModule();schedulePush();
       });
@@ -1886,8 +1942,19 @@ function renderZoeModule(){
 // ═══ EXTRAS ═══
 const EXTRAS_KEY="td26_extras";
 function getExtras(){
-  const raw=dbCache[EXTRAS_KEY]||localStorage.getItem(EXTRAS_KEY);
-  if(!raw)return[];try{const p=JSON.parse(raw);return Array.isArray(p)?p:[];}catch(e){return[];}
+  const parseExtras=raw=>{
+    if(!raw)return [];
+    try{const p=JSON.parse(raw);return Array.isArray(p)?p:[];}catch(e){return [];}
+  };
+  const fromCache=parseExtras(dbCache[EXTRAS_KEY]);
+  const fromLocal=parseExtras(localStorage.getItem(EXTRAS_KEY));
+  const map=new Map();
+  [...fromLocal,...fromCache].forEach(e=>{
+    if(!e||!e.id)return;
+    const prev=map.get(e.id)||{};
+    map.set(e.id,{...prev,...e});
+  });
+  return [...map.values()];
 }
 function saveExtras(list){
   const str=JSON.stringify(list);dbCache[EXTRAS_KEY]=str;localStorage.setItem(EXTRAS_KEY,str);schedulePush();
@@ -1931,12 +1998,12 @@ function toggleExtra(id){
   if(user&&ex.person&&ex.person!==user){showToast("🔒 Esta tarea es de "+(ex.person==="Nicolas"?"Nicolás":ex.person));return;}
   const pk="td26_extra_"+id+"_"+ex.period;
   if(ex.done){
-    const stampBak=ex.stamp;const photoBak=photoCache[pk]||localStorage.getItem("td26_photo_"+pk);
-    ex.done=false;ex.stamp=null;delete photoCache[pk];localStorage.removeItem("td26_photo_"+pk);
+    const stampBak=ex.stamp;const completedAtBak=ex.completedAt||null;const photoBak=photoCache[pk]||localStorage.getItem("td26_photo_"+pk);
+    ex.done=false;ex.stamp=null;ex.completedAt=null;delete photoCache[pk];localStorage.removeItem("td26_photo_"+pk);
     saveExtras(extras);render();flashSync();
     showToast("↩ Extra desmarcada",function(){
       const xs=getExtras();const xb=xs.find(e=>e.id===id);if(!xb)return;
-      xb.done=true;xb.stamp=stampBak;saveExtras(xs);
+      xb.done=true;xb.stamp=stampBak;xb.completedAt=completedAtBak;saveExtras(xs);
       if(photoBak){photoCache[pk]=photoBak;try{localStorage.setItem("td26_photo_"+pk,photoBak);}catch(e){}}
       render();flashSync();
     });
@@ -1989,11 +2056,11 @@ function showScoreDetail(person){
   for(const e of extras){if(e.person!==person)continue;const item={icon:e.icon,title:e.title,pts:e.pts,time:e.time,stamp:e.stamp,isExtra:true};if(e.done)donePts.push(item);else pendPts.push(item);}
   const totalDone=donePts.reduce((s,t)=>s+t.pts,0);const assignedPend=pendPts.reduce((s,t)=>s+t.pts,0);const sharedAvailable=availableShared.reduce((s,t)=>s+t.pts,0);const totalPossible=totalDone+assignedPend+sharedAvailable;const pct=totalPossible?Math.round(totalDone/totalPossible*100):0;
   const color=person==="Daniel"?"var(--d)":"var(--n)";const displayName=displayPersonName(person);const tabLabels={hoy:"Hoy",semana:"Esta semana",mes:"Este mes",trimestre:"Este trimestre",lista:"Lista",historial:"Historial",horario:"Horario",calendario:"Calendario"};const period=tabLabels[activeTab]||"Período";
-  const renderTask=(t,done)=>{const extraB=t.isExtra?`<span class="hist-tag-extra">EXTRA</span>`:"";const sharedB=t.isShared?`<span class="sd-shared-tag">${t.available?"libre":"compartida"}</span>`:"";return `<div class="sd-task ${done?"sd-done":"sd-pend"}"><span class="sd-icon">${t.icon}</span><div class="sd-info"><div class="sd-title">${t.title} ${extraB}${sharedB}</div>${t.stamp?`<div class="sd-stamp">✓ ${t.stamp}</div>`:`<div class="sd-stamp sd-pend-text">${t.available?"Disponible para quien la verifique":"Pendiente"} · ${t.time} min</div>`}</div><div class="sd-pts" style="color:${done?color:'var(--t3)'}">${done?'+':''}${fmtPts(t.pts)}</div></div>`;};
-  let content=`<div class="sd-head-pill"><div class="sd-head-left"><div class="sd-person-row"><span class="sd-person-dot" style="background:${color}"></span><span class="sd-person-name">${displayName}</span></div><div class="sd-period-tag">${period.toUpperCase()}</div></div><button class="sd-close" onclick="hideScoreDetail()" aria-label="Cerrar">✕</button></div><div class="sd-hero"><div class="sd-hero-num" style="color:${color}">${fmtPts(totalDone)}<span class="sd-hero-slash">/</span><span class="sd-hero-total">${fmtPts(totalPossible)}</span></div><div class="sd-hero-lbl">PUNTOS GANADOS</div><div class="sd-hero-bar"><div class="sd-hero-bar-fill" style="width:${pct}%;background:${color}"></div></div></div><div class="sd-stats"><div class="sd-stat-card"><div class="sd-stat-num" style="color:${color}">${donePts.length}</div><div class="sd-stat-lbl">Hechas</div></div><div class="sd-stat-card"><div class="sd-stat-num" style="color:var(--t1)">${pendPts.length}</div><div class="sd-stat-lbl">Propias pendientes</div></div><div class="sd-stat-card"><div class="sd-stat-num" style="color:#fbbf24">${availableShared.length}</div><div class="sd-stat-lbl">Compartidas libres</div></div></div>`;
+  const renderTask=(t,done)=>{const extraB=t.isExtra?`<span class="hist-tag-extra">EXTRA</span>`:"";return `<div class="sd-task ${done?"sd-done":"sd-pend"}"><span class="sd-icon">${t.icon}</span><div class="sd-info"><div class="sd-title">${t.title} ${extraB}</div>${t.stamp?`<div class="sd-stamp">✓ ${t.stamp}</div>`:`<div class="sd-stamp sd-pend-text">${t.available?"Disponible para verificar":"Pendiente"} · ${t.time} min</div>`}</div><div class="sd-pts" style="color:${done?color:'var(--t3)'}">${done?'+':''}${fmtPts(t.pts)}</div></div>`;};
+  let content=`<div class="sd-head-pill"><div class="sd-head-left"><div class="sd-person-row"><span class="sd-person-dot" style="background:${color}"></span><span class="sd-person-name">${displayName}</span></div><div class="sd-period-tag">${period.toUpperCase()}</div></div><button class="sd-close" onclick="hideScoreDetail()" aria-label="Cerrar">✕</button></div><div class="sd-hero"><div class="sd-hero-num" style="color:${color}">${fmtPts(totalDone)}<span class="sd-hero-slash">/</span><span class="sd-hero-total">${fmtPts(totalPossible)}</span></div><div class="sd-hero-lbl">PUNTOS GANADOS</div><div class="sd-hero-bar"><div class="sd-hero-bar-fill" style="width:${pct}%;background:${color}"></div></div></div><div class="sd-stats"><div class="sd-stat-card"><div class="sd-stat-num" style="color:${color}">${donePts.length}</div><div class="sd-stat-lbl">Hechas</div></div><div class="sd-stat-card"><div class="sd-stat-num" style="color:var(--t1)">${pendPts.length}</div><div class="sd-stat-lbl">Propias pendientes</div></div><div class="sd-stat-card"><div class="sd-stat-num" style="color:#fbbf24">${availableShared.length}</div><div class="sd-stat-lbl">Disponibles</div></div></div>`;
   if(donePts.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:${color}">✓</span><span class="sd-sec-title">TAREAS HECHAS</span><span class="sd-sec-pts" style="color:${color}">+${fmtPts(totalDone)}</span></div>${donePts.map(t=>renderTask(t,true)).join("")}</div>`;
   if(pendPts.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:rgba(255,255,255,.10);color:var(--t2)">○</span><span class="sd-sec-title">TAREAS PROPIAS PENDIENTES</span><span class="sd-sec-pts" style="color:var(--t2)">${fmtPts(assignedPend)}</span></div>${pendPts.map(t=>renderTask(t,false)).join("")}</div>`;
-  if(availableShared.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:#fbbf24">↔</span><span class="sd-sec-title">COMPARTIDAS DISPONIBLES</span><span class="sd-sec-pts" style="color:#fbbf24">${fmtPts(sharedAvailable)}</span></div>${availableShared.map(t=>renderTask(t,false)).join("")}</div>`;
+  if(availableShared.length)content+=`<div class="sd-section"><div class="sd-sec-hdr"><span class="sd-sec-badge" style="background:#fbbf24">↔</span><span class="sd-sec-title">TAREAS DISPONIBLES</span><span class="sd-sec-pts" style="color:#fbbf24">${fmtPts(sharedAvailable)}</span></div>${availableShared.map(t=>renderTask(t,false)).join("")}</div>`;
   if(!donePts.length&&!pendPts.length&&!availableShared.length)content+=`<div class="sd-empty">Sin tareas para este período.</div>`;
   $("score-detail-body").innerHTML=content;$("score-detail-modal").style.display="flex";
 }
@@ -2002,82 +2069,110 @@ function hideScoreDetail(){const m=$("score-detail-modal");if(m)m.style.display=
 // ═══ HISTORIAL ═══
 function histView(){
   const entries=[];
+  const addEntry=e=>{if(e&&e.task&&e.period&&periodIsInRange(e.task.freq,e.period))entries.push(e);};
+
+  // Tareas normales verificadas
   for(const[k,stamp] of Object.entries(dbCache)){
-    if(!k.startsWith("td26_")||k.startsWith("td26_actor_")||k.startsWith("td26_zoe_")||k.startsWith("td26_stock_")||k===EXTRAS_KEY||!stamp||typeof stamp!=="string")continue;
+    if(!k.startsWith("td26_")||k.startsWith("td26_actor_")||k.startsWith("td26_time_")||k.startsWith("td26_zoe_")||k.startsWith("td26_stock_")||k===EXTRAS_KEY||!stamp||typeof stamp!=="string")continue;
     const inner=k.replace("td26_","");let taskId=null,period=null;
     for(const t of TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
-    if(!taskId)continue;const task=taskById(taskId);if(period<APP_START_DATE)continue;
+    if(!taskId)continue;
+    const task=taskById(taskId);if(!task)continue;
     const actor=task.person==="shared"?getSharedActorById(task.id,period):effectivePersonAt(task,period);
-    entries.push({task,period,stamp,key:k,actor,missed:false,isZoe:false,isExtra:false});
+    addEntry({task,period,stamp,key:k,actor,missed:false,isZoe:false,isExtra:false,completedAt:getCompletedAt(k)});
   }
+
+  // Tareas normales no realizadas en períodos ya generados
   const freqs=["diaria","semanal","mensual","trimestral"];
   for(const t of TASKS){
     if(!freqs.includes(t.freq))continue;
     for(const pk of pastPeriodKeys(t.freq,LOOK_BACK[t.freq])){
-      if(pk<APP_START_DATE)continue;const k=sKey(t.id,pk);
-      if(!dbCache[k]&&!dbCache[k.replace(/[.#$\[\]]/g,"_")])entries.push({task:t,period:pk,stamp:null,key:k,missed:true,isZoe:false,isExtra:false});
+      if(!periodIsInRange(t.freq,pk))continue;
+      const k=sKey(t.id,pk);
+      if(!dbCache[k]&&!dbCache[k.replace(/[.#$\[\]]/g,"_")]){
+        addEntry({task:t,period:pk,stamp:null,key:k,actor:null,missed:true,isZoe:false,isExtra:false,completedAt:null});
+      }
     }
   }
-  const extras=getExtras();
-  for(const e of extras){
-    if(e.period<APP_START_DATE)continue;
-    const fakeTask={id:e.id,icon:e.icon,title:e.title,freq:e.freq,person:e.person,pts:e.pts,time:e.time};
-    entries.push({task:fakeTask,period:e.period,stamp:e.stamp,key:e.id,missed:!e.done,isZoe:false,isExtra:true});
+
+  // Tareas manuales / extras: realizadas y no realizadas
+  for(const e of getExtras()){
+    if(!e||!e.id)continue;
+    const freq=e.freq||"diaria";
+    const created=new Date(e.createdAt||Date.now());
+    const period=e.period||periodKey(freq,created);
+    const fakeTask={id:e.id,icon:e.icon||"📌",title:e.title||"Tarea extra",freq,person:e.person||"Daniel",pts:e.pts||1,time:e.time||5};
+    addEntry({task:fakeTask,period,stamp:e.stamp||null,key:"td26_extra_"+e.id+"_"+period,actor:e.person||fakeTask.person,missed:!e.done,isZoe:false,isExtra:true,completedAt:e.completedAt||null,createdAt:e.createdAt||0});
   }
+
+  // Zoe realizadas: se muestran con la persona a cargo del período
   for(const[k,stamp] of Object.entries(dbCache)){
     if(!k.startsWith("td26_zoe_")||!stamp||typeof stamp!=="string")continue;
     const inner=k.replace("td26_zoe_","");let taskId=null,period=null;
     for(const t of ZOE_TASKS){if(inner.startsWith(t.id+"_")){taskId=t.id;period=inner.slice(t.id.length+1);break;}}
-    if(!taskId)continue;const task={...zoeById(taskId),person:"Zoe"};
-    if(period<APP_START_DATE)continue;
-    entries.push({task,period,stamp,key:k,missed:false,isZoe:true,isExtra:false});
+    if(!taskId)continue;
+    const task={...zoeById(taskId),person:"Zoe"};
+    addEntry({task,period,stamp,key:k,actor:zoeOwnerForPeriod(period,task.freq),missed:false,isZoe:true,isExtra:false,completedAt:getCompletedAt(k)});
   }
+
   if(!entries.length)return `<div class="hist-empty">Sin historial todavía.<br>Marca tu primera tarea ✅</div>`;
-  const sortK=e=>(e.stamp?"2_"+e.period+"_"+e.stamp:"1_"+e.period);
-  entries.sort((a,b)=>sortK(b).localeCompare(sortK(a)));
-  const getPerson=e=>{if(e.actor)return e.actor;if(e.isZoe)return zoeOwnerForPeriod(e.period,e.task.freq);if(e.isExtra)return e.task.person;const ep=effectivePersonAt(e.task,e.period);return ep==="shared"?"Ambos":ep;};
+
+  const getPerson=e=>{
+    if(e.actor)return e.actor;
+    if(e.isZoe)return zoeOwnerForPeriod(e.period,e.task.freq);
+    if(e.isExtra)return e.task.person;
+    const ep=effectivePersonAt(e.task,e.period);
+    return ep==="shared"?"Disponible":ep;
+  };
+  const matchesFilter=e=>{
+    const p=getPerson(e);
+    if(histFilter==="daniel")return p==="Daniel";
+    if(histFilter==="nicolas")return p==="Nicolas";
+    if(histFilter==="missed")return e.missed;
+    return true;
+  };
+  const doneSort=(a,b)=>entryDoneMs(b)-entryDoneMs(a);
+  const pendingSort=(a,b)=>periodStartMs(b.task.freq,b.period)-periodStartMs(a.task.freq,a.period);
+  const visible=entries.filter(matchesFilter);
+  const doneEntries=visible.filter(e=>!e.missed).sort(doneSort);
+  const missedEntries=visible.filter(e=>e.missed).sort(pendingSort);
+
   let html=`<div class="hist-filter">
     <button class="hf-btn ${histFilter==="todo"?"on":""}" onclick="setHistFilter('todo')">Todos</button>
     <button class="hf-btn ${histFilter==="daniel"?"on":""}" onclick="setHistFilter('daniel')"><span style="color:var(--d)">●</span> Daniel</button>
     <button class="hf-btn ${histFilter==="nicolas"?"on":""}" onclick="setHistFilter('nicolas')"><span style="color:var(--n)">●</span> Nicolás</button>
     <button class="hf-btn ${histFilter==="missed"?"on":""}" onclick="setHistFilter('missed')">⚠️ No cumplidas</button>
   </div>`;
+
+  const filterLabel=histFilter==="daniel"?"Daniel":(histFilter==="nicolas"?"Nicolás":(histFilter==="missed"?"No cumplidas":"Daniel y Nicolás"));
+  const totalPts=doneEntries.reduce((s,e)=>s+(Number(e.task.pts)||0),0);
+  html+=`<div class="hist-person-header hist-global-head"><div class="hist-person-title"><span style="color:var(--d)">●</span><span style="color:var(--n)">●</span> Bitácora · ${filterLabel}</div><div class="hist-person-stats"><span>✅ ${doneEntries.length}</span><span>⚠️ ${missedEntries.length}</span><span style="color:var(--d);font-weight:700">★ ${fmtPts(totalPts)}</span></div></div>`;
+
   const renderEntry=e=>{
     const person=getPerson(e);const isDan=person==="Daniel";const isNic=person==="Nicolas";
-    const pc=isDan?"var(--d)":(isNic?"var(--n)":(person==="Ambos"?"#fbbf24":"#f9a8d4"));
-    const pLabel=isNic?"Nicolás":person;const dateStr=e.stamp||periodKeyLabel(e.task.freq,e.period);
-    const extraBadge=e.isExtra?`<span class="hist-tag-extra">EXTRA</span>`:"";;
-    const zoeBadge=e.isZoe?`<span class="hist-tag-zoe">🐱</span>`:"";;
-    if(e.missed)return `<div class="hist-item hi-miss"><div class="hist-status-pill status-missed">✕</div><span class="hist-icon">${e.task.icon}</span><div class="hist-info"><div class="hist-title" style="color:rgba(240,240,248,.55)">${e.task.title} ${extraBadge}${zoeBadge}</div><div class="hist-meta"><span style="color:${pc};font-weight:700">${pLabel}</span><span>·</span><span>${periodKeyLabel(e.task.freq,e.period)}</span><span>·</span><span>★ ${e.task.pts}</span></div></div></div>`;
-    return `<div class="hist-item ${isDan?"hi-d":(isNic?"hi-n":"hi-zoe")}"><div class="hist-status-pill status-done" style="background:${pc}">✓</div><span class="hist-icon">${e.task.icon}</span><div class="hist-info"><div class="hist-title">${e.task.title} ${extraBadge}${zoeBadge}</div><div class="hist-meta"><span style="color:${pc};font-weight:700">${pLabel}</span><span>·</span><span>${dateStr}</span><span>·</span><span>★ ${e.task.pts}</span></div></div></div>`;
-  };
-  const renderPersonSection=(name,color,items)=>{
-    const doneE=items.filter(e=>!e.missed);const missedE=items.filter(e=>e.missed);
-    const pts=doneE.reduce((s,e)=>s+e.task.pts,0);const dn=name==="Nicolas"?"Nicolás":name;
-    let out=`<div class="hist-person-header" style="border-color:${color}33"><div class="hist-person-title"><span style="color:${color}">●</span> ${dn}</div><div class="hist-person-stats"><span>✅ ${doneE.length}</span><span>⚠️ ${missedE.length}</span><span style="color:${color};font-weight:700">★ ${pts}</span></div></div>`;
-    if(!items.length){out+=`<div class="hist-empty-sub">Sin actividad</div>`;return out;}
-    if(doneE.length)out+=`<div class="hist-subcat"><div class="hist-subcat-hdr"><span class="hist-subcat-icon" style="background:${color}">✓</span><span class="hist-subcat-title">Cumplidas</span><span class="hist-subcat-count">${doneE.length}</span></div><div class="hist-entries">${doneE.map(renderEntry).join("")}</div></div>`;
-    if(missedE.length)out+=`<div class="hist-subcat"><div class="hist-subcat-hdr"><span class="hist-subcat-icon" style="background:rgba(248,113,113,.2);color:var(--err)">✕</span><span class="hist-subcat-title">No cumplidas</span><span class="hist-subcat-count">${missedE.length}</span></div><div class="hist-entries">${missedE.map(renderEntry).join("")}</div></div>`;
-    return out;
-  };
-  if(histFilter==="missed"){
-    const miss=entries.filter(e=>e.missed);
-    if(!miss.length){html+=`<div class="hist-empty-sub">🎉 ¡Todo cumplido!</div>`;}
-    else{
-      html+=renderPersonSection("Daniel","var(--d)",miss.filter(e=>{const p=getPerson(e);return p==="Daniel"||(!e.stamp&&p==="Ambos");}));
-      html+=`<div style="height:20px"></div>`;
-      html+=renderPersonSection("Nicolas","var(--n)",miss.filter(e=>{const p=getPerson(e);return p==="Nicolas"||(!e.stamp&&p==="Ambos");}));
+    const pc=personColor(person);const pLabel=displayPersonName(person);
+    const extraBadge=e.isExtra?`<span class="hist-tag-extra">MANUAL</span>`:"";
+    const zoeBadge=e.isZoe?`<span class="hist-tag-zoe">🐱 Zoe</span>`:"";
+    const baseTitle=`${e.task.title} ${extraBadge}${zoeBadge}`;
+    if(e.missed){
+      const dueStr=periodKeyLabel(e.task.freq,e.period);
+      return `<div class="hist-item hi-miss"><div class="hist-status-pill status-missed">✕</div><span class="hist-icon">${e.task.icon}</span><div class="hist-info"><div class="hist-title" style="color:rgba(240,240,248,.58)">${baseTitle}</div><div class="hist-meta"><span style="color:${pc};font-weight:700">${pLabel}</span><span>·</span><span>Programada: ${dueStr}</span><span>·</span><span>★ ${fmtPts(e.task.pts)}</span></div></div></div>`;
     }
+    const verifiedStr=formatVerifiedAt(e);
+    const taskDateStr=periodKeyLabel(e.task.freq,e.period);
+    return `<div class="hist-item ${isDan?"hi-d":(isNic?"hi-n":"hi-zoe")}"><div class="hist-status-pill status-done" style="background:${pc}">✓</div><span class="hist-icon">${e.task.icon}</span><div class="hist-info"><div class="hist-title">${baseTitle}</div><div class="hist-meta"><span style="color:${pc};font-weight:700">${pLabel}</span><span>·</span><span>Verificada: ${verifiedStr}</span><span>·</span><span>Tarea: ${taskDateStr}</span><span>·</span><span>★ ${fmtPts(e.task.pts)}</span></div></div></div>`;
+  };
+
+  const renderBlock=(title,icon,color,list,emptyMsg)=>{
+    return `<div class="hist-subcat hist-block"><div class="hist-subcat-hdr"><span class="hist-subcat-icon" style="background:${color}">${icon}</span><span class="hist-subcat-title">${title}</span><span class="hist-subcat-count">${list.length}</span></div>${list.length?`<div class="hist-entries">${list.map(renderEntry).join("")}</div>`:`<div class="hist-empty-sub">${emptyMsg}</div>`}</div>`;
+  };
+
+  if(histFilter==="missed"){
+    html+=renderBlock("No cumplidas", "✕", "rgba(248,113,113,.2);color:var(--err)", missedEntries, "🎉 No hay tareas incumplidas en el rango revisado");
     return html;
   }
-  if(histFilter==="daniel"||histFilter==="nicolas"){
-    const name=histFilter==="daniel"?"Daniel":"Nicolas";const color=name==="Daniel"?"var(--d)":"var(--n)";
-    html+=renderPersonSection(name,color,entries.filter(e=>{const p=getPerson(e);return p===name||(!e.stamp&&p==="Ambos");}));
-    return html;
-  }
-  html+=renderPersonSection("Daniel","var(--d)",entries.filter(e=>{const p=getPerson(e);return p==="Daniel"||(!e.stamp&&p==="Ambos");}));
-  html+=`<div style="height:20px"></div>`;
-  html+=renderPersonSection("Nicolas","var(--n)",entries.filter(e=>{const p=getPerson(e);return p==="Nicolas"||(!e.stamp&&p==="Ambos");}));
+  html+=renderBlock("Realizadas verificadas · más nuevas primero", "✓", "linear-gradient(135deg,var(--d),var(--n))", doneEntries, "Aún no hay tareas verificadas con foto");
+  html+=renderBlock("No realizadas · separadas", "✕", "rgba(248,113,113,.2);color:var(--err)", missedEntries, "🎉 No hay tareas pendientes/incumplidas en el rango revisado");
   return html;
 }
 function setHistFilter(f){histFilter=f;render();}
@@ -2085,13 +2180,13 @@ function setHistFilter(f){histFilter=f;render();}
 // ═══ LISTA VIEW ═══
 function listView(){
   const order=["diaria","semanal","mensual","trimestral"];
-  let html=`<div class="list-intro"><div class="list-intro-title">Distribución de tareas</div><div class="list-intro-sub">Las tareas compartidas no reparten puntos: quien verifica con foto se lleva el puntaje completo. Daniel mantiene siempre “Regar las plantas”.</div></div>`;
+  let html=`<div class="list-intro"><div class="list-intro-title">Distribución de tareas</div><div class="list-intro-sub">Quien verifica una tarea con foto se lleva el puntaje completo. Daniel mantiene siempre “Regar las plantas”.</div></div>`;
   for(const freq of order){
     const tasks=TASKS.filter(t=>t.freq===freq);if(!tasks.length)continue;
     let danPts=0,nicPts=0,sharedPts=0;
     tasks.forEach(t=>{const ep=effectivePerson(t);if(ep==="Daniel")danPts+=t.pts;else if(ep==="Nicolas")nicPts+=t.pts;else if(ep==="shared")sharedPts+=t.pts;});
     html+=`<div class="list-section"><div class="sec-hdr ${SC[freq].shCls}"><span class="sec-title">${SC[freq].label.toUpperCase()}</span><span class="sec-pgs">Dan ${fmtPts(danPts)} · Nico ${fmtPts(nicPts)} · Libres ${fmtPts(sharedPts)}</span></div><div class="task-matrix">`;
-    for(const t of tasks){const ep=effectivePerson(t);const isShared=ep==="shared";const color=personColor(ep);const pLabel=isShared?"Compartida":displayPersonName(ep);const note=t.id==="d2"?"Fija de Daniel":(t.person==="rotate"?"Rotación automática":(t.dueDay!==undefined?`Cada ${["dom","lun","mar","mié","jue","vie","sáb"][t.dueDay]}`:(isShared?"La toma quien la verifique":"")));html+=`<div class="task-row-card ${isShared?'task-row-shared':''}"><div class="task-row-icon">${t.icon}</div><div class="task-row-main"><div class="task-row-title">${t.title}</div>${note?`<div class="task-row-note">${note}</div>`:""}</div><div class="task-row-person" style="color:${color}">${pLabel}</div><div class="task-row-meta"><span>${t.time} min</span><b>${t.pts} pts</b></div></div>`;}
+    for(const t of tasks){const ep=effectivePerson(t);const isShared=ep==="shared";const color=personColor(ep);const pLabel=isShared?"Disponible":displayPersonName(ep);const note=t.id==="d2"?"Fija de Daniel":(t.person==="rotate"?"Rotación automática":(t.dueDay!==undefined?`Cada ${["dom","lun","mar","mié","jue","vie","sáb"][t.dueDay]}`:(isShared?"La hace quien la verifique":"")));html+=`<div class="task-row-card ${isShared?'task-row-shared':''}"><div class="task-row-icon">${t.icon}</div><div class="task-row-main"><div class="task-row-title">${t.title}</div>${note?`<div class="task-row-note">${note}</div>`:""}</div><div class="task-row-person" style="color:${color}">${pLabel}</div><div class="task-row-meta"><span>${t.time} min</span><b>${t.pts} pts</b></div></div>`;}
     html+=`</div></div>`;
   }
   return html;
@@ -2196,7 +2291,7 @@ function calendarioView(){
     <div class="cal-stats"><div class="cal-stat"><div class="cal-stat-num" style="color:var(--d)">${danT}</div><div class="cal-stat-lbl">Daniel</div></div><div class="cal-stat"><div class="cal-stat-num" style="color:var(--t0)">${active}</div><div class="cal-stat-lbl">Días activos</div></div><div class="cal-stat"><div class="cal-stat-num" style="color:var(--n)">${nicT}</div><div class="cal-stat-lbl">Nicolás</div></div></div>
     <div class="cal-streak"><div class="cal-streak-num">🔥 ${streak}</div><div class="cal-streak-lbl">${streak===1?"día seguido":streak>1?"días seguidos":"Sin racha"}</div></div>
     <div class="cal-grid-card"><div class="cal-dow-row">${dowHtml}</div><div class="cal-days-grid">${days}</div>
-    <div class="cal-legend"><div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--d)"></div>Daniel</div><div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--n)"></div>Nicolás</div><div class="cal-legend-item"><div class="cal-legend-dot" style="background:linear-gradient(135deg,var(--d) 50%,var(--n) 50%)"></div>Ambos</div></div></div>
+    <div class="cal-legend"><div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--d)"></div>Daniel</div><div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--n)"></div>Nicolás</div><div class="cal-legend-item"><div class="cal-legend-dot" style="background:linear-gradient(135deg,var(--d) 50%,var(--n) 50%)"></div>Daniel + Nico</div></div></div>
     <div id="cal-day-detail" class="cal-day-detail"><div class="cal-day-detail-empty"><div class="cdd-pointer-anim">👆</div><div>Toca un día para ver sus tareas</div></div></div>
   </div>`;
 }
@@ -2237,13 +2332,16 @@ function showCalDay(dateStr){
   }
   // Extras
   for(const e of getExtras()){
-    let applies=false;
-    if(e.freq==="diaria"&&e.period===dateStr)applies=true;
-    else if(e.freq==="semanal"&&e.period===wK)applies=true;
-    if(!applies)continue;
-    if(e.done)done.push({task:{icon:e.icon,title:e.title,person:e.person,pts:e.pts},stamp:e.stamp,isExtra:true});
-    else{if(dt<today)missed.push({task:{icon:e.icon,title:e.title,person:e.person,pts:e.pts},isExtra:true});
-    else if(dt.getTime()===today.getTime())pending.push({task:{icon:e.icon,title:e.title,person:e.person,pts:e.pts},isExtra:true});}
+    if(!e||!e.id)continue;
+    const freq=e.freq||"diaria";
+    const created=new Date(e.createdAt||Date.now());
+    const ePeriod=e.period||periodKey(freq,created);
+    const expected=periodKey(freq,dt);
+    if(ePeriod!==expected)continue;
+    const extraTask={icon:e.icon||"📌",title:e.title||"Tarea extra",person:e.person||"Daniel",pts:e.pts||1,freq};
+    if(e.done)done.push({task:extraTask,stamp:e.stamp,isExtra:true});
+    else{if(dt<today)missed.push({task:extraTask,isExtra:true});
+    else if(dt.getTime()===today.getTime())pending.push({task:extraTask,isExtra:true});}
   }
   // Render
   function prettyDate(s){const[y2,m2,d2]=s.split("-").map(Number);const dt2=new Date(y2,m2-1,d2);return `${DAYS[dt2.getDay()]} ${d2} de ${MONTHS[m2-1]}`;}
@@ -2251,11 +2349,11 @@ function showCalDay(dateStr){
     if(e.isZoe)return zoeOwnerForPeriod(periodKey(e.task.freq,dt),e.task.freq);
     if(!e.task.freq)return e.task.person||"";
     if(e.actor)return e.actor;
-    if(e.task.person==="shared")return "Ambos";
+    if(e.task.person==="shared")return "Disponible";
     if(e.task.person==="rotate")return effectivePersonAt(e.task,periodKey(e.task.freq,dt));
     return e.task.person;
   };
-  const byPerson=(list,person)=>list.filter(e=>{const p=getDayEntryPerson(e);return p===person||p==="Ambos";});
+  const byPerson=(list,person)=>list.filter(e=>getDayEntryPerson(e)===person);
   const renderItem=(e,cls)=>{
     const p=getDayEntryPerson(e);
     const isDan=p==="Daniel";const color=isDan?"var(--d)":(p==="Nicolas"?"var(--n)":"#fbbf24");
