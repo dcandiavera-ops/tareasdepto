@@ -1262,7 +1262,7 @@ button{touch-action:manipulation;}
       <div class="pipette-modal-sub">Fecha, marca y precio de la aplicación realizada a Zoe.</div>
     </div>
 
-    <form id="pipette-form" class="pipette-form" onsubmit="return savePipetteRecord(event)" novalidate>
+    <form id="pipette-form" class="pipette-form" onsubmit="return savePipetteRecord(event)" novalidate autocomplete="off">
       <div class="pipette-field">
         <label class="pipette-field-label" for="pipette-date">📅 Fecha de aplicación</label>
         <input class="pipette-input" type="date" id="pipette-date" required/>
@@ -1286,7 +1286,7 @@ button{touch-action:manipulation;}
 
     <div class="pipette-actions">
       <button type="button" class="pipette-action-btn pipette-btn-cancel" onclick="hidePipetteModal()">Cancelar</button>
-      <button type="submit" form="pipette-form" id="pipette-save-btn" class="pipette-action-btn pipette-btn-save">Guardar</button>
+      <button type="button" id="pipette-save-btn" class="pipette-action-btn pipette-btn-save" onclick="savePipetteRecord(event)">Guardar</button>
     </div>
   </div>
 </div>
@@ -2573,6 +2573,7 @@ function deleteStockPurchase(id,idx){
   const list=getStockList(id);list.splice(idx,1);saveStockList(id,list);showToast("🗑️ Eliminada");
 }
 function formatCLP(n){if(n==null||isNaN(n))return "—";return "$"+Math.round(n).toLocaleString("es-CL");}
+function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));}
 function formatShortDate(s){if(!s)return "—";const d=new Date(s+"T00:00:00");return d.toLocaleDateString("es-CL",{day:"2-digit",month:"short"});}
 
 function renderStockSection(){
@@ -2618,11 +2619,12 @@ function getPipetteList(){
   try{const p=JSON.parse(raw);return Array.isArray(p)?p:[];}catch(e){return[];}
 }
 function savePipetteList(list){
-  const str=JSON.stringify(list);
+  const safeList=Array.isArray(list)?list:[];
+  const str=JSON.stringify(safeList);
   dbCache[PIPETTE_KEY]=str;
-  localStorage.setItem(PIPETTE_KEY,str);
-  schedulePush();
-  renderPipetteSection();
+  try{localStorage.setItem(PIPETTE_KEY,str);}catch(e){console.warn("No se pudo guardar pipeta en localStorage",e);throw e;}
+  try{schedulePush();}catch(e){console.warn("Sync de pipeta omitido temporalmente",e);}
+  try{renderPipetteSection();}catch(e){console.warn("Render pipeta omitido temporalmente",e);}
 }
 function openPipetteModal(){
   const today=fmtDate(getNow());
@@ -2647,9 +2649,11 @@ function hidePipetteModal(){
 }
 function savePipetteRecord(ev){
   if(ev){ev.preventDefault();ev.stopPropagation();}
+  const saveBtn=$("pipette-save-btn");
+  if(saveBtn&&saveBtn.disabled)return false;
   try{
     if(document.activeElement&&typeof document.activeElement.blur==="function")document.activeElement.blur();
-    const dateEl=$("pipette-date"), brandEl=$("pipette-brand"), priceEl=$("pipette-price"), notesEl=$("pipette-notes"), saveBtn=$("pipette-save-btn");
+    const dateEl=$("pipette-date"), brandEl=$("pipette-brand"), priceEl=$("pipette-price"), notesEl=$("pipette-notes");
     const date=dateEl?(dateEl.value||"").trim():"";
     const brand=brandEl?(brandEl.value||"").trim():"";
     const priceStr=priceEl?(priceEl.value||"").trim():"";
@@ -2683,7 +2687,7 @@ function savePipetteRecord(ev){
   }
 }
 window.savePipetteRecord=savePipetteRecord;
-document.addEventListener("DOMContentLoaded",()=>{const btn=$("pipette-save-btn");if(btn){btn.addEventListener("click",e=>{const form=$("pipette-form");if(form&&typeof form.requestSubmit==="function"){return;}savePipetteRecord(e);});}});
+document.addEventListener("DOMContentLoaded",()=>{const form=$("pipette-form");if(form){form.addEventListener("submit",savePipetteRecord);}});
 function deletePipetteRecord(id){
   if(!confirm("¿Eliminar registro de pipeta?"))return;
   const list=getPipetteList().filter(r=>r.id!==id);
