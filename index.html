@@ -649,7 +649,7 @@ body{
 .pipette-item-title{font-size:12px;font-weight:800;color:var(--t0);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pipette-item-meta{display:flex;gap:7px;flex-wrap:wrap;font-size:10.5px;color:var(--t2)}
 .pipette-item-notes{font-size:10.5px;color:var(--t3);margin-top:3px;line-height:1.35}
-.pipette-del{width:28px;height:28px;border-radius:50%;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.22);color:var(--err);cursor:pointer;flex-shrink:0;font-size:11px;font-weight:900;-webkit-tap-highlight-color:transparent}
+.pipette-del{width:40px;height:40px;min-width:40px;min-height:40px;border-radius:50%;background:rgba(248,113,113,.10);border:1px solid rgba(248,113,113,.30);color:var(--err);cursor:pointer;flex-shrink:0;font-size:16px;font-weight:900;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;position:relative;z-index:3;touch-action:manipulation}
 @media(max-width:380px){.zoe-pipette-head{flex-direction:column}.pipette-add-btn{width:100%}.pipette-last-top{align-items:flex-start}.pipette-last-price{margin-top:2px}}
 
 
@@ -2613,6 +2613,7 @@ function renderStockSection(){
 
 // ═══ PIPETA ANTIPULGAS ZOE ═══
 const PIPETTE_KEY="td26_zoe_pipette_records";
+const PIPETTE_DELETED_KEY="td26_zoe_pipette_deleted_keys";
 let _pipetteCleanupQueued=false;
 let _pipetteSaving=false;
 
@@ -2668,6 +2669,54 @@ function pipetteDedupeKey(r){
   // Limpieza profunda: fecha + marca + precio. La nota no diferencia registros.
   return [normalizePipetteDateKey(n.date),normalizePipetteLoose(n.brand),n.price??""].join("|");
 }
+function getPipetteDeletedKeys(){
+  let raw="";
+  try{raw=dbCache[PIPETTE_DELETED_KEY]||localStorage.getItem(PIPETTE_DELETED_KEY)||"";}catch(e){raw=dbCache[PIPETTE_DELETED_KEY]||"";}
+  if(!raw)return new Set();
+  try{
+    const parsed=JSON.parse(raw);
+    if(Array.isArray(parsed))return new Set(parsed.map(normalizePipetteText).filter(Boolean));
+  }catch(e){console.warn("Lista de pipetas eliminadas corrupta, se reinicia",e);}
+  return new Set();
+}
+function savePipetteDeletedKeys(set,{push=true}={}){
+  const arr=Array.from(set||[]).map(normalizePipetteText).filter(Boolean);
+  const str=JSON.stringify(Array.from(new Set(arr)));
+  dbCache[PIPETTE_DELETED_KEY]=str;
+  try{localStorage.setItem(PIPETTE_DELETED_KEY,str);}catch(e){console.warn("No se pudo guardar borrados de pipeta",e);}
+  if(push){try{schedulePush();}catch(e){console.warn("Sync borrados pipeta omitido",e);}}
+  return new Set(arr);
+}
+function markPipetteDeleted(rec){
+  const deleted=getPipetteDeletedKeys();
+  if(rec){
+    deleted.add(pipetteDedupeKey(rec));
+    if(rec.id)deleted.add(normalizePipetteText(rec.id));
+  }
+  savePipetteDeletedKeys(deleted,{push:false});
+  return deleted;
+}
+function unmarkPipetteDeletedFor(rec){
+  const deleted=getPipetteDeletedKeys();
+  if(rec){
+    deleted.delete(pipetteDedupeKey(rec));
+    if(rec.id)deleted.delete(normalizePipetteText(rec.id));
+  }
+  savePipetteDeletedKeys(deleted,{push:false});
+  return deleted;
+}
+function filterDeletedPipetteList(list){
+  const arr=Array.isArray(list)?list:[];
+  const deleted=getPipetteDeletedKeys();
+  if(!deleted.size)return arr;
+  return arr.filter(r=>{
+    if(!r)return false;
+    const id=normalizePipetteText(r.id);
+    const key=pipetteDedupeKey(r);
+    return !deleted.has(id)&&!deleted.has(key);
+  });
+}
+
 function choosePipetteRecordToKeep(prev,rec){
   if(!prev)return rec;
   const prevTime=new Date(prev.createdAt||prev.updatedAt||0).getTime()||0;
@@ -2690,12 +2739,60 @@ function dedupePipetteList(list){
     const key=pipetteDedupeKey(rec);
     map.set(key,choosePipetteRecordToKeep(map.get(key),rec));
   }
-  return Array.from(map.values()).sort((a,b)=>{
+  return filterDeletedPipetteList(Array.from(map.values())).sort((a,b)=>{
     const byDate=new Date((b.date||"")+"T23:59:59")-new Date((a.date||"")+"T23:59:59");
     if(byDate!==0)return byDate;
     return new Date(b.createdAt||0)-new Date(a.createdAt||0);
   });
 }
+
+function persistPipetteList(list,{push=true,render=false}={}){
+  const clean=dedupePipetteList(Array.isArray(list)?list:[]);
+  const str=JSON.stringify(clean);
+  dbCache[PIPETTE_KEY]=str;
+  try{
+    localStorage.setItem(PIPETTE_KEY,str);
+  }catch(e){
+    console.warn("No se pudo guardar pipeta en localStorage",e);
+  }
+  if(push){
+    try{schedulePush();}catch(e){console.warn("Sync de pipeta omitido temporalmente",e);}
+  }
+  if(render){
+    try{renderPipetteSection();}catch(e){console.warn("Render pipeta omitido temporalmente",e);}
+  }
+  return clean;
+}
+function queuePipetteCleanup(){
+  if(_pipetteCleanupQueued)return;
+  _pipetteCleanupQueued=true;
+  setTimeout(()=>{
+    _pipetteCleanupQueued=false;
+    try{persistPipetteList(getPipetteList(),{push:true,render:true});}catch(e){console.warn("Limpieza de pipeta omitida",e);}
+  },250);
+}
+function getPipetteList(){
+  let raw="";
+  try{raw=dbCache[PIPETTE_KEY]||localStorage.getItem(PIPETTE_KEY)||"";}catch(e){raw=dbCache[PIPETTE_KEY]||"";}
+  if(!raw)return [];
+  let parsed=[];
+  try{
+    const p=JSON.parse(raw);
+    parsed=Array.isArray(p)?p:[];
+  }catch(e){
+    console.warn("Registro de pipetas corrupto, se reinicia lista local",e);
+    parsed=[];
+  }
+  const clean=dedupePipetteList(parsed);
+  const cleanStr=JSON.stringify(clean);
+  if(clean.length!==parsed.length||cleanStr!==JSON.stringify(parsed)){
+    dbCache[PIPETTE_KEY]=cleanStr;
+    try{localStorage.setItem(PIPETTE_KEY,cleanStr);}catch(e){console.warn("No se pudo limpiar duplicados de pipeta",e);}
+    queuePipetteCleanup();
+  }
+  return clean;
+}
+
 function cleanPipetteStorageNow({push=true,render=false}={}){
   let parsed=[];
   const raw=dbCache[PIPETTE_KEY]||localStorage.getItem(PIPETTE_KEY);
@@ -2757,6 +2854,7 @@ function savePipetteRecord(ev){
       createdAt:now.toISOString(),
       updatedAt:now.toISOString()
     });
+    unmarkPipetteDeletedFor(newRecord);
     const list=getPipetteList();
     const key=pipetteDedupeKey(newRecord);
     const existingIndex=list.findIndex(r=>pipetteDedupeKey(r)===key);
@@ -2784,11 +2882,34 @@ function savePipetteRecord(ev){
 }
 window.savePipetteRecord=savePipetteRecord;
 document.addEventListener("DOMContentLoaded",()=>{const form=$("pipette-form");if(form){form.addEventListener("submit",savePipetteRecord);}});
-function deletePipetteRecord(id){
-  if(!confirm("¿Eliminar registro de pipeta?"))return;
-  const list=getPipetteList().filter(r=>r.id!==id);
-  savePipetteList(list);
-  showToast("🗑️ Registro eliminado");
+document.addEventListener("click",ev=>{
+  const btn=ev.target&&ev.target.closest?ev.target.closest("[data-pipette-delete]"):null;
+  if(!btn)return;
+  const encoded=btn.getAttribute("data-pipette-delete")||"";
+  return deletePipetteRecord(decodeURIComponent(encoded),ev);
+});
+function deletePipetteRecord(id,ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  try{
+    const list=getPipetteList();
+    const target=list.find(r=>normalizePipetteText(r.id)===normalizePipetteText(id));
+    if(!target){
+      renderPipetteSection();
+      showToast("Registro no encontrado o ya eliminado");
+      return false;
+    }
+    const targetKey=pipetteDedupeKey(target);
+    markPipetteDeleted(target);
+    const next=list.filter(r=>normalizePipetteText(r.id)!==normalizePipetteText(id)&&pipetteDedupeKey(r)!==targetKey);
+    persistPipetteList(next,{push:true,render:true});
+    try{setTimeout(pushToSync,60);}catch(e){}
+    showToast("🗑️ Registro eliminado");
+    return false;
+  }catch(err){
+    console.error("Error borrando pipeta:",err);
+    showToast("⚠️ No se pudo borrar. Intenta nuevamente");
+    return false;
+  }
 }
 function renderPipetteSection(){
   const box=$("zoe-pipette-log");
@@ -2807,7 +2928,7 @@ function renderPipetteSection(){
   const last=list[0];
   const total=list.reduce((s,r)=>s+(Number(r.price)||0),0);
   const lastCard=`<div class="pipette-last-card"><div class="pipette-last-top"><span class="pipette-last-icon">🛡️</span><div class="pipette-last-title">${escapeHTML(last.brand||"Pipeta")}</div><div class="pipette-last-price">${last.price?formatCLP(last.price):"—"}</div></div><div class="pipette-meta-row"><span class="pipette-pill">📅 Aplicada ${formatShortDate(last.date)}</span><span class="pipette-pill">📋 ${list.length} registro${list.length===1?"":"s"}</span>${total?`<span class="pipette-pill">💰 Total ${formatCLP(total)}</span>`:""}</div>${last.notes?`<div class="pipette-item-notes">${escapeHTML(last.notes)}</div>`:""}</div>`;
-  const history=list.map(r=>`<div class="pipette-item"><div class="pipette-item-main"><div class="pipette-item-title">${escapeHTML(r.brand||"Pipeta")}</div><div class="pipette-item-meta"><span>📅 ${formatShortDate(r.date)}</span>${r.price?`<span>💰 ${formatCLP(r.price)}</span>`:""}</div>${r.notes?`<div class="pipette-item-notes">${escapeHTML(r.notes)}</div>`:""}</div><button class="pipette-del" onclick="deletePipetteRecord('${r.id}')">✕</button></div>`).join("");
+  const history=list.map(r=>`<div class="pipette-item"><div class="pipette-item-main"><div class="pipette-item-title">${escapeHTML(r.brand||"Pipeta")}</div><div class="pipette-item-meta"><span>📅 ${formatShortDate(r.date)}</span>${r.price?`<span>💰 ${formatCLP(r.price)}</span>`:""}</div>${r.notes?`<div class="pipette-item-notes">${escapeHTML(r.notes)}</div>`:""}</div><button type="button" class="pipette-del" data-pipette-delete="${encodeURIComponent(r.id||"")}" aria-label="Eliminar registro de pipeta">✕</button></div>`).join("");
   box.innerHTML=lastCard+`<div class="pipette-history"><div class="pipette-history-label">Historial de aplicaciones</div>${history}</div>`;
 }
 
