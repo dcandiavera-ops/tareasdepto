@@ -2613,18 +2613,103 @@ function renderStockSection(){
 
 // ═══ PIPETA ANTIPULGAS ZOE ═══
 const PIPETTE_KEY="td26_zoe_pipette_records";
-function getPipetteList(){
+let _pipetteCleanupQueued=false;
+let _pipetteSaving=false;
+
+function normalizePipetteText(v){
+  return String(v??"").trim().replace(/\s+/g," ");
+}
+function normalizePipettePrice(v){
+  if(v==null||v==="")return null;
+  const n=Number(String(v).replace(/[^0-9]/g,""));
+  return Number.isFinite(n)&&n>0?n:null;
+}
+function normalizePipetteLoose(v){
+  return normalizePipetteText(v)
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+function normalizePipetteDateKey(v){
+  const s=normalizePipetteText(v);
+  if(!s)return fmtDate(getNow());
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  const d1=s.match(/^(\d{2})[-\/](\d{2})[-\/](\d{4})$/);
+  if(d1)return `${d1[3]}-${d1[2]}-${d1[1]}`;
+  const d=new Date(s);
+  if(!Number.isNaN(d.getTime())){
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    const day=String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
+  return s;
+}
+function normalizePipetteRecord(r){
+  const nowIso=getNow().toISOString();
+  const date=normalizePipetteDateKey(r&&r.date);
+  const brand=normalizePipetteText(r&&r.brand)||"Pipeta";
+  const notes=normalizePipetteText(r&&r.notes);
+  const price=normalizePipettePrice(r&&r.price);
+  const createdAt=normalizePipetteText(r&&r.createdAt)||nowIso;
+  return {
+    id:normalizePipetteText(r&&r.id)||("pp_"+Date.now()+"_"+Math.random().toString(36).slice(2,7)),
+    date,
+    brand,
+    price,
+    notes,
+    createdAt,
+    updatedAt:normalizePipetteText(r&&r.updatedAt)||createdAt
+  };
+}
+function pipetteDedupeKey(r){
+  const n=normalizePipetteRecord(r);
+  // Limpieza profunda: fecha + marca + precio. La nota no diferencia registros.
+  return [normalizePipetteDateKey(n.date),normalizePipetteLoose(n.brand),n.price??""].join("|");
+}
+function choosePipetteRecordToKeep(prev,rec){
+  if(!prev)return rec;
+  const prevTime=new Date(prev.createdAt||prev.updatedAt||0).getTime()||0;
+  const recTime=new Date(rec.createdAt||rec.updatedAt||0).getTime()||0;
+  const base=(prevTime&&recTime&&recTime<prevTime)?rec:prev;
+  const other=base===prev?rec:prev;
+  return {
+    ...base,
+    id:base.id||other.id,
+    notes:base.notes||other.notes||"",
+    updatedAt:new Date(Math.max(new Date(base.updatedAt||base.createdAt||0).getTime()||0,new Date(other.updatedAt||other.createdAt||0).getTime()||0,Date.now())).toISOString()
+  };
+}
+function dedupePipetteList(list){
+  const arr=Array.isArray(list)?list:[];
+  const map=new Map();
+  for(const item of arr){
+    if(!item)continue;
+    const rec=normalizePipetteRecord(item);
+    const key=pipetteDedupeKey(rec);
+    map.set(key,choosePipetteRecordToKeep(map.get(key),rec));
+  }
+  return Array.from(map.values()).sort((a,b)=>{
+    const byDate=new Date((b.date||"")+"T23:59:59")-new Date((a.date||"")+"T23:59:59");
+    if(byDate!==0)return byDate;
+    return new Date(b.createdAt||0)-new Date(a.createdAt||0);
+  });
+}
+function cleanPipetteStorageNow({push=true,render=false}={}){
+  let parsed=[];
   const raw=dbCache[PIPETTE_KEY]||localStorage.getItem(PIPETTE_KEY);
-  if(!raw)return[];
-  try{const p=JSON.parse(raw);return Array.isArray(p)?p:[];}catch(e){return[];}
+  if(raw){try{const p=JSON.parse(raw);parsed=Array.isArray(p)?p:[];}catch(e){parsed=[];}}
+  const clean=dedupePipetteList(parsed);
+  const cleanStr=JSON.stringify(clean);
+  dbCache[PIPETTE_KEY]=cleanStr;
+  try{localStorage.setItem(PIPETTE_KEY,cleanStr);}catch(e){console.warn("No se pudo limpiar pipetas",e);}
+  if(push){try{schedulePush();}catch(e){console.warn("Sync limpieza pipeta omitido",e);}}
+  if(render){try{renderPipetteSection();}catch(e){console.warn("Render limpieza pipeta omitido",e);}}
+  return clean;
 }
 function savePipetteList(list){
-  const safeList=Array.isArray(list)?list:[];
-  const str=JSON.stringify(safeList);
-  dbCache[PIPETTE_KEY]=str;
-  try{localStorage.setItem(PIPETTE_KEY,str);}catch(e){console.warn("No se pudo guardar pipeta en localStorage",e);throw e;}
-  try{schedulePush();}catch(e){console.warn("Sync de pipeta omitido temporalmente",e);}
-  try{renderPipetteSection();}catch(e){console.warn("Render pipeta omitido temporalmente",e);}
+  return persistPipetteList(list,{push:true,render:true});
 }
 function openPipetteModal(){
   const today=fmtDate(getNow());
@@ -2649,8 +2734,8 @@ function hidePipetteModal(){
 }
 function savePipetteRecord(ev){
   if(ev){ev.preventDefault();ev.stopPropagation();}
+  if(_pipetteSaving)return false;
   const saveBtn=$("pipette-save-btn");
-  if(saveBtn&&saveBtn.disabled)return false;
   try{
     if(document.activeElement&&typeof document.activeElement.blur==="function")document.activeElement.blur();
     const dateEl=$("pipette-date"), brandEl=$("pipette-brand"), priceEl=$("pipette-price"), notesEl=$("pipette-notes");
@@ -2660,30 +2745,41 @@ function savePipetteRecord(ev){
     const notes=notesEl?(notesEl.value||"").trim():"";
     if(!date){showToast("⚠️ Ingresa fecha");if(dateEl)dateEl.focus();return false;}
     if(!brand){showToast("⚠️ Ingresa marca");if(brandEl)brandEl.focus();return false;}
+    _pipetteSaving=true;
     if(saveBtn){saveBtn.disabled=true;saveBtn.textContent="Guardando…";}
-    const cleanedPrice=priceStr.replace(/[^0-9]/g,"");
-    const price=cleanedPrice?parseInt(cleanedPrice,10):null;
-    const list=getPipetteList();
     const now=getNow();
-    list.push({
+    const newRecord=normalizePipetteRecord({
       id:"pp_"+now.getTime()+"_"+Math.random().toString(36).slice(2,7),
       date,
       brand,
-      price:Number.isFinite(price)?price:null,
+      price:normalizePipettePrice(priceStr),
       notes,
       createdAt:now.toISOString(),
       updatedAt:now.toISOString()
     });
-    savePipetteList(list);
-    hidePipetteModal();
-    showToast("✓ Pipeta registrada");
+    const list=getPipetteList();
+    const key=pipetteDedupeKey(newRecord);
+    const existingIndex=list.findIndex(r=>pipetteDedupeKey(r)===key);
+    if(existingIndex>=0){
+      // Evita duplicar el mismo registro si el botón se tocó varias veces o si sync trajo copias.
+      list[existingIndex]={...list[existingIndex],updatedAt:now.toISOString()};
+      savePipetteList(list);
+      hidePipetteModal();
+      showToast("✓ Registro ya estaba guardado");
+    }else{
+      list.push(newRecord);
+      savePipetteList(list);
+      hidePipetteModal();
+      showToast("✓ Pipeta registrada");
+    }
     return false;
   }catch(err){
     console.error("Error guardando pipeta:",err);
-    const saveBtn=$("pipette-save-btn");
-    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent="Guardar";}
     showToast("⚠️ No se pudo guardar. Intenta nuevamente");
     return false;
+  }finally{
+    _pipetteSaving=false;
+    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent="Guardar";}
   }
 }
 window.savePipetteRecord=savePipetteRecord;
@@ -2755,9 +2851,18 @@ async function pullFromSync(isInit){
       let changed=false;
       for(const[k,v] of Object.entries(data)){
         if(v===null){if(dbCache[k]){delete dbCache[k];localStorage.removeItem(k);changed=true;}continue;}
+        if(k===PIPETTE_KEY){
+          let remoteList=[];
+          try{const p=JSON.parse(v);remoteList=Array.isArray(p)?p:[];}catch(e){remoteList=[];}
+          const clean=dedupePipetteList(remoteList);
+          const cleanStr=JSON.stringify(clean);
+          if(dbCache[k]!==cleanStr){dbCache[k]=cleanStr;localStorage.setItem(k,cleanStr);changed=true;}
+          if(cleanStr!==v){try{setTimeout(()=>persistPipetteList(clean,{push:true,render:false}),80);}catch(e){console.warn("No se pudo subir limpieza de pipeta",e);}}
+          continue;
+        }
         if(dbCache[k]!==v){dbCache[k]=v;localStorage.setItem(k,v);changed=true;}
       }
-      if(changed){render();if(typeof renderZoeModule==="function")renderZoeModule();if(typeof renderStockSection==="function")renderStockSection();if(typeof renderPipetteSection==="function")renderPipetteSection();}
+      if(changed){render();if(typeof renderZoeModule==="function")renderZoeModule();if(typeof renderStockSection==="function")renderStockSection();if(typeof cleanPipetteStorageNow==="function")cleanPipetteStorageNow({push:true,render:false});if(typeof renderPipetteSection==="function")renderPipetteSection();}
     }
     setSyncDot("ok","☁️ Al día");return true;
   }catch(e){console.error("Pull error:",e);setSyncDot("err","Sin conexión");return false;}
@@ -2894,7 +2999,7 @@ window.addEventListener("focus",()=>{if(hasSyncUrl())pullFromSync(false);});
 // ════════════════════════════════════════════════════════════
 // STARTUP
 // ════════════════════════════════════════════════════════════
-loadLocalStorage();loadPhotos();render();renderZoeModule();renderStockSection();renderPipetteSection();updateTabProgress();
+loadLocalStorage();loadPhotos();if(typeof cleanPipetteStorageNow==="function")cleanPipetteStorageNow({push:true,render:false});render();renderZoeModule();renderStockSection();renderPipetteSection();queuePipetteCleanup();updateTabProgress();
 (()=>{const b=$("bnav-"+activeTab);if(b)b.classList.add("on");updateBnavPips();})();
 initIdentity();
 const _rm=$("reset-modal");if(_rm)_rm.style.display="none";
